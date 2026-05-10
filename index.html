@@ -322,6 +322,29 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* alert badge */
+  .alert-badge{
+    display:inline-grid;place-items:center;
+    min-width:20px;height:20px;padding:0 6px;border-radius:99px;
+    background:linear-gradient(135deg,var(--accent-orange),#ff5a30);
+    color:#fff;font-family:'Geist Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(255,140,80,.4);
+    animation:badgePulse 1.6s ease-in-out infinite;
+  }
+  @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+  /* compact density */
+  body.density-compact .compare-grid,
+  body.density-compact .heatmap,
+  body.density-compact #sec_corr,
+  body.density-compact #sec_news,
+  body.density-compact #sec_etfs,
+  body.density-compact #sec_indices,
+  body.density-compact .about{display:none}
+  body.density-compact .card{padding:14px 16px;margin-bottom:10px}
+  body.density-compact .grid{gap:8px}
+
   /* live ticker bar */
   .ticker{
     position:sticky;top:0;z-index:35;
@@ -1186,12 +1209,13 @@
   </div>
   <div class="topbar-right">
     <span class="live-pill" id="live_pill" title="Last server-side brief sync"><span class="dot"></span><span id="live_pill_txt">live</span></span>
-    <button class="nav-link" data-modal="how-it-works"><span class="glyph">🧠</span>Method</button>
-    <button class="nav-link" data-modal="api-info"><span class="glyph">🔌</span>Data</button>
-    <button class="nav-link" data-modal="roadmap"><span class="glyph">🗺️</span>Roadmap</button>
-    <button class="nav-link" data-modal="changelog"><span class="glyph">📋</span>Log</button>
-    <button class="nav-link" data-modal="settings"><span class="glyph">⚙️</span>Settings</button>
-    <button class="nav-link" id="share_btn" title="Copy a deeplink"><span class="glyph">🔗</span>Share</button>
+    <span class="alert-badge" id="alert_badge" style="display:none" title="Triggered alerts">0</span>
+    <button class="nav-link" data-modal="how-it-works">Method</button>
+    <button class="nav-link" data-modal="api-info">Data</button>
+    <button class="nav-link" data-modal="roadmap">Roadmap</button>
+    <button class="nav-link" data-modal="changelog">Log</button>
+    <button class="nav-link" data-modal="settings">Settings</button>
+    <button class="nav-link" id="share_btn" title="Copy a deeplink">Share</button>
     <button class="hamburger" id="cmdk_open" title="Command palette (Cmd+K)" aria-label="Open command palette">⌘K</button>
     <button class="hamburger" id="theme_toggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
     <button class="hamburger" id="drawer_open" title="Open menu" aria-label="Open menu">☰</button>
@@ -1243,7 +1267,7 @@
 
 <div class="card" id="sec_perf" style="padding:16px 20px">
   <div class="card-head" style="margin-bottom:8px">
-    <h2><span style="margin-right:6px">📊</span>Cohort performance <span class="meta">aggregate across all 4 tracked assets</span></h2>
+    <h2>Cohort performance <span class="meta">aggregate across all 4 tracked assets</span></h2>
   </div>
   <div class="perf-row" id="perf_row">
     <div class="perf-mini"><div class="pl">total cum</div><div class="pv"><span class="skel"></span></div></div>
@@ -1268,9 +1292,9 @@
     <span class="skel" style="width:60%;height:1em;display:block"></span>
   </p>
   <div class="brief-actions">
-    <button class="ghost-btn primary" id="brief_open">📖 Read full brief</button>
-    <button class="ghost-btn" id="brief_refresh">🔄 Regenerate</button>
-    <button class="ghost-btn" id="brief_copy">📋 Copy</button>
+    <button class="ghost-btn primary" id="brief_open">Read full brief</button>
+    <button class="ghost-btn" id="brief_refresh">Regenerate</button>
+    <button class="ghost-btn" id="brief_copy">Copy</button>
     <span class="meta" id="brief_mode" style="margin-left:auto"></span>
   </div>
 </div>
@@ -1324,7 +1348,7 @@
 
 <div class="card" id="sec_corr">
   <div class="card-head">
-    <h2><span style="margin-right:6px">🔗</span>Cross-asset correlation <span class="meta">Pearson on 30d daily flows</span></h2>
+    <h2>Cross-asset correlation <span class="meta">Pearson on 30d daily flows</span></h2>
     <button class="info-btn" data-modal="how-it-works" title="How correlation is computed">i</button>
   </div>
   <table class="corr-table" id="corr_tbl"></table>
@@ -1345,7 +1369,7 @@
 
 <div class="card" id="sec_etfs">
   <div class="card-head">
-    <h2><span style="margin-right:6px">🏛️</span>Component ETFs <span class="meta" id="etfs_meta">underlying ETFs that make up the basket for the active asset</span></h2>
+    <h2>Component ETFs <span class="meta" id="etfs_meta">underlying ETFs that make up the basket for the active asset</span></h2>
     <button class="ghost-btn" id="etfs_refresh">Refresh list</button>
   </div>
   <div id="etfs_list">
@@ -1355,12 +1379,12 @@
 
 <div class="card" id="sec_news">
   <div class="card-head">
-    <h2><span style="margin-right:6px">📰</span>Market context <span class="meta">SoSoValue feeds, cached 7d</span></h2>
+    <h2>Market context <span class="meta">SoSoValue feeds, cached 7d</span></h2>
     <button class="ghost-btn" id="news_refresh">Refresh feed</button>
   </div>
   <div class="news-tabs">
-    <button class="news-tab on" data-feed="featured">⭐ Featured</button>
-    <button class="news-tab" data-feed="trending">🔥 Trending</button>
+    <button class="news-tab on" data-feed="featured">Featured</button>
+    <button class="news-tab" data-feed="trending">Trending</button>
   </div>
   <div class="news-list" id="news">
     <div class="news-item" style="cursor:default"><p class="news-title"><span class="skel" style="width:80%;display:block"></span></p><div class="news-meta"><span class="skel" style="width:120px"></span></div></div>
@@ -1444,7 +1468,7 @@
 
 <div class="card" id="sec_indices">
   <div class="card-head">
-    <h2><span style="margin-right:6px">📊</span>SSI on-chain indices <span class="meta">live on Base via SSI Protocol</span></h2>
+    <h2>SSI on-chain indices <span class="meta">live on Base via SSI Protocol</span></h2>
     <button class="ghost-btn" id="idx_refresh">Refresh prices</button>
   </div>
   <div class="idx-grid" id="idx_grid">
@@ -1708,6 +1732,12 @@
         <label>Forecast band on chart</label>
         <select id="set_forecast">
           <option value="on">On</option><option value="off">Off</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Layout density</label>
+        <select id="set_density">
+          <option value="comfortable">Comfortable</option><option value="compact">Compact (focus mode)</option>
         </select>
       </div>
     </div>
@@ -1981,7 +2011,7 @@
   }
 
   // ====== prefs persistence ======
-  var DEFAULT_PREFS = { bullThreshold: 1.1, capital: 10000, defaultAsset: "BTC", defaultRegion: "US", defaultRange: 30, riskMode: "balanced", sound: "on", forecast: "on" };
+  var DEFAULT_PREFS = { bullThreshold: 1.1, capital: 10000, defaultAsset: "BTC", defaultRegion: "US", defaultRange: 30, riskMode: "balanced", sound: "on", forecast: "on", density: "comfortable" };
   var prefs;
   try { prefs = Object.assign({}, DEFAULT_PREFS, JSON.parse(localStorage.getItem("sosoflows.prefs") || "{}")); }
   catch (e) { prefs = Object.assign({}, DEFAULT_PREFS); }
@@ -2008,7 +2038,12 @@
     $("set_risk").value = prefs.riskMode;
     if ($("set_sound")) $("set_sound").value = prefs.sound || "on";
     if ($("set_forecast")) $("set_forecast").value = prefs.forecast || "on";
+    if ($("set_density")) $("set_density").value = prefs.density || "comfortable";
   }
+  function applyDensity(){
+    document.body.classList.toggle("density-compact", prefs.density === "compact");
+  }
+  applyDensity();
   syncSettingsForm();
 
   $("set_save") && $("set_save").addEventListener("click", function(){
@@ -2020,6 +2055,8 @@
     prefs.riskMode = $("set_risk").value;
     if ($("set_sound")) prefs.sound = $("set_sound").value;
     if ($("set_forecast")) prefs.forecast = $("set_forecast").value;
+    if ($("set_density")) prefs.density = $("set_density").value;
+    applyDensity();
     savePrefs();
     // Apply immediately
     chartRange = prefs.defaultRange;
@@ -2145,13 +2182,14 @@
             icon: "https://smartcoded.xyz/favicon.ico"
           });
         }
-        toast("🔔 " + al.asset + " alert: " + metricLabel(al.metric) + " " + (al.op === "gt" ? ">" : "<") + " " + al.value, "info");
+        toast(al.asset + " alert: " + metricLabel(al.metric) + " " + (al.op === "gt" ? ">" : "<") + " " + al.value, "info");
         chime();
       } else if (!conditionMet && al.triggered) {
         al.triggered = false;
       }
     });
     if (fired) saveAlerts();
+    updateAlertBadge();
   }
 
   function renderAlerts(){
@@ -2213,12 +2251,12 @@
     var dash = (avg / 100) * circ;
     ring.setAttribute("stroke-dasharray", dash + " " + circ);
 
-    var verdict = "↻ rotation";
+    var verdict = "rotation";
     var verdictCls = "flat";
-    if (bull > bear && avg >= 60) { verdict = "📈 demand expanding"; verdictCls = "bull"; }
-    else if (bear > bull && avg <= 40) { verdict = "📉 redemptions dominating"; verdictCls = "bear"; }
-    else if (bull > bear) { verdict = "▲ tilt bullish"; verdictCls = "bull"; }
-    else if (bear > bull) { verdict = "▼ tilt bearish"; verdictCls = "bear"; }
+    if (bull > bear && avg >= 60) { verdict = "demand expanding"; verdictCls = "bull"; }
+    else if (bear > bull && avg <= 40) { verdict = "redemptions dominating"; verdictCls = "bear"; }
+    else if (bull > bear) { verdict = "tilt bullish"; verdictCls = "bull"; }
+    else if (bear > bull) { verdict = "tilt bearish"; verdictCls = "bear"; }
     verdictEl.textContent = verdict; verdictEl.className = "cohort-verdict " + verdictCls;
 
     var topAsset = withData[0], topScore = -1;
@@ -2232,6 +2270,49 @@
     html += '<span class="cohort-pill">avg score ' + avg + '</span>';
     rowEl.innerHTML = html;
   }
+
+  // ====== Hash routing for deep section links ======
+  function jumpToHash(hash){
+    if (!hash || hash.length < 2) return;
+    var key = hash.substring(1).toLowerCase();
+    var target = document.getElementById("sec_" + key) || document.getElementById(key);
+    if (target) {
+      setTimeout(function(){
+        var off = target.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: off, behavior: "smooth" });
+      }, 100);
+    }
+  }
+  window.addEventListener("hashchange", function(){ jumpToHash(location.hash); });
+  // On load, if hash present, scroll there after data loads
+  if (location.hash) setTimeout(function(){ jumpToHash(location.hash); }, 600);
+  // Update hash when bottom-nav buttons jump (for browser back/forward)
+  document.querySelectorAll(".bn-btn[data-jump]").forEach(function(b){
+    b.addEventListener("click", function(){ history.replaceState(null, "", "#" + b.dataset.jump); });
+  });
+  document.querySelectorAll(".drawer-link[data-drawer-jump]").forEach(function(b){
+    b.addEventListener("click", function(){ history.replaceState(null, "", "#" + b.dataset.drawerJump); });
+  });
+
+  // ====== Alert badge in topbar ======
+  function updateAlertBadge(){
+    var badge = $("alert_badge"); if (!badge) return;
+    var triggered = alerts.filter(function(a){ return a.triggered; }).length;
+    if (triggered > 0) {
+      badge.style.display = "inline-grid";
+      badge.textContent = triggered;
+    } else {
+      badge.style.display = "none";
+    }
+  }
+  $("alert_badge") && $("alert_badge").addEventListener("click", function(){
+    var t = $("sec_alerts");
+    if (t) {
+      history.replaceState(null, "", "#alerts");
+      var off = t.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top: off, behavior: "smooth" });
+    }
+  });
 
   // ====== Live ticker bar ======
   function renderTicker(){
@@ -2268,33 +2349,33 @@
 
   // ====== Command palette ======
   var cmdkActions = [
-    { name: "Switch to BTC", desc: "asset toggle", em: "🟠", run: function(){ document.querySelector('.pill[data-asset="BTC"]').click(); } },
-    { name: "Switch to ETH", desc: "asset toggle", em: "🟣", run: function(){ document.querySelector('.pill[data-asset="ETH"]').click(); } },
-    { name: "Switch to SOL", desc: "asset toggle", em: "🟢", run: function(){ document.querySelector('.pill[data-asset="SOL"]').click(); } },
-    { name: "Switch to XRP", desc: "asset toggle", em: "⚪", run: function(){ document.querySelector('.pill[data-asset="XRP"]').click(); } },
-    { name: "Switch to US region", desc: "region toggle", em: "🇺🇸", run: function(){ document.querySelector('.pill[data-region="US"]').click(); } },
-    { name: "Switch to HK region", desc: "region toggle", em: "🇭🇰", run: function(){ document.querySelector('.pill[data-region="HK"]').click(); } },
-    { name: "Jump to Daily Brief", desc: "section", em: "📊", run: function(){ jumpTo("brief"); } },
-    { name: "Jump to Signal-to-Action", desc: "section", em: "🎯", run: function(){ jumpTo("signals"); } },
-    { name: "Jump to Position Sizer", desc: "section", em: "💰", run: function(){ jumpTo("sizer"); } },
-    { name: "Jump to Watchlist Alerts", desc: "section", em: "🔔", run: function(){ jumpTo("alerts"); } },
-    { name: "Jump to Trade Journal", desc: "section", em: "📝", run: function(){ jumpTo("journal"); } },
-    { name: "Jump to Market Context", desc: "section", em: "📰", run: function(){ jumpTo("news"); } },
-    { name: "Jump to Component ETFs", desc: "section", em: "🏛️", run: function(){ jumpTo("etfs"); } },
-    { name: "Jump to Correlation Matrix", desc: "section", em: "🔗", run: function(){ jumpTo("corr"); } },
-    { name: "Jump to Indices snapshot", desc: "section", em: "📈", run: function(){ jumpTo("indices"); } },
-    { name: "Regenerate Daily Brief", desc: "action", em: "🔄", run: function(){ $("brief_refresh").click(); } },
-    { name: "Copy Daily Brief", desc: "action", em: "📋", run: function(){ $("brief_copy").click(); } },
-    { name: "Snapshot to Journal", desc: "action", em: "📝", run: function(){ $("jrn_snap").click(); } },
-    { name: "Add Watchlist Alert", desc: "action", em: "🔔", run: function(){ $("alert_add").click(); } },
-    { name: "Export current asset CSV", desc: "action", em: "📥", run: function(){ $("csv_btn").click(); } },
-    { name: "Copy deeplink", desc: "action", em: "🔗", run: function(){ $("share_btn").click(); } },
-    { name: "Toggle theme", desc: "action", em: "🌗", run: function(){ $("theme_toggle").click(); } },
-    { name: "Open Methodology", desc: "modal", em: "🧠", run: function(){ openModal("how-it-works"); } },
-    { name: "Open Data Sources", desc: "modal", em: "🔌", run: function(){ openModal("api-info"); } },
-    { name: "Open Roadmap", desc: "modal", em: "🗺️", run: function(){ openModal("roadmap"); } },
-    { name: "Open Settings", desc: "modal", em: "⚙️", run: function(){ openModal("settings"); } },
-    { name: "Replay onboarding tour", desc: "tour", em: "🚀", run: function(){ startTour(); } }
+    { name: "Switch to BTC", desc: "asset toggle", em: "BTC", run: function(){ document.querySelector('.pill[data-asset="BTC"]').click(); } },
+    { name: "Switch to ETH", desc: "asset toggle", em: "ETH", run: function(){ document.querySelector('.pill[data-asset="ETH"]').click(); } },
+    { name: "Switch to SOL", desc: "asset toggle", em: "SOL", run: function(){ document.querySelector('.pill[data-asset="SOL"]').click(); } },
+    { name: "Switch to XRP", desc: "asset toggle", em: "XRP", run: function(){ document.querySelector('.pill[data-asset="XRP"]').click(); } },
+    { name: "Switch to US region", desc: "region toggle", em: "US", run: function(){ document.querySelector('.pill[data-region="US"]').click(); } },
+    { name: "Switch to HK region", desc: "region toggle", em: "HK", run: function(){ document.querySelector('.pill[data-region="HK"]').click(); } },
+    { name: "Jump to Daily Brief", desc: "section", em: "->", run: function(){ jumpTo("brief"); } },
+    { name: "Jump to Signal-to-Action", desc: "section", em: "->", run: function(){ jumpTo("signals"); } },
+    { name: "Jump to Position Sizer", desc: "section", em: "->", run: function(){ jumpTo("sizer"); } },
+    { name: "Jump to Watchlist Alerts", desc: "section", em: "->", run: function(){ jumpTo("alerts"); } },
+    { name: "Jump to Trade Journal", desc: "section", em: "->", run: function(){ jumpTo("journal"); } },
+    { name: "Jump to Market Context", desc: "section", em: "->", run: function(){ jumpTo("news"); } },
+    { name: "Jump to Component ETFs", desc: "section", em: "->", run: function(){ jumpTo("etfs"); } },
+    { name: "Jump to Correlation Matrix", desc: "section", em: "->", run: function(){ jumpTo("corr"); } },
+    { name: "Jump to Indices snapshot", desc: "section", em: "->", run: function(){ jumpTo("indices"); } },
+    { name: "Regenerate Daily Brief", desc: "action", em: "+", run: function(){ $("brief_refresh").click(); } },
+    { name: "Copy Daily Brief", desc: "action", em: "+", run: function(){ $("brief_copy").click(); } },
+    { name: "Snapshot to Journal", desc: "action", em: "+", run: function(){ $("jrn_snap").click(); } },
+    { name: "Add Watchlist Alert", desc: "action", em: "+", run: function(){ $("alert_add").click(); } },
+    { name: "Export current asset CSV", desc: "action", em: "+", run: function(){ $("csv_btn").click(); } },
+    { name: "Copy deeplink", desc: "action", em: "+", run: function(){ $("share_btn").click(); } },
+    { name: "Toggle theme", desc: "action", em: "+", run: function(){ $("theme_toggle").click(); } },
+    { name: "Open Methodology", desc: "modal", em: "+", run: function(){ openModal("how-it-works"); } },
+    { name: "Open Data Sources", desc: "modal", em: "+", run: function(){ openModal("api-info"); } },
+    { name: "Open Roadmap", desc: "modal", em: "+", run: function(){ openModal("roadmap"); } },
+    { name: "Open Settings", desc: "modal", em: "+", run: function(){ openModal("settings"); } },
+    { name: "Replay onboarding tour", desc: "tour", em: "+", run: function(){ startTour(); } }
   ];
   function jumpTo(sec){
     var target = $("sec_" + sec) || $(sec);
