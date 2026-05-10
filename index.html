@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SoSoFlows - Agentic ETF flow analyst built on SoSoValue</title>
+<meta name="description" content="SoSoFlows turns SoSoValue spot ETF flow data into plain-English market briefs and bullish or bearish signals per asset. Built for the SoSoValue Buildathon.">
+<meta property="og:title" content="SoSoFlows - Agentic ETF flow analyst">
+<meta property="og:description" content="Turns SoSoValue ETF data into plain-English briefs and signals. One-person on-chain finance operator stack.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%,rgba(120,80,255,.08),transparent 50%),
+      radial-gradient(circle at 85% 100%,rgba(255,140,80,.06),transparent 50%),
+      #07070a;
+    color:#e8e8ec;
+    min-height:100vh;
+    line-height:1.5;
+    padding:24px 16px 80px;
+  }
+  a{color:#c9c9d4}
+  .wrap{max-width:1080px;margin:0 auto}
+
+  header{
+    padding:26px 28px;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:18px;
+    background:linear-gradient(160deg,rgba(255,255,255,.03),rgba(255,255,255,.005));
+    backdrop-filter:blur(20px);
+    margin-bottom:14px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,#7850ff,#ff8c50);
+    display:grid;place-items:center;
+    font-family:'Geist Mono',monospace;font-weight:700;color:#fff;font-size:14px;
+  }
+  .eyebrow{font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.14em;color:#8a8a98;margin:0 0 4px}
+  h1{
+    font-size:24px;font-weight:600;margin:0;letter-spacing:-.02em;
+    background:linear-gradient(120deg,#fff,#c9c9d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  h1 small{font-size:13px;color:#8a8a98;font-weight:500;margin-left:8px;letter-spacing:0;-webkit-text-fill-color:#8a8a98}
+  .ctrls{display:flex;gap:6px;flex-wrap:wrap}
+  .pill{
+    padding:7px 12px;border-radius:8px;
+    font-family:'Geist Mono',monospace;font-size:12px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    color:#c9c9d4;cursor:pointer;user-select:none;transition:all .15s;
+  }
+  .pill:hover{background:rgba(255,255,255,.07);color:#fff}
+  .pill.on{background:rgba(255,140,80,.15);border-color:rgba(255,140,80,.4);color:#ffd0b3}
+
+  .pitch{
+    border:1px solid rgba(255,255,255,.06);border-radius:16px;
+    background:linear-gradient(160deg,rgba(120,80,255,.06),rgba(255,140,80,.03));
+    padding:18px 22px;margin-bottom:14px;
+    display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .pitch p{margin:0;color:#c9c9d4;font-size:14px;max-width:720px}
+  .pitch .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .tag{
+    font-family:'Geist Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+    padding:4px 9px;border-radius:99px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#a9a9b8;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+  .stat{
+    border:1px solid rgba(255,255,255,.06);border-radius:14px;
+    background:linear-gradient(160deg,rgba(255,255,255,.025),rgba(255,255,255,.005));
+    padding:16px 18px;
+  }
+  .stat .lbl{font-family:'Geist Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#7a7a88;margin:0 0 6px}
+  .stat .val{font-family:'Geist Mono',monospace;font-size:20px;font-weight:600;color:#fff;letter-spacing:-.01em;margin:0}
+  .stat .dlt{font-family:'Geist Mono',monospace;font-size:11px;margin-top:4px}
+  .pos{color:#7adc9c}
+  .neg{color:#ff8a8a}
+
+  .card{
+    border:1px solid rgba(255,255,255,.06);border-radius:16px;
+    background:linear-gradient(160deg,rgba(255,255,255,.025),rgba(255,255,255,.005));
+    padding:18px 20px;margin-bottom:14px;
+  }
+  .card h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#a9a9b8;margin:0 0 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card h2 .meta{font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.08em;color:#5a5a68;text-transform:none}
+  .signal{
+    font-family:'Geist Mono',monospace;font-size:11px;padding:3px 9px;border-radius:99px;
+    text-transform:uppercase;letter-spacing:.08em;
+  }
+  .signal.bull{background:rgba(120,220,156,.15);color:#7adc9c}
+  .signal.bear{background:rgba(255,138,138,.15);color:#ff8a8a}
+  .signal.flat{background:rgba(200,200,210,.1);color:#a9a9b8}
+
+  .brief{
+    background:linear-gradient(160deg,rgba(120,80,255,.08),rgba(120,80,255,.02));
+    border-color:rgba(120,80,255,.2);
+  }
+  .brief-text{
+    font-size:15px;line-height:1.65;color:#e0e0e8;margin:0 0 14px;
+  }
+  .brief-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ghost-btn{
+    font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.05em;
+    padding:6px 12px;border-radius:8px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+    color:#c9c9d4;cursor:pointer;transition:all .15s;
+  }
+  .ghost-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+  .ghost-btn[disabled]{opacity:.5;cursor:not-allowed}
+
+  .signals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .sig-card{
+    border:1px solid rgba(255,255,255,.06);border-radius:12px;
+    background:rgba(255,255,255,.02);padding:14px 16px;
+  }
+  .sig-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .sig-card .sym{font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;color:#fff;letter-spacing:.05em}
+  .sig-card .insight{font-size:13px;color:#c9c9d4;margin:0 0 6px;line-height:1.5}
+  .sig-card .action{font-size:12px;color:#8a8a98;margin:0;line-height:1.5}
+  .sig-card .action::before{content:"-> ";color:#5a5a68;font-family:'Geist Mono',monospace}
+
+  #chart{width:100%;height:240px;display:block}
+
+  table{width:100%;border-collapse:collapse;font-family:'Geist Mono',monospace;font-size:12.5px}
+  th,td{text-align:right;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:#7a7a88;font-weight:500;text-transform:uppercase;font-size:10px;letter-spacing:.1em}
+  tr:hover td{background:rgba(255,255,255,.02)}
+
+  .banner{
+    border:1px solid rgba(255,180,80,.3);background:linear-gradient(180deg,rgba(255,180,80,.08),rgba(255,180,80,.02));
+    color:#ffd9a8;padding:12px 16px;border-radius:12px;margin-bottom:14px;font-size:13px;
+  }
+  .banner code{background:rgba(0,0,0,.3);padding:1px 6px;border-radius:4px;font-family:'Geist Mono',monospace;font-size:12px}
+
+  .about{
+    border:1px solid rgba(255,255,255,.06);border-radius:16px;
+    background:linear-gradient(160deg,rgba(255,255,255,.018),rgba(255,255,255,.003));
+    padding:22px 24px;margin-top:18px;
+  }
+  .about h3{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#a9a9b8;margin:0 0 14px}
+  .about-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .about-cols h4{font-family:'Geist Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#7adc9c;margin:0 0 6px}
+  .about-cols p{font-size:13px;line-height:1.6;color:#c9c9d4;margin:0}
+
+  footer{text-align:center;color:#5a5a68;font-family:'Geist Mono',monospace;font-size:11px;margin-top:24px;line-height:1.7}
+  footer a{color:#7a7a88;text-decoration:none}
+  footer a:hover{color:#c9c9d4}
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .signals-grid{grid-template-columns:1fr}
+    .about-cols{grid-template-columns:1fr}
+    body{padding:16px 12px 60px}
+    header{padding:20px}
+    .stat .val{font-size:17px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="logo">SF</div>
+    <div>
+      <p class="eyebrow">SoSoFlows</p>
+      <h1>Agentic ETF flow analyst <small>built on SoSoValue</small></h1>
+    </div>
+  </div>
+  <div class="ctrls">
+    <button class="pill on" data-asset="BTC">BTC</button>
+    <button class="pill" data-asset="ETH">ETH</button>
+    <button class="pill" data-asset="SOL">SOL</button>
+    <button class="pill" data-asset="XRP">XRP</button>
+    <button class="pill on" data-region="US">US</button>
+    <button class="pill" data-region="HK">HK</button>
+  </div>
+</header>
+
+<div class="pitch">
+  <p>Spot ETF inflows are the cleanest read on real institutional positioning. SoSoFlows pulls them from SoSoValue, runs a deterministic signal engine over the last 7 and 30 days, and writes a plain-English daily brief so a one-person operator gets institutional context without 8 tabs and a Bloomberg subscription.</p>
+  <div class="tags">
+    <span class="tag">SoSoValue API</span>
+    <span class="tag">Agentic</span>
+    <span class="tag">One-Person</span>
+    <span class="tag">Buildathon W1</span>
+  </div>
+</div>
+
+<div id="banner"></div>
+
+<div class="card brief">
+  <h2>Daily Brief
+    <span class="meta" id="brief_meta">loading</span>
+  </h2>
+  <p class="brief-text" id="brief_text">Reading cached flow data and synthesizing the daily picture...</p>
+  <div class="brief-actions">
+    <button class="ghost-btn" id="brief_refresh">Regenerate brief</button>
+    <span class="meta" id="brief_mode" style="font-family:'Geist Mono',monospace;font-size:10px;color:#5a5a68"></span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Signal-to-Action <span class="meta">computed from 7d vs prior-7d delta per asset</span></h2>
+  <div class="signals-grid" id="signals">
+    <div class="sig-card"><div class="head"><span class="sym">loading...</span></div></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="stat"><p class="lbl">Last day net flow</p><p class="val" id="s_last">-</p><p class="dlt" id="s_last_d">-</p></div>
+  <div class="stat"><p class="lbl">7d net flow</p><p class="val" id="s_7d">-</p><p class="dlt" id="s_7d_d">-</p></div>
+  <div class="stat"><p class="lbl">30d net flow</p><p class="val" id="s_30d">-</p><p class="dlt" id="s_30d_d">-</p></div>
+  <div class="stat"><p class="lbl">Cumulative inflow</p><p class="val" id="s_cum">-</p><p class="dlt" id="s_cum_d">since launch</p></div>
+</div>
+
+<div class="card">
+  <h2><span id="chart_title">BTC daily net inflow</span> <span class="signal flat" id="signal">loading</span></h2>
+  <canvas id="chart" width="1040" height="240"></canvas>
+</div>
+
+<div class="card">
+  <h2>SSI on-chain indices <span class="meta">live on Base via SSI Protocol</span></h2>
+  <table id="ssi"><thead><tr><th>Symbol</th><th>Index</th><th>Status</th></tr></thead><tbody><tr><td colspan="3" style="text-align:center;color:#7a7a88;padding:18px">loading...</td></tr></tbody></table>
+</div>
+
+<div class="card">
+  <h2>Recent rows <span class="meta">last 14 days, <span id="rows_meta">-</span></span></h2>
+  <table id="rows"><thead><tr><th>Date</th><th>Net inflow (USD)</th><th>Volume (USD)</th><th>NAV (USD)</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center;color:#7a7a88;padding:18px">loading...</td></tr></tbody></table>
+</div>
+
+<div class="about">
+  <h3>About SoSoFlows</h3>
+  <div class="about-cols">
+    <div>
+      <h4>What it is</h4>
+      <p>An agentic flow analyst for crypto spot ETFs. Reads SoSoValue's daily inflow data, runs a deterministic signal engine, and writes a plain-English daily brief. Wave 1 of the SoSoValue Buildathon submission.</p>
+    </div>
+    <div>
+      <h4>How it works</h4>
+      <p>PHP whitelisted proxy caches SoSoValue API responses on disk for 7 days. A second endpoint synthesizes the cached series into per-asset signals and a multi-asset daily brief, regenerated server-side every 6 hours.</p>
+    </div>
+    <div>
+      <h4>Roadmap</h4>
+      <p>Wave 2 - SoDEX testnet integration so each signal links to a one-click trade flow. Wave 3 - risk control, a deployable Telegram bot version, broader ticker coverage, and SSI rebalance correlation.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>data: openapi.sosovalue.com/openapi/v1, indices: SSI Protocol on Base. cached server-side, 7d ETF TTL, 6h brief TTL.</p>
+  <p>built by <a href="https://x.com/smartcoded" target="_blank" rel="noopener">@smartcoded</a> for the <a href="https://app.akindo.io/wave-hacks/JBEQXgN4Zi2jA3wA" target="_blank" rel="noopener">SoSoValue Buildathon</a> - source: <a href="https://github.com/codedforum/sosoflows" target="_blank" rel="noopener">github.com/codedforum/sosoflows</a></p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var ASSETS = ["BTC", "ETH", "SOL", "XRP"];
+  var state = { asset: "BTC", region: "US" };
+  var allSeries = {}; // { BTC: [rows], ETH: [rows], ... }
+
+  var els = {
+    banner: document.getElementById("banner"),
+    s_last: document.getElementById("s_last"),
+    s_7d: document.getElementById("s_7d"),
+    s_30d: document.getElementById("s_30d"),
+    s_cum: document.getElementById("s_cum"),
+    s_last_d: document.getElementById("s_last_d"),
+    s_7d_d: document.getElementById("s_7d_d"),
+    s_30d_d: document.getElementById("s_30d_d"),
+    signal: document.getElementById("signal"),
+    chart: document.getElementById("chart"),
+    chart_title: document.getElementById("chart_title"),
+    rows: document.querySelector("#rows tbody"),
+    rows_meta: document.getElementById("rows_meta"),
+    ssi: document.querySelector("#ssi tbody"),
+    brief_text: document.getElementById("brief_text"),
+    brief_meta: document.getElementById("brief_meta"),
+    brief_mode: document.getElementById("brief_mode"),
+    brief_refresh: document.getElementById("brief_refresh"),
+    signals: document.getElementById("signals")
+  };
+
+  document.querySelectorAll(".pill[data-asset]").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.querySelectorAll(".pill[data-asset]").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on"); state.asset = b.dataset.asset; renderActiveAsset();
+    });
+  });
+  document.querySelectorAll(".pill[data-region]").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.querySelectorAll(".pill[data-region]").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on"); state.region = b.dataset.region; loadAll(true);
+    });
+  });
+
+  els.brief_refresh.addEventListener("click", function(){
+    els.brief_refresh.disabled = true;
+    els.brief_text.textContent = "Regenerating brief...";
+    fetch("ai.php?refresh=1").then(function(r){return r.json()}).then(function(j){ paintBrief(j); }).catch(function(){
+      els.brief_text.textContent = "Brief regeneration failed - try again later.";
+    }).finally(function(){ els.brief_refresh.disabled = false; });
+  });
+
+  function fmtUsd(n){
+    if (n === null || n === undefined || isNaN(n)) return "-";
+    var abs = Math.abs(n);
+    if (abs >= 1e9) return (n/1e9).toFixed(2) + "B";
+    if (abs >= 1e6) return (n/1e6).toFixed(2) + "M";
+    if (abs >= 1e3) return (n/1e3).toFixed(2) + "K";
+    return n.toFixed(0);
+  }
+  function sign(n){ return n > 0 ? "+" : ""; }
+  function dlt(n, prev){
+    if (prev === undefined || prev === null) return "";
+    if (n === undefined || n === null) return "";
+    var d = n - prev;
+    return (d>=0?"+":"") + fmtUsd(d) + " vs prev";
+  }
+
+  function showBanner(html){
+    els.banner.innerHTML = '<div class="banner">'+html+'</div>';
+  }
+  function clearBanner(){ els.banner.innerHTML = ""; }
+
+  function api(path, params){
+    var qs = Object.keys(params).map(function(k){return k+"="+encodeURIComponent(params[k])}).join("&");
+    return fetch("api.php?path="+encodeURIComponent(path)+"&"+qs).then(function(r){
+      return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; });
+    });
+  }
+
+  function loadOne(sym){
+    return api("etfs/summary-history", {symbol: sym, country_code: state.region, limit: 60}).then(function(r){
+      if (!r.ok) {
+        if (r.status === 503 && r.body && r.body.demo) {
+          showBanner('demo mode - <code>/sosoflows/.api-key</code> not set on server. configure your <a href="https://sosovalue.com/developer" target="_blank" rel="noopener" style="color:#ffd0b3">SoSoValue API key</a> to populate.');
+          return null;
+        }
+        return null;
+      }
+      clearBanner();
+      var rows = (r.body && (r.body.data || r.body.records || r.body)) || [];
+      if (!Array.isArray(rows)) rows = rows.list || rows.records || [];
+      rows.sort(function(a,b){ return (a.date||"").localeCompare(b.date||""); });
+      return rows;
+    }).catch(function(){ return null; });
+  }
+
+  function loadAll(force){
+    var keys = ASSETS.slice();
+    var promises = keys.map(function(sym){ return loadOne(sym); });
+    Promise.all(promises).then(function(results){
+      keys.forEach(function(sym, i){ if (results[i]) allSeries[sym] = results[i]; });
+      renderSignals();
+      renderActiveAsset();
+      loadBrief();
+    });
+    renderSsi(["ssimag7", "ssilayer1"]);
+  }
+
+  function loadBrief(){
+    fetch("ai.php").then(function(r){return r.json()}).then(paintBrief).catch(function(){
+      els.brief_text.textContent = "Brief unavailable - cached flow data may be empty.";
+      els.brief_meta.textContent = "";
+    });
+  }
+
+  function paintBrief(j){
+    if (!j) return;
+    els.brief_text.textContent = j.summary || "(empty)";
+    els.brief_meta.textContent = j.generated_at ? "as of " + j.generated_at.replace("T", " ").substring(0, 16) + " UTC" : "";
+    els.brief_mode.textContent = j.mode === "groq" ? "[ai-generated]" : "[deterministic, static mode]";
+  }
+
+  function computeStats(rows){
+    var asc = rows.slice();
+    var last = asc[asc.length-1] || {};
+    var prev = asc[asc.length-2] || {};
+    function sumLast(n, key){
+      var s = 0;
+      for (var i = Math.max(0, asc.length-n); i < asc.length; i++) s += Number(asc[i][key]||0);
+      return s;
+    }
+    var sum7 = sumLast(7, "total_net_inflow");
+    var sum30 = sumLast(30, "total_net_inflow");
+    var prev7 = (function(){
+      var s = 0; for (var i = Math.max(0, asc.length-14); i < asc.length-7; i++) s += Number(asc[i].total_net_inflow||0); return s;
+    })();
+    var direction = "flat";
+    var insight = "Two-sided rotation. No clean signal.";
+    var action = "No-trade environment. Wait for either side to break out of the range.";
+    if (sum7 > 0 && sum7 > prev7 * 1.1) {
+      direction = "bull";
+      insight = "Inflows expanding (+" + Math.round((sum7/Math.max(1, Math.abs(prev7))-1)*100) + "% vs prior 7d). Real institutional accumulation.";
+      action = "Watch for follow-through. The cleanest setup is inflows leading price into a confirmation move.";
+    } else if (sum7 < 0 && sum7 < prev7) {
+      direction = "bear";
+      insight = "Outflows accelerating. Net redemptions for multiple sessions, not noise.";
+      action = "Wait for outflow exhaustion. Reversals usually follow a flush, not the first red day.";
+    } else if (sum7 > 0 && sum7 < prev7) {
+      direction = "flat";
+      insight = "Inflows still positive but fading. Demand cooling.";
+      action = "Trim chase entries. Wait for re-acceleration before adding risk.";
+    } else if (sum7 < 0 && sum7 > prev7) {
+      direction = "flat";
+      insight = "Outflows easing. Selling pressure fading without reversal yet.";
+      action = "Watch for the first net-inflow day to flag the turn.";
+    }
+    return {
+      last: Number(last.total_net_inflow||0),
+      prev: Number(prev.total_net_inflow||0),
+      sum7: sum7,
+      sum30: sum30,
+      prev7: prev7,
+      cum: Number(last.cum_net_inflow||0),
+      lastDate: last.date || "",
+      direction: direction,
+      insight: insight,
+      action: action
+    };
+  }
+
+  function renderSignals(){
+    var html = "";
+    ASSETS.forEach(function(sym){
+      var rows = allSeries[sym];
+      if (!rows || !rows.length) {
+        html += '<div class="sig-card"><div class="head"><span class="sym">'+sym+'</span><span class="signal flat">no data</span></div><p class="insight">Cache empty for this asset. Click the asset toggle to populate.</p></div>';
+        return;
+      }
+      var s = computeStats(rows);
+      var sigClass = s.direction === "bull" ? "bull" : (s.direction === "bear" ? "bear" : "flat");
+      var sigText = s.direction === "bull" ? "bullish" : (s.direction === "bear" ? "bearish" : "neutral");
+      var pos = s.sum7 >= 0;
+      html += '<div class="sig-card">'
+            + '<div class="head"><span class="sym">'+sym+'</span><span class="signal '+sigClass+'">'+sigText+'</span></div>'
+            + '<p class="insight"><strong style="color:'+(pos?"#7adc9c":"#ff8a8a")+'">'+(pos?"+":"")+fmtUsd(s.sum7)+'</strong> 7d net flow. '+s.insight+'</p>'
+            + '<p class="action">'+s.action+'</p>'
+            + '</div>';
+    });
+    els.signals.innerHTML = html;
+  }
+
+  function renderActiveAsset(){
+    var rows = allSeries[state.asset];
+    els.chart_title.textContent = state.asset + " daily net inflow (" + state.region + " spot ETFs)";
+    if (!rows || !rows.length) {
+      els.s_last.textContent = els.s_7d.textContent = els.s_30d.textContent = els.s_cum.textContent = "-";
+      els.signal.textContent = "no data"; els.signal.className = "signal flat";
+      els.rows.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#7a7a88;padding:18px">no data</td></tr>';
+      drawChart([]);
+      return;
+    }
+    var s = computeStats(rows);
+    els.s_last.textContent = fmtUsd(s.last);
+    els.s_last.className = "val " + (s.last>=0?"pos":"neg");
+    els.s_last_d.textContent = dlt(s.last, s.prev);
+    els.s_7d.textContent = fmtUsd(s.sum7);
+    els.s_7d.className = "val " + (s.sum7>=0?"pos":"neg");
+    els.s_7d_d.textContent = dlt(s.sum7, s.prev7);
+    els.s_30d.textContent = fmtUsd(s.sum30);
+    els.s_30d.className = "val " + (s.sum30>=0?"pos":"neg");
+    els.s_30d_d.textContent = "30d window";
+    els.s_cum.textContent = fmtUsd(s.cum);
+
+    var sigClass = s.direction === "bull" ? "bull" : (s.direction === "bear" ? "bear" : "flat");
+    var sigText = s.direction === "bull" ? "bullish momentum" : (s.direction === "bear" ? "bearish outflow" : "mixed");
+    els.signal.textContent = sigText;
+    els.signal.className = "signal " + sigClass;
+
+    els.rows_meta.textContent = "as of " + s.lastDate;
+    var html = "";
+    var recent = rows.slice(-14).reverse();
+    for (var i = 0; i < recent.length; i++) {
+      var r = recent[i];
+      var ni = Number(r.total_net_inflow||0);
+      html += '<tr><td>'+(r.date||"")+'</td>'
+            + '<td class="'+(ni>=0?"pos":"neg")+'">'+sign(ni)+fmtUsd(ni)+'</td>'
+            + '<td>'+fmtUsd(Number(r.total_value_traded||0))+'</td>'
+            + '<td>'+fmtUsd(Number(r.total_net_assets||0))+'</td></tr>';
+    }
+    els.rows.innerHTML = html || '<tr><td colspan="4" style="text-align:center;color:#7a7a88;padding:18px">no rows</td></tr>';
+
+    drawChart(rows.slice(-30).map(function(r){ return { d: r.date, v: Number(r.total_net_inflow||0) }; }));
+  }
+
+  function renderSsi(symbols){
+    if (!symbols.length) {
+      els.ssi.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#7a7a88;padding:18px">no indices returned</td></tr>';
+      return;
+    }
+    var nameMap = { ssimag7: "Magnificent 7 (BTC, ETH, SOL, ADA, XRP, BNB, DOGE)", ssilayer1: "Layer 1 basket" };
+    var html = "";
+    for (var i = 0; i < symbols.length; i++) {
+      var s = symbols[i];
+      html += '<tr><td><strong>'+s+'</strong></td><td>'+(nameMap[s]||"-")+'</td><td class="pos">live on Base</td></tr>';
+    }
+    els.ssi.innerHTML = html;
+  }
+
+  function drawChart(data){
+    var c = els.chart, ctx = c.getContext("2d");
+    var dpr = window.devicePixelRatio || 1;
+    var w = c.clientWidth, h = c.clientHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0,0,w,h);
+    if (!data.length) {
+      ctx.fillStyle = "#5a5a68"; ctx.font = "12px 'Geist Mono', monospace";
+      ctx.textAlign = "center"; ctx.fillText("no data", w/2, h/2);
+      return;
+    }
+    var pad = 32;
+    var max = 0, min = 0;
+    for (var i = 0; i < data.length; i++) { if (data[i].v > max) max = data[i].v; if (data[i].v < min) min = data[i].v; }
+    if (max === 0 && min === 0) max = 1;
+    var range = Math.max(Math.abs(max), Math.abs(min));
+    var zeroY = pad + (h - pad*2) * (range / (range*2));
+    var bw = (w - pad*2) / data.length;
+
+    ctx.strokeStyle = "rgba(255,255,255,.05)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad, zeroY); ctx.lineTo(w-pad, zeroY); ctx.stroke();
+
+    for (var i = 0; i < data.length; i++) {
+      var v = data[i].v;
+      var x = pad + i * bw + bw*0.15;
+      var bh = (Math.abs(v) / range) * (h/2 - pad);
+      var y = v >= 0 ? zeroY - bh : zeroY;
+      ctx.fillStyle = v >= 0 ? "rgba(120,220,156,.85)" : "rgba(255,138,138,.85)";
+      ctx.fillRect(x, y, bw*0.7, bh);
+    }
+
+    ctx.fillStyle = "#5a5a68"; ctx.font = "10px 'Geist Mono', monospace";
+    ctx.textAlign = "left"; ctx.fillText(data[0].d, pad, h - 10);
+    ctx.textAlign = "right"; ctx.fillText(data[data.length-1].d, w - pad, h - 10);
+  }
+
+  window.addEventListener("resize", function(){
+    renderActiveAsset();
+  });
+
+  loadAll();
+  // No auto-refresh: ETF data is daily, not intraday. Manual reload only.
+})();
+</script>
+</body>
+</html>

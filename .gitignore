@@ -1,0 +1,5 @@
+.api-key
+.groq-key
+.cache/
+.DS_Store
+*.log
