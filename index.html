@@ -322,6 +322,63 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* cohort history sparkline + risk sentinel */
+  .cohort-spark{
+    display:block;width:100%;height:32px;margin-top:8px;opacity:.85;
+  }
+  .risk-card{
+    border-color:rgba(255,180,80,.25);
+    background:linear-gradient(160deg,rgba(255,140,80,.07),rgba(255,140,80,.01));
+  }
+  .risk-card .risk-eyebrow{
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent-orange);margin:0 0 6px;
+  }
+  .risk-card .risk-title{font-size:16px;font-weight:600;margin:0 0 10px;color:#fff}
+  body.theme-light .risk-card .risk-title{color:#1a1a1f}
+  .risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+  .risk-mini{
+    padding:10px 12px;border-radius:9px;
+    background:rgba(0,0,0,.2);border:1px solid var(--border);text-align:center;
+  }
+  body.theme-light .risk-mini{background:rgba(0,0,0,.04)}
+  .risk-mini .l{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+  .risk-mini .v{font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:#fff}
+  body.theme-light .risk-mini .v{color:#1a1a1f}
+  .risk-rationale{font-size:13px;line-height:1.6;color:#c9c9d4;margin:6px 0 0}
+  body.theme-light .risk-rationale{color:#3a3a45}
+
+  /* speak button */
+  .speak-btn.active{
+    background:rgba(120,80,255,.18);
+    color:#d4c8ff;border-color:rgba(120,80,255,.4);
+  }
+
+  /* print stylesheet - clean layout for the brief */
+  @media print {
+    body{background:#fff !important;color:#000 !important;padding:0 !important;font-size:11pt !important}
+    body::before, body::after{display:none}
+    .ticker, .topbar, .bottom-nav, .mobile-fab, .drawer, .drawer-bg,
+    .modal-bg, .toast, .tour-bg, .live-pill, .hamburger,
+    .asset-row, .ctrls, .nav-link, .ghost-btn, .info-btn, .card-collapse,
+    .news-tabs, .qchip-row, .chart-ctrls, #ticker, .alert-badge{display:none !important}
+    .wrap{max-width:100% !important;padding:0 !important}
+    .card, .cohort-card, .pitch{
+      background:#fff !important;border:1px solid #ddd !important;
+      box-shadow:none !important;page-break-inside:avoid;break-inside:avoid;
+      padding:14px !important;margin-bottom:10px !important;
+    }
+    h1, h2, h3, .cohort-title, .brief-text, .ins-title{color:#000 !important}
+    .meta, .ins-meta, .stat .lbl, .l, .pl, .lbl{color:#666 !important}
+    .stat .val, .ab-row .v, .v{color:#000 !important}
+    .signal, .cohort-pill, .cohort-verdict, .sentiment-pill, .streak{
+      border:1px solid #999 !important;color:#333 !important;background:#f5f5f5 !important;
+    }
+    canvas{max-width:100%;height:auto}
+    .pos{color:#0a7e2c !important}
+    .neg{color:#b71c1c !important}
+  }
+
   /* card collapse */
   .card{position:relative;transition:padding .25s ease}
   .card-collapse{
@@ -1332,6 +1389,7 @@
     <div class="cohort-row" id="cohort_row">
       <span class="cohort-pill"><span class="skel" style="width:40px"></span></span>
     </div>
+    <canvas class="cohort-spark" id="cohort_spark" width="500" height="32"></canvas>
   </div>
   <span class="cohort-verdict flat" id="cohort_verdict">--</span>
 </div>
@@ -1366,6 +1424,8 @@
     <button class="ghost-btn primary" id="brief_open">Read full brief</button>
     <button class="ghost-btn" id="brief_refresh">Regenerate</button>
     <button class="ghost-btn" id="brief_copy">Copy</button>
+    <button class="ghost-btn speak-btn" id="brief_speak" title="Read brief aloud">Speak</button>
+    <button class="ghost-btn" id="brief_print" title="Print clean brief view">Print</button>
     <span class="meta" id="brief_mode" style="margin-left:auto"></span>
   </div>
 </div>
@@ -1446,6 +1506,20 @@
   <div id="etfs_list">
     <div class="empty-state">Click Refresh list to load the underlying ETFs from etfs/list.</div>
   </div>
+</div>
+
+<div class="card risk-card" id="sec_risk">
+  <div class="card-head">
+    <h2>Risk Sentinel <span class="meta">auto-flagged highest-risk asset across the cohort</span></h2>
+  </div>
+  <p class="risk-eyebrow" id="risk_eyebrow">Scanning for risk signals...</p>
+  <p class="risk-title" id="risk_title">--</p>
+  <div class="risk-grid" id="risk_grid">
+    <div class="risk-mini"><div class="l">streak</div><div class="v"><span class="skel"></span></div></div>
+    <div class="risk-mini"><div class="l">last z</div><div class="v"><span class="skel"></span></div></div>
+    <div class="risk-mini"><div class="l">score</div><div class="v"><span class="skel"></span></div></div>
+  </div>
+  <p class="risk-rationale" id="risk_rationale"></p>
 </div>
 
 <div class="card" id="sec_news">
@@ -1619,6 +1693,7 @@
     <button class="drawer-link" data-drawer-jump="signals"><span class="em">🎯</span><span class="lbl">Signal-to-Action</span></button>
     <button class="drawer-link" data-drawer-jump="sizer"><span class="em">💰</span><span class="lbl">Position Sizer</span></button>
     <button class="drawer-link" data-drawer-jump="alerts"><span class="em">🔔</span><span class="lbl">Watchlist Alerts</span></button>
+    <button class="drawer-link" data-drawer-jump="risk"><span class="em">⚠</span><span class="lbl">Risk Sentinel</span></button>
     <button class="drawer-link" data-drawer-jump="news"><span class="em">📰</span><span class="lbl">Market Context</span></button>
     <button class="drawer-link" data-drawer-jump="journal"><span class="em">📝</span><span class="lbl">Trade Journal</span></button>
     <button class="drawer-link" data-drawer-jump="etfs"><span class="em">🏛️</span><span class="lbl">Component ETFs</span></button>
@@ -2362,6 +2437,10 @@
     withData.forEach(function(sym){ if (details[sym].score > topScore) { topScore = details[sym].score; topAsset = sym; } });
     titleEl.textContent = topAsset + " is leading the cohort at " + topScore + "/100. " + bull + " bullish, " + bear + " bearish, " + neutral + " neutral.";
 
+    // Record + draw cohort history sparkline
+    recordCohortScore(avg);
+    drawCohortSparkline();
+
     var html = "";
     html += '<span class="cohort-pill bull">' + bull + ' bull</span>';
     html += '<span class="cohort-pill bear">' + bear + ' bear</span>';
@@ -2518,6 +2597,150 @@
     }
   });
 
+  // ====== Cohort score history (persisted) ======
+  var cohortHistory;
+  try { cohortHistory = JSON.parse(localStorage.getItem("sosoflows.cohortHist") || "[]"); }
+  catch(e){ cohortHistory = []; }
+  function saveCohortHist(){ try { localStorage.setItem("sosoflows.cohortHist", JSON.stringify(cohortHistory.slice(-30))); } catch(e){} }
+
+  function recordCohortScore(score){
+    var now = Date.now();
+    var lastEntry = cohortHistory[cohortHistory.length - 1];
+    // Only record once per hour
+    if (lastEntry && (now - lastEntry.t) < 60 * 60 * 1000) return;
+    cohortHistory.push({ t: now, s: score });
+    cohortHistory = cohortHistory.slice(-30);
+    saveCohortHist();
+  }
+
+  function drawCohortSparkline(){
+    var c = $("cohort_spark"); if (!c) return;
+    var ctx = c.getContext("2d");
+    var dpr = window.devicePixelRatio || 1;
+    var w = c.clientWidth, h = c.clientHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+    if (cohortHistory.length < 2) {
+      ctx.fillStyle = "rgba(255,255,255,.25)"; ctx.font = "10px 'Geist Mono', monospace";
+      ctx.textAlign = "center"; ctx.fillText("history will populate as you reload", w/2, h/2 + 3);
+      return;
+    }
+    var values = cohortHistory.map(function(e){ return e.s; });
+    var min = Math.min.apply(null, values);
+    var max = Math.max.apply(null, values);
+    var range = Math.max(5, max - min);
+    var pad = 3;
+    // Filled area
+    ctx.fillStyle = "rgba(120,80,255,.16)";
+    ctx.beginPath();
+    values.forEach(function(v, i){
+      var x = (i / (values.length - 1)) * w;
+      var y = h - pad - ((v - min) / range) * (h - pad*2);
+      if (i === 0) { ctx.moveTo(x, h); ctx.lineTo(x, y); }
+      else ctx.lineTo(x, y);
+    });
+    ctx.lineTo(w, h);
+    ctx.closePath();
+    ctx.fill();
+    // Line
+    ctx.strokeStyle = "rgba(120,80,255,.85)"; ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    values.forEach(function(v, i){
+      var x = (i / (values.length - 1)) * w;
+      var y = h - pad - ((v - min) / range) * (h - pad*2);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    // Last dot
+    var lx = w, lyVal = values[values.length-1];
+    var ly = h - pad - ((lyVal - min) / range) * (h - pad*2);
+    ctx.fillStyle = "rgba(120,80,255,.95)";
+    ctx.beginPath(); ctx.arc(lx - 1, ly, 2.5, 0, 2*Math.PI); ctx.fill();
+    // Label
+    ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.font = "9px 'Geist Mono', monospace";
+    ctx.textAlign = "left"; ctx.fillText("avg score history", 4, 11);
+  }
+
+  // ====== Risk Sentinel ======
+  function renderRiskSentinel(){
+    var present = ASSETS.filter(function(s){ return allSeries[s] && allSeries[s].length; });
+    if (!present.length) { $("risk_title").textContent = "No data cached yet"; return; }
+    var stats = {};
+    present.forEach(function(s){ stats[s] = computeStats(allSeries[s]); });
+    // Risk score per asset = outflow streak * 10 + abs(z if neg) * 5 + (100 - score) * 0.4
+    var byRisk = present.map(function(s){
+      var st = stats[s];
+      var risk = 0;
+      if (st.streak.dir < 0) risk += st.streak.len * 10;
+      if (st.lastZ < 0) risk += Math.abs(st.lastZ) * 5;
+      risk += (100 - st.score) * 0.4;
+      if (st.direction === "bear") risk += 15;
+      return { sym: s, risk: risk, st: st };
+    }).sort(function(a, b){ return b.risk - a.risk; });
+    var top = byRisk[0];
+    if (!top || top.risk < 5) {
+      $("risk_eyebrow").textContent = "Cohort posture: stable";
+      $("risk_title").textContent = "No standout risk signals";
+      $("risk_grid").innerHTML = '<div class="empty-state" style="grid-column:span 3">All assets are within normal bands. No outflow streaks or sigma anomalies above threshold.</div>';
+      $("risk_rationale").textContent = "";
+      return;
+    }
+    var st = top.st;
+    $("risk_eyebrow").textContent = "Highest risk: " + top.sym + " (risk index " + Math.round(top.risk) + ")";
+    var title = top.sym + " is the cohort's exposure";
+    if (st.streak.dir < 0 && st.streak.len >= 3) title = top.sym + " on a " + st.streak.len + "-day outflow streak";
+    else if (st.lastZ < -2) title = top.sym + " just printed a " + Math.abs(st.lastZ).toFixed(1) + "-sigma outflow day";
+    else if (st.score <= 30) title = top.sym + " composite score sitting at " + st.score + "/100";
+    $("risk_title").textContent = title;
+    var streakTxt = st.streak.dir < 0 ? (st.streak.len + "d out") : st.streak.dir > 0 ? (st.streak.len + "d in") : "-";
+    var streakCol = st.streak.dir < 0 ? "var(--neg)" : st.streak.dir > 0 ? "var(--pos)" : "var(--muted)";
+    $("risk_grid").innerHTML =
+        '<div class="risk-mini"><div class="l">streak</div><div class="v" style="color:'+streakCol+'">'+streakTxt+'</div></div>'
+      + '<div class="risk-mini"><div class="l">last z</div><div class="v" style="color:'+(st.lastZ < -1.5 ? "var(--neg)" : st.lastZ > 1.5 ? "var(--pos)" : "var(--muted)")+'">'+st.lastZ.toFixed(2)+'</div></div>'
+      + '<div class="risk-mini"><div class="l">score</div><div class="v" style="color:'+(st.score >= 65 ? "var(--pos)" : st.score <= 35 ? "var(--neg)" : "var(--muted)")+'">'+st.score+'/100</div></div>';
+
+    var parts = [];
+    if (st.streak.dir < 0 && st.streak.len >= 3) parts.push("Persistent redemptions over " + st.streak.len + " sessions usually precede a flush, not a base.");
+    if (st.lastZ < -2) parts.push("Last day flow is " + Math.abs(st.lastZ).toFixed(1) + " sigma below the 14d mean - either a real catalyst or a single-day distortion.");
+    if (st.score <= 30) parts.push("Multiple sub-factors aligning to caution: low direction, fading momentum, weak consistency.");
+    if (st.direction === "bear") parts.push("7d net flow has crossed below the prior 7d - a confirmed bearish tilt.");
+    if (!parts.length) parts.push("Composite risk index is elevated relative to the rest of the cohort.");
+    $("risk_rationale").textContent = parts.join(" ");
+  }
+
+  // ====== Speak brief aloud (Web Speech API) ======
+  var __speaking = false;
+  $("brief_speak") && $("brief_speak").addEventListener("click", function(){
+    if (!("speechSynthesis" in window)) { toast("Speech not supported in this browser", "err"); return; }
+    if (__speaking) {
+      window.speechSynthesis.cancel();
+      __speaking = false;
+      $("brief_speak").classList.remove("active");
+      $("brief_speak").textContent = "Speak";
+      return;
+    }
+    var j = window.__lastBrief;
+    if (!j || !j.summary) { toast("No brief to read", "err"); return; }
+    var text = j.summary;
+    if (j.headlines) {
+      j.headlines.forEach(function(h){ text += ". " + h.text; });
+    }
+    var u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.0; u.pitch = 1.0;
+    u.onend = function(){ __speaking = false; $("brief_speak").classList.remove("active"); $("brief_speak").textContent = "Speak"; };
+    u.onerror = u.onend;
+    window.speechSynthesis.speak(u);
+    __speaking = true;
+    $("brief_speak").classList.add("active");
+    $("brief_speak").textContent = "Stop";
+  });
+
+  // ====== Print brief ======
+  $("brief_print") && $("brief_print").addEventListener("click", function(){
+    window.print();
+  });
+
   // ====== Live ticker bar ======
   function renderTicker(){
     var track = $("ticker_track"); if (!track) return;
@@ -2563,6 +2786,9 @@
     { name: "Jump to Signal-to-Action", desc: "section", em: "->", run: function(){ jumpTo("signals"); } },
     { name: "Jump to Position Sizer", desc: "section", em: "->", run: function(){ jumpTo("sizer"); } },
     { name: "Jump to Watchlist Alerts", desc: "section", em: "->", run: function(){ jumpTo("alerts"); } },
+    { name: "Jump to Risk Sentinel", desc: "section", em: "->", run: function(){ jumpTo("risk"); } },
+    { name: "Speak brief aloud", desc: "action", em: "+", run: function(){ $("brief_speak") && $("brief_speak").click(); } },
+    { name: "Print clean brief view", desc: "action", em: "+", run: function(){ $("brief_print") && $("brief_print").click(); } },
     { name: "Jump to Trade Journal", desc: "section", em: "->", run: function(){ jumpTo("journal"); } },
     { name: "Jump to Market Context", desc: "section", em: "->", run: function(){ jumpTo("news"); } },
     { name: "Jump to Component ETFs", desc: "section", em: "->", run: function(){ jumpTo("etfs"); } },
@@ -3155,7 +3381,7 @@
     $("brief_refresh") && $("brief_refresh").click();
   });
   // Auto-update bottom nav active state on scroll
-  var sections = ["brief", "signals", "sizer", "alerts", "news", "journal", "etfs", "corr", "perf", "indices"];
+  var sections = ["brief", "signals", "sizer", "alerts", "risk", "news", "journal", "etfs", "corr", "perf", "indices"];
   function updateBNActive(){
     if (window.innerWidth > 760) return;
     var scrollY = window.scrollY + 120;
@@ -3359,6 +3585,7 @@
       renderAlerts();
       renderJournal();
       renderNews();
+      renderRiskSentinel();
       renderIndicesSnapshot();
       renderTicker();
       checkAlerts();
