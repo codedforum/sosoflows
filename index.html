@@ -271,6 +271,78 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* asset color dots */
+  .pill[data-asset]::before{
+    content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
+    margin-right:6px;vertical-align:middle;
+  }
+  .pill[data-asset="BTC"]::before{background:#f7931a;box-shadow:0 0 6px rgba(247,147,26,.5)}
+  .pill[data-asset="ETH"]::before{background:#7c83ff;box-shadow:0 0 6px rgba(124,131,255,.5)}
+  .pill[data-asset="SOL"]::before{background:#9945ff;box-shadow:0 0 6px rgba(153,69,255,.5)}
+  .pill[data-asset="XRP"]::before{background:#23292f;box-shadow:0 0 6px rgba(140,140,140,.4);border:1px solid rgba(255,255,255,.3)}
+
+  /* topbar with svg-ish glyph */
+  .nav-link .glyph{margin-right:4px;opacity:.85;font-size:11px}
+  .nav-link:hover .glyph{opacity:1}
+
+  /* mobile drawer */
+  .drawer-bg{
+    position:fixed;inset:0;z-index:90;
+    background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    opacity:0;pointer-events:none;transition:opacity .25s;
+  }
+  .drawer-bg.open{opacity:1;pointer-events:auto}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;z-index:91;
+    width:88%;max-width:340px;
+    background:linear-gradient(180deg,#13131a 0%,#0a0a10 100%);
+    border-left:1px solid var(--border-strong);
+    box-shadow:-12px 0 40px rgba(0,0,0,.5);
+    transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;padding:22px 22px calc(28px + env(safe-area-inset-bottom));
+  }
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+  .drawer-brand{display:flex;align-items:center;gap:10px}
+  .drawer-brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent-purple),var(--accent-orange));display:grid;place-items:center;font-family:'Geist Mono',monospace;font-weight:700;color:#fff;font-size:11px}
+  .drawer-brand .name{font-size:14px;font-weight:600}
+  .drawer-brand .name small{display:block;color:var(--muted);font-size:10px;font-weight:500;margin-top:2px}
+  .drawer-section{margin-bottom:18px}
+  .drawer-label{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:0 0 8px;padding:0 4px}
+  .drawer-link{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:11px 14px;border-radius:10px;
+    background:transparent;border:0;color:#c9c9d4;
+    font-family:'Geist',-apple-system,sans-serif;font-size:14px;text-align:left;
+    cursor:pointer;transition:all .15s;margin-bottom:2px;
+  }
+  .drawer-link:hover{background:rgba(255,255,255,.04);color:#fff}
+  .drawer-link .em{font-size:18px;flex-shrink:0;width:24px;text-align:center}
+  .drawer-link .lbl{flex:1}
+  .drawer-link .badge{
+    font-family:'Geist Mono',monospace;font-size:10px;
+    padding:2px 7px;border-radius:99px;
+    background:rgba(120,80,255,.15);color:#c0a8ff;
+  }
+  .drawer-footer{
+    padding-top:16px;border-top:1px solid var(--border);
+    font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);text-align:center;line-height:1.7;
+  }
+  .drawer-footer a{color:var(--muted)}
+  .drawer-footer a:hover{color:#c9c9d4}
+
+  /* hamburger button - shown only when there's no room for full nav */
+  .hamburger{
+    background:transparent;border:1px solid var(--border);color:#c9c9d4;
+    width:34px;height:34px;border-radius:8px;cursor:pointer;
+    font-size:16px;display:none;place-items:center;transition:all .15s;
+  }
+  .hamburger:hover{background:rgba(255,255,255,.06);color:#fff;border-color:var(--border-strong)}
+  @media (max-width:980px){
+    .topbar-right .nav-link{display:none}
+    .hamburger{display:grid}
+  }
+
   /* cohort gauge */
   .cohort-card{
     display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;
@@ -787,6 +859,21 @@
     /* About */
     .about{padding:18px 18px;border-radius:14px}
 
+    /* Cohort card stacks on mobile */
+    .cohort-card{
+      grid-template-columns:1fr;gap:14px;padding:16px 16px;text-align:center;
+    }
+    .cohort-card .gauge-ring{margin:0 auto;width:88px;height:88px}
+    .cohort-card .gauge-ring .gnum{font-size:24px}
+    .cohort-body{text-align:center}
+    .cohort-title{font-size:15px;line-height:1.4}
+    .cohort-row{justify-content:center}
+    .cohort-pill{font-size:10.5px;padding:4px 10px}
+    .cohort-verdict{
+      align-self:center;font-size:10px;padding:6px 14px;
+      margin-top:2px;
+    }
+
     /* Hide top-bar nav links, surface in bottom nav */
     .bottom-nav{
       display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;
@@ -849,12 +936,13 @@
   </div>
   <div class="topbar-right">
     <span class="live-pill" id="live_pill" title="Last server-side brief sync"><span class="dot"></span><span id="live_pill_txt">live</span></span>
-    <button class="nav-link" data-modal="how-it-works">Methodology</button>
-    <button class="nav-link" data-modal="api-info">Data</button>
-    <button class="nav-link" data-modal="roadmap">Roadmap</button>
-    <button class="nav-link" data-modal="changelog">Changelog</button>
-    <button class="nav-link" data-modal="settings">Settings</button>
-    <button class="nav-link" id="share_btn" title="Copy a deeplink">Share</button>
+    <button class="nav-link" data-modal="how-it-works"><span class="glyph">🧠</span>Method</button>
+    <button class="nav-link" data-modal="api-info"><span class="glyph">🔌</span>Data</button>
+    <button class="nav-link" data-modal="roadmap"><span class="glyph">🗺️</span>Roadmap</button>
+    <button class="nav-link" data-modal="changelog"><span class="glyph">📋</span>Log</button>
+    <button class="nav-link" data-modal="settings"><span class="glyph">⚙️</span>Settings</button>
+    <button class="nav-link" id="share_btn" title="Copy a deeplink"><span class="glyph">🔗</span>Share</button>
+    <button class="hamburger" id="drawer_open" title="Open menu" aria-label="Open menu">☰</button>
   </div>
 </div>
 
@@ -1098,12 +1186,55 @@
 
 <!-- Mobile bottom nav -->
 <nav class="bottom-nav">
-  <button class="bn-btn on" data-jump="brief"><div class="bn-icon">B</div><div class="bn-label">Brief</div></button>
-  <button class="bn-btn" data-jump="signals"><div class="bn-icon">S</div><div class="bn-label">Signals</div></button>
-  <button class="bn-btn" data-jump="sizer"><div class="bn-icon">$</div><div class="bn-label">Size</div></button>
-  <button class="bn-btn" data-jump="alerts"><div class="bn-icon">!</div><div class="bn-label">Alerts</div></button>
-  <button class="bn-btn" data-modal="settings"><div class="bn-icon">o</div><div class="bn-label">More</div></button>
+  <button class="bn-btn on" data-jump="brief"><div class="bn-icon">📊</div><div class="bn-label">Brief</div></button>
+  <button class="bn-btn" data-jump="signals"><div class="bn-icon">🎯</div><div class="bn-label">Signals</div></button>
+  <button class="bn-btn" data-jump="sizer"><div class="bn-icon">💰</div><div class="bn-label">Size</div></button>
+  <button class="bn-btn" data-jump="alerts"><div class="bn-icon">🔔</div><div class="bn-label">Alerts</div></button>
+  <button class="bn-btn" id="bn_more"><div class="bn-icon">☰</div><div class="bn-label">Menu</div></button>
 </nav>
+
+<!-- Slide-out drawer (mobile + desktop) -->
+<div class="drawer-bg" id="drawer_bg"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-brand">
+      <div class="logo">SF</div>
+      <div class="name">SoSoFlows<small>Wave 1 / Buildathon</small></div>
+    </div>
+    <button class="modal-close" id="drawer_close" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="drawer-section">
+    <p class="drawer-label">Jump to section</p>
+    <button class="drawer-link" data-drawer-jump="brief"><span class="em">📊</span><span class="lbl">Daily Brief</span><span class="badge">AI</span></button>
+    <button class="drawer-link" data-drawer-jump="signals"><span class="em">🎯</span><span class="lbl">Signal-to-Action</span></button>
+    <button class="drawer-link" data-drawer-jump="sizer"><span class="em">💰</span><span class="lbl">Position Sizer</span></button>
+    <button class="drawer-link" data-drawer-jump="alerts"><span class="em">🔔</span><span class="lbl">Watchlist Alerts</span></button>
+    <button class="drawer-link" data-drawer-jump="news"><span class="em">📰</span><span class="lbl">Market Context</span></button>
+    <button class="drawer-link" data-drawer-jump="journal"><span class="em">📝</span><span class="lbl">Trade Journal</span></button>
+  </div>
+
+  <div class="drawer-section">
+    <p class="drawer-label">Reference</p>
+    <button class="drawer-link" data-modal="how-it-works"><span class="em">🧠</span><span class="lbl">Methodology</span></button>
+    <button class="drawer-link" data-modal="api-info"><span class="em">🔌</span><span class="lbl">Data sources</span></button>
+    <button class="drawer-link" data-modal="roadmap"><span class="em">🗺️</span><span class="lbl">Roadmap</span></button>
+    <button class="drawer-link" data-modal="changelog"><span class="em">📋</span><span class="lbl">Changelog</span></button>
+  </div>
+
+  <div class="drawer-section">
+    <p class="drawer-label">Operator</p>
+    <button class="drawer-link" data-modal="settings"><span class="em">⚙️</span><span class="lbl">Settings</span></button>
+    <button class="drawer-link" id="drawer_share"><span class="em">🔗</span><span class="lbl">Copy deeplink</span></button>
+    <button class="drawer-link" id="drawer_csv"><span class="em">📥</span><span class="lbl">Export CSV (current asset)</span></button>
+    <button class="drawer-link" id="drawer_refresh"><span class="em">🔄</span><span class="lbl">Regenerate brief</span></button>
+  </div>
+
+  <div class="drawer-footer">
+    <p>Built by <a href="https://x.com/smartcoded" target="_blank" rel="noopener">@smartcoded</a></p>
+    <p>SoSoValue Buildathon Wave 1</p>
+  </div>
+</aside>
 
 <!-- modals -->
 <div class="modal-bg" id="modal_brief">
@@ -1717,12 +1848,12 @@
     var dash = (avg / 100) * circ;
     ring.setAttribute("stroke-dasharray", dash + " " + circ);
 
-    var verdict = "rotation";
+    var verdict = "↻ rotation";
     var verdictCls = "flat";
-    if (bull > bear && avg >= 60) { verdict = "demand expanding"; verdictCls = "bull"; }
-    else if (bear > bull && avg <= 40) { verdict = "redemptions dominating"; verdictCls = "bear"; }
-    else if (bull > bear) { verdict = "tilt bullish"; verdictCls = "bull"; }
-    else if (bear > bull) { verdict = "tilt bearish"; verdictCls = "bear"; }
+    if (bull > bear && avg >= 60) { verdict = "📈 demand expanding"; verdictCls = "bull"; }
+    else if (bear > bull && avg <= 40) { verdict = "📉 redemptions dominating"; verdictCls = "bear"; }
+    else if (bull > bear) { verdict = "▲ tilt bullish"; verdictCls = "bull"; }
+    else if (bear > bull) { verdict = "▼ tilt bearish"; verdictCls = "bear"; }
     verdictEl.textContent = verdict; verdictEl.className = "cohort-verdict " + verdictCls;
 
     var topAsset = withData[0], topScore = -1;
@@ -1864,6 +1995,40 @@
   // Share + CSV + range/cum state
   var chartRange = 30;
   var chartCum = false;
+
+  // ====== Drawer ======
+  function openDrawer(){ $("drawer").classList.add("open"); $("drawer_bg").classList.add("open"); document.body.style.overflow = "hidden"; }
+  function closeDrawer(){ $("drawer").classList.remove("open"); $("drawer_bg").classList.remove("open"); document.body.style.overflow = ""; }
+  $("drawer_open") && $("drawer_open").addEventListener("click", openDrawer);
+  $("drawer_close") && $("drawer_close").addEventListener("click", closeDrawer);
+  $("drawer_bg") && $("drawer_bg").addEventListener("click", closeDrawer);
+  $("bn_more") && $("bn_more").addEventListener("click", openDrawer);
+
+  document.querySelectorAll(".drawer-link[data-drawer-jump]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var target = $("sec_" + b.dataset.drawerJump);
+      closeDrawer();
+      if (!target) return;
+      setTimeout(function(){
+        var off = target.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: off, behavior: "smooth" });
+      }, 220);
+    });
+  });
+  document.querySelectorAll(".drawer-link[data-modal]").forEach(function(b){
+    b.addEventListener("click", function(){
+      closeDrawer();
+      setTimeout(function(){ openModal(b.dataset.modal); }, 220);
+    });
+  });
+  $("drawer_share") && $("drawer_share").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("share_btn") && $("share_btn").click(); }, 200); });
+  $("drawer_csv") && $("drawer_csv").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("csv_btn") && $("csv_btn").click(); }, 200); });
+  $("drawer_refresh") && $("drawer_refresh").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("brief_refresh") && $("brief_refresh").click(); }, 200); });
+
+  // Esc closes drawer too
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") closeDrawer();
+  });
 
   // Mobile bottom nav: scroll to section + active state
   document.querySelectorAll(".bn-btn[data-jump]").forEach(function(b){
@@ -2330,7 +2495,7 @@
       var dirTxt = maxStreak.s.streak.dir > 0 ? "inflow" : "outflow";
       var iconCls = maxStreak.s.streak.dir > 0 ? "pos" : "neg";
       insights.push({
-        icon: maxStreak.s.streak.len + "d",
+        icon: maxStreak.s.streak.dir > 0 ? "🔥" : "🧊",
         iconCls: iconCls,
         title: maxStreak.sym + " on a " + maxStreak.s.streak.len + "-day " + dirTxt + " streak",
         meta: dirTxt === "inflow" ? "Pattern persistence usually leads continuation" : "Persistent redemptions often precede a flush"
@@ -2342,7 +2507,7 @@
     var bearAssets = assets.filter(function(sym){ return statsByAsset[sym].direction === "bear"; });
     if (bullAssets.length && bearAssets.length) {
       insights.push({
-        icon: "DIV",
+        icon: "↔️",
         iconCls: "info",
         title: "Cross-asset divergence: " + bullAssets.join(", ") + " bullish vs " + bearAssets.join(", ") + " bearish",
         meta: "Rotation between cohorts. Strength concentrating in the bullish set."
@@ -2356,7 +2521,7 @@
         var dir = s.last > s.mean14 ? "above" : "below";
         var iconCls = s.last > s.mean14 ? "pos" : "neg";
         insights.push({
-          icon: "z=" + s.lastZ.toFixed(1),
+          icon: "⚡",
           iconCls: iconCls,
           title: sym + " last day flow is a " + Math.abs(s.lastZ).toFixed(1) + "-sigma " + dir + " 14d mean",
           meta: "Anomaly day. Either real catalyst or single-day distortion."
@@ -2372,7 +2537,7 @@
     });
     if (topScore && topScore.s.score >= 70) {
       insights.push({
-        icon: topScore.s.score,
+        icon: "🏆",
         iconCls: "pos",
         title: topScore.sym + " composite signal score at " + topScore.s.score + " of 100",
         meta: "Top of the cohort on direction + momentum + consistency + magnitude + cumulative"
@@ -2385,7 +2550,7 @@
     });
     if (bottomScore && bottomScore.s.score <= 30) {
       insights.push({
-        icon: bottomScore.s.score,
+        icon: "⚠️",
         iconCls: "neg",
         title: bottomScore.sym + " composite signal score at " + bottomScore.s.score + " of 100",
         meta: "Bottom of the cohort. Multiple sub-factors aligning to caution."
@@ -2397,14 +2562,14 @@
       var s = statsByAsset[sym];
       if (s.cum >= 50e9 && s.cum < 60e9) {
         insights.push({
-          icon: "$50B",
+          icon: "🎯",
           iconCls: "info",
           title: sym + " cumulative inflow above $50B since launch",
           meta: "Long-tail demand intact regardless of week-to-week noise."
         });
       } else if (s.cum >= 10e9 && s.cum < 15e9 && sym !== "BTC") {
         insights.push({
-          icon: "$10B",
+          icon: "💎",
           iconCls: "info",
           title: sym + " cumulative inflow above $10B since launch",
           meta: "Second-tier ETF demand confirmed at multi-billion scale."
@@ -2420,7 +2585,7 @@
     var box = $("insights");
     if (!box) return;
     if (!ins.length) {
-      box.innerHTML = '<div class="ins-row"><div class="ins-icon info">--</div><div class="ins-body"><p class="ins-title">No standout cross-asset patterns right now</p><p class="ins-meta">Switch region or check back after the next session</p></div></div>';
+      box.innerHTML = '<div class="ins-row"><div class="ins-icon info">😴</div><div class="ins-body"><p class="ins-title">No standout cross-asset patterns right now</p><p class="ins-meta">Switch region or check back after the next session</p></div></div>';
       return;
     }
     var html = "";
