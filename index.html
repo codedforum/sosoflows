@@ -110,7 +110,6 @@
 
   .wrap{max-width:1080px;margin:0 auto;padding:24px 16px 80px}
 
-  /* sticky header */
   .topbar{
     position:sticky;top:0;z-index:40;
     margin:-24px -16px 16px;padding:14px 24px;
@@ -145,7 +144,6 @@
     .nav-link.kbd{display:none}
   }
 
-  /* hero */
   .hero{
     padding:30px 30px;
     border:1px solid var(--border);
@@ -194,7 +192,6 @@
     .hero p.lede{font-size:13.5px}
   }
 
-  /* asset toggles */
   .asset-row{
     display:flex;gap:8px;flex-wrap:wrap;align-items:center;
     margin-bottom:18px;padding:14px 18px;
@@ -225,7 +222,6 @@
   .pill.on .kbd{background:rgba(0,0,0,.25);color:#ffd0b3}
   .divider{width:1px;height:18px;background:var(--border);margin:0 6px}
 
-  /* stats */
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
   .stat{
     border:1px solid var(--border);border-radius:14px;
@@ -247,10 +243,8 @@
   .pos{color:var(--pos)}
   .neg{color:var(--neg)}
 
-  /* sparkline */
   .spark{display:block;width:100%;height:28px;margin-top:8px;opacity:.85}
 
-  /* live status pill */
   .live-pill{
     display:inline-flex;align-items:center;gap:6px;
     font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.05em;
@@ -265,7 +259,6 @@
   .live-pill.stale{background:rgba(255,180,80,.10);border-color:rgba(255,180,80,.25);color:#ffd9a8}
   .live-pill.stale .dot{background:#ffc380;box-shadow:0 0 8px #ffc380}
 
-  /* heatmap */
   .heatmap{display:grid;grid-template-columns:repeat(30,1fr);gap:3px;margin:6px 0}
   .hcell{
     aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.04);
@@ -288,7 +281,6 @@
   .heatmap-legend .scale{display:flex;align-items:center;gap:3px}
   .heatmap-legend .scale span{width:14px;height:10px;border-radius:2px}
 
-  /* score ring */
   .score-ring{
     position:relative;width:90px;height:90px;margin:0 auto 12px;
   }
@@ -311,7 +303,6 @@
   }
   .score-bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
 
-  /* streak badge */
   .streak{
     display:inline-flex;align-items:center;gap:5px;
     font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.05em;
@@ -322,7 +313,6 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
-  /* cohort history sparkline + risk sentinel */
   .cohort-spark{
     display:block;width:100%;height:32px;margin-top:8px;opacity:.85;
   }
@@ -348,13 +338,11 @@
   .risk-rationale{font-size:13px;line-height:1.6;color:#c9c9d4;margin:6px 0 0}
   body.theme-light .risk-rationale{color:#3a3a45}
 
-  /* speak button */
   .speak-btn.active{
     background:rgba(120,80,255,.18);
     color:#d4c8ff;border-color:rgba(120,80,255,.4);
   }
 
-  /* print stylesheet - clean layout for the brief */
   @media print {
     body{background:#fff !important;color:#000 !important;padding:0 !important;font-size:11pt !important}
     body::before, body::after{display:none}
@@ -379,7 +367,6 @@
     .neg{color:#b71c1c !important}
   }
 
-  /* card collapse */
   .card{position:relative;transition:padding .25s ease}
   .card-collapse{
     background:transparent;border:1px solid var(--border);
@@ -394,7 +381,6 @@
   .card.collapsed > *:not(.card-head){display:none !important}
   .card.collapsed .card-head{margin-bottom:0}
 
-  /* brief sentiment stripe */
   .brief.brief-bull::before{background:linear-gradient(90deg,transparent,var(--pos),transparent)}
   .brief.brief-bear::before{background:linear-gradient(90deg,transparent,var(--neg),transparent)}
   .brief.brief-flat::before{background:linear-gradient(90deg,transparent,var(--accent-purple),transparent)}
@@ -408,7 +394,6 @@
   .sentiment-pill.bear{background:rgba(255,138,138,.12);color:var(--neg);border:1px solid rgba(255,138,138,.25)}
   .sentiment-pill.flat{background:rgba(120,80,255,.12);color:#c0a8ff;border:1px solid rgba(120,80,255,.25)}
 
-  /* quick-add chips */
   .qchip-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding:0 0 12px;border-bottom:1px dashed var(--border)}
   .qchip{
     font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.04em;
@@ -422,7 +407,6 @@
     color:var(--dim);text-transform:uppercase;align-self:center;margin-right:4px;
   }
 
-  /* A/B compare */
   .ab-pick-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
   .ab-pick{
     flex:1;min-width:140px;
@@ -450,7 +434,6 @@
     .ab-grid{grid-template-columns:1fr}
   }
 
-  /* alert badge */
   .alert-badge{
     display:inline-grid;place-items:center;
     min-width:20px;height:20px;padding:0 6px;border-radius:99px;
@@ -462,7 +445,6 @@
   }
   @keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
-  /* compact density */
   body.density-compact .compare-grid,
   body.density-compact .heatmap,
   body.density-compact #sec_corr,
@@ -473,7 +455,6 @@
   body.density-compact .card{padding:14px 16px;margin-bottom:10px}
   body.density-compact .grid{gap:8px}
 
-  /* live ticker bar */
   .ticker{
     position:sticky;top:0;z-index:35;
     margin:-14px -12px 12px;padding:0;
@@ -500,7 +481,6 @@
   .ticker-item .sep{width:4px;height:4px;border-radius:50%;background:var(--dim)}
   @keyframes tickerSlide{from{transform:translateX(0)} to{transform:translateX(-50%)}}
 
-  /* command palette */
   .cmdk-bg{
     position:fixed;inset:0;z-index:120;
     background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -550,7 +530,6 @@
     font-family:'Geist Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.04em;
   }
 
-  /* correlation matrix */
   .corr-table{
     width:100%;border-collapse:separate;border-spacing:3px;
     font-family:'Geist Mono',monospace;font-size:11px;
@@ -573,7 +552,6 @@
   .corr-legend .scale{display:flex;align-items:center;gap:2px}
   .corr-legend .scale span{width:14px;height:10px;border-radius:2px}
 
-  /* perf summary */
   .perf-row{
     display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;
   }
@@ -588,7 +566,6 @@
     .perf-row{grid-template-columns:repeat(2,1fr)}
   }
 
-  /* onboarding tour - no backdrop-filter so the spotlight stays sharp */
   .tour-bg{
     position:fixed;inset:0;z-index:300;
     background:transparent;
@@ -622,7 +599,6 @@
   .tour-dot.on{background:var(--accent-purple)}
   .tour-btns{display:flex;gap:6px}
 
-  /* indices snapshot */
   .idx-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:6px}
   .idx-card{
     padding:14px 16px;border-radius:11px;
@@ -642,7 +618,6 @@
   .idx-price{font-family:'Geist Mono',monospace;font-size:18px;font-weight:600;color:#fff;letter-spacing:-.01em;margin-bottom:4px}
   .idx-meta{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted)}
 
-  /* news tabs */
   .news-tabs{
     display:flex;gap:4px;padding:4px;
     background:rgba(0,0,0,.25);border-radius:10px;
@@ -656,7 +631,6 @@
   .news-tab:hover{color:#fff}
   .news-tab.on{background:var(--soft-purple);color:#d4c8ff}
 
-  /* asset color dots */
   .pill[data-asset]::before{
     content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
     margin-right:6px;vertical-align:middle;
@@ -666,11 +640,9 @@
   .pill[data-asset="SOL"]::before{background:#9945ff;box-shadow:0 0 6px rgba(153,69,255,.5)}
   .pill[data-asset="XRP"]::before{background:#23292f;box-shadow:0 0 6px rgba(140,140,140,.4);border:1px solid rgba(255,255,255,.3)}
 
-  /* topbar with svg-ish glyph */
   .nav-link .glyph{margin-right:4px;opacity:.85;font-size:11px}
   .nav-link:hover .glyph{opacity:1}
 
-  /* mobile drawer */
   .drawer-bg{
     position:fixed;inset:0;z-index:90;
     background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
@@ -716,7 +688,6 @@
   .drawer-footer a{color:var(--muted)}
   .drawer-footer a:hover{color:#c9c9d4}
 
-  /* hamburger button - shown only when there's no room for full nav */
   .hamburger{
     background:transparent;border:1px solid var(--border);color:#c9c9d4;
     width:34px;height:34px;border-radius:8px;cursor:pointer;
@@ -732,7 +703,6 @@
     #drawer_open{display:grid}
   }
 
-  /* cohort gauge */
   .cohort-card{
     display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;
     padding:18px 22px;border-radius:16px;
@@ -772,7 +742,6 @@
   .cohort-verdict.bear{background:rgba(255,138,138,.15);color:var(--neg)}
   .cohort-verdict.flat{background:rgba(120,80,255,.15);color:#c0a8ff}
 
-  /* news feed */
   .news-list{display:flex;flex-direction:column;gap:8px}
   .news-item{
     padding:12px 14px;border-radius:10px;
@@ -793,7 +762,6 @@
     background:rgba(120,80,255,.12);color:#c0a8ff;flex-shrink:0;
   }
 
-  /* journal */
   .journal-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
   .jrn-row{
     padding:12px 14px;border-radius:10px;
@@ -810,7 +778,6 @@
   .jrn-body .jnote{display:block;margin-top:4px;color:var(--muted);font-style:italic;font-size:11.5px}
   .jrn-actions{display:flex;gap:6px;flex-shrink:0}
 
-  /* sizer */
   .sizer-controls{
     display:flex;gap:14px;align-items:center;flex-wrap:wrap;
     padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.025);
@@ -845,7 +812,6 @@
   .sizer-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-purple),var(--accent-orange));border-radius:99px;transition:width .6s ease}
   .sizer-note{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
 
-  /* alerts */
   .alerts-list{display:flex;flex-direction:column;gap:8px}
   .alert-row{
     display:flex;justify-content:space-between;align-items:center;gap:12px;
@@ -874,7 +840,6 @@
     text-align:center;padding:24px 16px;color:var(--muted);font-size:13px;
   }
 
-  /* settings modal form */
   .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
   .settings-row{display:flex;flex-direction:column;gap:6px}
   .settings-row label{
@@ -887,7 +852,6 @@
   }
   .settings-row input:focus,.settings-row select:focus{outline:none;border-color:var(--accent-purple)}
 
-  /* insights feed */
   .insights{
     display:flex;flex-direction:column;gap:8px;
   }
@@ -910,7 +874,6 @@
   .ins-title{font-size:13px;color:#fff;margin:0 0 3px;font-weight:500;line-height:1.4}
   .ins-meta{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
 
-  /* compare grid */
   .compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .compare-card{
     border:1px solid var(--border);border-radius:10px;padding:12px 14px;
@@ -925,7 +888,6 @@
   }
   .compare-card .cstats .cv{color:#fff;font-weight:600}
 
-  /* chart controls */
   .chart-ctrls{display:flex;gap:6px;align-items:center}
   .toggle-btn{
     font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.06em;font-weight:500;
@@ -936,7 +898,6 @@
   .toggle-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
   .toggle-btn.on{background:var(--soft-purple);border-color:rgba(120,80,255,.4);color:#d4c8ff}
 
-  /* skeleton */
   .skel{
     display:inline-block;height:.9em;width:80px;border-radius:4px;
     background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.12),rgba(255,255,255,.05));
@@ -945,7 +906,6 @@
   }
   @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-  /* card base */
   .card{
     border:1px solid var(--border);border-radius:16px;
     background:linear-gradient(160deg,var(--card-grad-start),var(--card-grad-end));
@@ -975,7 +935,6 @@
   }
   .info-btn:hover{background:rgba(255,255,255,.06);color:var(--text);border-color:var(--border-strong)}
 
-  /* signal pill */
   .signal{
     font-family:'Geist Mono',monospace;font-size:11px;padding:4px 10px;border-radius:99px;
     text-transform:uppercase;letter-spacing:.08em;font-weight:500;
@@ -985,7 +944,6 @@
   .signal.bear{background:rgba(255,138,138,.15);color:var(--neg);box-shadow:0 0 0 1px rgba(255,138,138,.2)}
   .signal.flat{background:rgba(200,200,210,.1);color:#a9a9b8;box-shadow:0 0 0 1px rgba(200,200,210,.1)}
 
-  /* daily brief */
   .brief{
     background:linear-gradient(160deg,rgba(120,80,255,.10),rgba(120,80,255,.02));
     border-color:rgba(120,80,255,.22);
@@ -1011,7 +969,6 @@
   }
   .ghost-btn.primary:hover{background:rgba(120,80,255,.22);color:#fff}
 
-  /* signals grid */
   .signals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   .sig-card{
     border:1px solid var(--border);border-radius:12px;
@@ -1037,7 +994,6 @@
   .sig-card .action{font-size:12px;color:var(--muted);margin:0;line-height:1.55;display:flex;gap:6px}
   .sig-card .action::before{content:"->";color:var(--dim);font-family:'Geist Mono',monospace;flex-shrink:0}
 
-  /* chart */
   #chart{width:100%;height:240px;display:block;cursor:crosshair}
   .chart-tooltip{
     position:absolute;pointer-events:none;
@@ -1055,7 +1011,6 @@
   .chart-tooltip .ttv{font-weight:600;font-size:13px}
   .chart-wrap{position:relative}
 
-  /* table */
   table{width:100%;border-collapse:collapse;font-family:'Geist Mono',monospace;font-size:12.5px}
   th,td{text-align:right;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
   th:first-child,td:first-child{text-align:left}
@@ -1064,7 +1019,6 @@
   tbody tr:hover td{background:rgba(255,255,255,.025)}
   tbody tr.clickable{cursor:pointer}
 
-  /* banner */
   .banner{
     border:1px solid rgba(255,180,80,.3);background:linear-gradient(180deg,rgba(255,180,80,.10),rgba(255,180,80,.02));
     color:#ffd9a8;padding:13px 18px;border-radius:12px;margin-bottom:14px;font-size:13px;
@@ -1072,7 +1026,6 @@
   }
   .banner code{background:rgba(0,0,0,.3);padding:1px 6px;border-radius:4px;font-family:'Geist Mono',monospace;font-size:12px}
 
-  /* about */
   .about{
     border:1px solid var(--border);border-radius:16px;
     background:linear-gradient(160deg,rgba(255,255,255,.018),rgba(255,255,255,.003));
@@ -1088,7 +1041,6 @@
   footer a:hover{color:#c9c9d4}
   footer .row{margin-bottom:4px}
 
-  /* modal */
   .modal-bg{
     position:fixed;inset:0;z-index:100;
     background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
@@ -1132,7 +1084,6 @@
   .modal-stat .l{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
   .modal-stat .v{font-family:'Geist Mono',monospace;font-size:15px;font-weight:600;color:#fff}
 
-  /* toast */
   .toast{
     position:fixed;bottom:24px;left:50%;
     transform:translate(-50%, 0);
@@ -1166,7 +1117,6 @@
   .stagger > *:nth-child(3){animation-delay:.15s}
   .stagger > *:nth-child(4){animation-delay:.20s}
 
-  /* Mobile bottom nav */
   .bottom-nav{display:none}
   .mobile-fab{display:none}
 
@@ -1183,7 +1133,6 @@
     .sizer-grid{grid-template-columns:1fr;gap:8px}
     .heatmap{grid-template-columns:repeat(15,1fr);gap:2px}
 
-    /* Compact mobile topbar */
     .topbar{
       margin:0 0 14px;padding:12px 14px;border-radius:0;
       background:linear-gradient(180deg,rgba(7,7,10,.92),rgba(7,7,10,.78));
@@ -1193,13 +1142,11 @@
     .live-pill{padding:4px 8px;font-size:9.5px}
     .topbar-right .nav-link{display:none}
 
-    /* Hero compact */
     .hero{padding:18px 18px;border-radius:14px;margin-bottom:12px}
     .hero h1{font-size:21px;line-height:1.2}
     .hero p.lede{font-size:13px;line-height:1.55;margin-bottom:12px}
     .hero-eyebrow{font-size:10px}
 
-    /* Asset toggles - horizontal scroll on mobile */
     .asset-row{
       padding:10px 12px;border-radius:12px;margin-bottom:14px;
       overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;
@@ -1210,50 +1157,39 @@
     .pill{padding:8px 12px;font-size:12px;flex-shrink:0;min-height:36px}
     .pill .kbd{display:none}
 
-    /* Cards tighter */
     .card{padding:16px 16px;border-radius:14px;margin-bottom:12px}
     .card-head h2{font-size:11.5px}
     .card-head .meta{font-size:9.5px}
 
-    /* Stats cards mobile */
     .stat{padding:14px 14px;border-radius:12px}
     .stat .lbl{font-size:9px}
     .stat .val{font-size:18px}
     .stat .dlt{font-size:10.5px}
 
-    /* Sizer */
     .sizer-controls{padding:12px;flex-direction:column;align-items:stretch;gap:10px}
     .sizer-input{width:100%}
     .sizer-modes{justify-content:space-between}
     .sizer-mode{flex:1}
 
-    /* Brief */
     .brief-text{font-size:14.5px;line-height:1.6}
 
-    /* Chart */
     #chart{height:200px}
     .chart-ctrls{flex-wrap:wrap;justify-content:flex-end}
 
-    /* Compare card mobile */
     .compare-card{padding:10px 12px}
     .compare-card .csym{font-size:12px}
 
-    /* Sig cards */
     .sig-card{padding:14px 14px}
 
-    /* Alert rows */
     .alert-row{font-size:11.5px;padding:10px 12px;flex-wrap:wrap}
 
-    /* Insights */
     .ins-row{padding:10px 12px}
     .ins-icon{width:26px;height:26px;font-size:10px}
     .ins-title{font-size:12.5px}
     .ins-meta{font-size:10px}
 
-    /* About */
     .about{padding:18px 18px;border-radius:14px}
 
-    /* Cohort card stacks on mobile */
     .cohort-card{
       grid-template-columns:1fr;gap:14px;padding:16px 16px;text-align:center;
     }
@@ -1268,7 +1204,6 @@
       margin-top:2px;
     }
 
-    /* Hide top-bar nav links, surface in bottom nav */
     .bottom-nav{
       display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;
       background:linear-gradient(180deg,rgba(15,15,22,.92),rgba(7,7,10,.96));
@@ -1291,7 +1226,6 @@
     }
     .bn-label{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase}
 
-    /* Mobile FAB for refresh brief */
     .mobile-fab{
       display:flex;position:fixed;right:16px;bottom:90px;z-index:45;
       width:48px;height:48px;border-radius:14px;
@@ -1304,10 +1238,8 @@
     }
     .mobile-fab:active{transform:scale(.9)}
 
-    /* Mobile footer condensed */
     footer{font-size:10.5px;padding:0 8px;line-height:1.6}
 
-    /* Toast for mobile */
     .toast{bottom:96px;font-size:11.5px;padding:10px 16px}
   }
 
@@ -1664,10 +1596,8 @@
 
 </div>
 
-<!-- Mobile FAB - regenerate brief -->
 <button class="mobile-fab" id="fab_refresh" title="Regenerate Daily Brief">^</button>
 
-<!-- Mobile bottom nav -->
 <nav class="bottom-nav">
   <button class="bn-btn on" data-jump="brief"><div class="bn-icon">📊</div><div class="bn-label">Brief</div></button>
   <button class="bn-btn" data-jump="signals"><div class="bn-icon">🎯</div><div class="bn-label">Signals</div></button>
@@ -1676,7 +1606,6 @@
   <button class="bn-btn" id="bn_more"><div class="bn-icon">☰</div><div class="bn-label">Menu</div></button>
 </nav>
 
-<!-- Slide-out drawer (mobile + desktop) -->
 <div class="drawer-bg" id="drawer_bg"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
@@ -1725,7 +1654,6 @@
   </div>
 </aside>
 
-<!-- modals -->
 <div class="modal-bg" id="modal_brief">
   <div class="modal">
     <div class="modal-head">
@@ -2074,7 +2002,6 @@
   </div>
 </div>
 
-<!-- Command palette (Cmd+K / Ctrl+K) -->
 <div class="cmdk-bg" id="cmdk_bg">
   <div class="cmdk">
     <input type="text" class="cmdk-input" id="cmdk_input" placeholder="Search actions, sections, assets..." autocomplete="off">
@@ -2087,7 +2014,6 @@
   </div>
 </div>
 
-<!-- Onboarding tour overlay -->
 <div class="tour-bg" id="tour_bg">
   <div class="tour-spotlight" id="tour_spot" style="top:-1000px;left:-1000px;width:0;height:0"></div>
   <div class="tour-card" id="tour_card" style="top:50%;left:50%;transform:translate(-50%,-50%)">
@@ -2129,13 +2055,11 @@
     toast: $("toast")
   };
 
-  // Topbar scroll shadow
   window.addEventListener("scroll", function(){
     if (window.scrollY > 4) els.topbar.classList.add("scrolled");
     else els.topbar.classList.remove("scrolled");
   });
 
-  // Asset / region buttons
   document.querySelectorAll(".pill[data-asset]").forEach(function(b){
     b.addEventListener("click", function(){
       document.querySelectorAll(".pill[data-asset]").forEach(function(x){x.classList.remove("on")});
@@ -2149,7 +2073,6 @@
     });
   });
 
-  // Keyboard shortcuts
   document.addEventListener("keydown", function(e){
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -2166,7 +2089,6 @@
     }
   });
 
-  // Modal system
   document.querySelectorAll("[data-modal]").forEach(function(el){
     el.addEventListener("click", function(){ openModal(el.dataset.modal); });
   });
@@ -2184,24 +2106,20 @@
     if (m) m.classList.add("open");
   }
 
-  // ====== prefs persistence ======
   var DEFAULT_PREFS = { bullThreshold: 1.1, capital: 10000, defaultAsset: "BTC", defaultRegion: "US", defaultRange: 30, riskMode: "balanced", sound: "on", forecast: "on", density: "comfortable" };
   var prefs;
   try { prefs = Object.assign({}, DEFAULT_PREFS, JSON.parse(localStorage.getItem("sosoflows.prefs") || "{}")); }
   catch (e) { prefs = Object.assign({}, DEFAULT_PREFS); }
   function savePrefs(){ try { localStorage.setItem("sosoflows.prefs", JSON.stringify(prefs)); } catch (e) {} }
 
-  // Apply prefs as initial state if not overridden by URL
   if (!new URLSearchParams(location.search).get("asset")) state.asset = prefs.defaultAsset;
   if (!new URLSearchParams(location.search).get("region")) state.region = prefs.defaultRegion;
 
-  // ====== alerts persistence ======
   var alerts;
   try { alerts = JSON.parse(localStorage.getItem("sosoflows.alerts") || "[]"); }
   catch (e) { alerts = []; }
   function saveAlerts(){ try { localStorage.setItem("sosoflows.alerts", JSON.stringify(alerts)); } catch (e) {} }
 
-  // ====== Settings modal logic ======
   function syncSettingsForm(){
     if (!$("set_bull_thr")) return;
     $("set_bull_thr").value = prefs.bullThreshold;
@@ -2232,7 +2150,7 @@
     if ($("set_density")) prefs.density = $("set_density").value;
     applyDensity();
     savePrefs();
-    // Apply immediately
+
     chartRange = prefs.defaultRange;
     document.querySelectorAll(".toggle-btn[data-range]").forEach(function(x){ x.classList.toggle("on", parseInt(x.dataset.range,10) === chartRange); });
     $("sizer_capital").value = prefs.capital;
@@ -2254,7 +2172,6 @@
     setTimeout(startTour, 250);
   });
 
-  // ====== Position Sizer ======
   function renderSizer(){
     var box = $("sizer"); if (!box) return;
     var capital = parseFloat($("sizer_capital").value) || 0;
@@ -2311,13 +2228,11 @@
     renderSizer();
   });
 
-  // Apply persisted capital + risk mode after load
   setTimeout(function(){
     if ($("sizer_capital")) $("sizer_capital").value = prefs.capital;
     document.querySelectorAll(".sizer-mode").forEach(function(x){ x.classList.toggle("on", x.dataset.risk === prefs.riskMode); });
   }, 0);
 
-  // ====== Watchlist Alerts ======
   function getMetricValue(sym, metric){
     var rows = allSeries[sym];
     if (!rows || !rows.length) return null;
@@ -2349,7 +2264,7 @@
         al.triggered = true;
         al.triggeredAt = Date.now();
         fired = true;
-        // Browser notification
+
         if ("Notification" in window && Notification.permission === "granted") {
           new Notification("SoSoFlows alert: " + al.asset, {
             body: metricLabel(al.metric) + " " + (al.op === "gt" ? ">" : "<") + " " + al.value + " (now " + metricFmt(al.metric, v) + ")",
@@ -2395,7 +2310,6 @@
     });
   }
 
-  // ====== Cohort Health gauge ======
   function renderCohort(){
     var ring = $("cohort_arc"); if (!ring) return;
     var titleEl = $("cohort_title"), scoreEl = $("cohort_score"), rowEl = $("cohort_row"), verdictEl = $("cohort_verdict");
@@ -2437,7 +2351,6 @@
     withData.forEach(function(sym){ if (details[sym].score > topScore) { topScore = details[sym].score; topAsset = sym; } });
     titleEl.textContent = topAsset + " is leading the cohort at " + topScore + "/100. " + bull + " bullish, " + bear + " bearish, " + neutral + " neutral.";
 
-    // Record + draw cohort history sparkline
     recordCohortScore(avg);
     drawCohortSparkline();
 
@@ -2449,7 +2362,6 @@
     rowEl.innerHTML = html;
   }
 
-  // ====== Per-card collapse with persistence ======
   var collapsed;
   try { collapsed = JSON.parse(localStorage.getItem("sosoflows.collapsed") || "{}"); }
   catch(e){ collapsed = {}; }
@@ -2457,7 +2369,7 @@
 
   function attachCollapseButtons(){
     document.querySelectorAll(".card[id]").forEach(function(card){
-      // Skip the brief card and cohort already styled
+
       if (card.querySelector(".card-collapse")) return;
       var head = card.querySelector(".card-head");
       if (!head) return;
@@ -2466,7 +2378,7 @@
       btn.textContent = collapsed[card.id] ? "+" : "-";
       btn.title = "Collapse";
       btn.setAttribute("aria-label", "Toggle card");
-      // Append after existing buttons
+
       head.appendChild(btn);
       btn.addEventListener("click", function(){
         card.classList.toggle("collapsed");
@@ -2475,12 +2387,11 @@
         collapsed[card.id] = isCollapsed;
         saveCollapsed();
       });
-      // Apply persisted state
+
       if (collapsed[card.id]) card.classList.add("collapsed");
     });
   }
 
-  // ====== Brief sentiment indicator ======
   function detectSentiment(text){
     if (!text) return "flat";
     var lower = text.toLowerCase();
@@ -2494,12 +2405,11 @@
     return "flat";
   }
 
-  // ====== Quick-add chips ======
   document.querySelectorAll(".qchip[data-q]").forEach(function(chip){
     chip.addEventListener("click", function(){
       var p = chip.dataset.q.split(",");
       var asset = p[0], metric = p[1], op = p[2], value = parseFloat(p[3]);
-      // Avoid duplicates
+
       var dup = alerts.some(function(a){ return a.asset === asset && a.metric === metric && a.op === op && a.value === value; });
       if (dup) { toast("Alert already exists", "err"); return; }
       alerts.push({ asset: asset, metric: metric, op: op, value: value, triggered: false, createdAt: Date.now() });
@@ -2511,7 +2421,6 @@
     });
   });
 
-  // ====== A/B compare modal ======
   function renderABCompare(){
     var a = $("ab_a").value, b = $("ab_b").value;
     var grid = $("ab_grid");
@@ -2554,7 +2463,6 @@
   $("ab_a") && $("ab_a").addEventListener("change", renderABCompare);
   $("ab_b") && $("ab_b").addEventListener("change", renderABCompare);
 
-  // ====== Hash routing for deep section links ======
   function jumpToHash(hash){
     if (!hash || hash.length < 2) return;
     var key = hash.substring(1).toLowerCase();
@@ -2567,9 +2475,9 @@
     }
   }
   window.addEventListener("hashchange", function(){ jumpToHash(location.hash); });
-  // On load, if hash present, scroll there after data loads
+
   if (location.hash) setTimeout(function(){ jumpToHash(location.hash); }, 600);
-  // Update hash when bottom-nav buttons jump (for browser back/forward)
+
   document.querySelectorAll(".bn-btn[data-jump]").forEach(function(b){
     b.addEventListener("click", function(){ history.replaceState(null, "", "#" + b.dataset.jump); });
   });
@@ -2577,7 +2485,6 @@
     b.addEventListener("click", function(){ history.replaceState(null, "", "#" + b.dataset.drawerJump); });
   });
 
-  // ====== Alert badge in topbar ======
   function updateAlertBadge(){
     var badge = $("alert_badge"); if (!badge) return;
     var triggered = alerts.filter(function(a){ return a.triggered; }).length;
@@ -2597,7 +2504,6 @@
     }
   });
 
-  // ====== Cohort score history (persisted) ======
   var cohortHistory;
   try { cohortHistory = JSON.parse(localStorage.getItem("sosoflows.cohortHist") || "[]"); }
   catch(e){ cohortHistory = []; }
@@ -2606,7 +2512,7 @@
   function recordCohortScore(score){
     var now = Date.now();
     var lastEntry = cohortHistory[cohortHistory.length - 1];
-    // Only record once per hour
+
     if (lastEntry && (now - lastEntry.t) < 60 * 60 * 1000) return;
     cohortHistory.push({ t: now, s: score });
     cohortHistory = cohortHistory.slice(-30);
@@ -2631,7 +2537,7 @@
     var max = Math.max.apply(null, values);
     var range = Math.max(5, max - min);
     var pad = 3;
-    // Filled area
+
     ctx.fillStyle = "rgba(120,80,255,.16)";
     ctx.beginPath();
     values.forEach(function(v, i){
@@ -2643,7 +2549,7 @@
     ctx.lineTo(w, h);
     ctx.closePath();
     ctx.fill();
-    // Line
+
     ctx.strokeStyle = "rgba(120,80,255,.85)"; ctx.lineWidth = 1.6;
     ctx.beginPath();
     values.forEach(function(v, i){
@@ -2652,23 +2558,22 @@
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.stroke();
-    // Last dot
+
     var lx = w, lyVal = values[values.length-1];
     var ly = h - pad - ((lyVal - min) / range) * (h - pad*2);
     ctx.fillStyle = "rgba(120,80,255,.95)";
     ctx.beginPath(); ctx.arc(lx - 1, ly, 2.5, 0, 2*Math.PI); ctx.fill();
-    // Label
+
     ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.font = "9px 'Geist Mono', monospace";
     ctx.textAlign = "left"; ctx.fillText("avg score history", 4, 11);
   }
 
-  // ====== Risk Sentinel ======
   function renderRiskSentinel(){
     var present = ASSETS.filter(function(s){ return allSeries[s] && allSeries[s].length; });
     if (!present.length) { $("risk_title").textContent = "No data cached yet"; return; }
     var stats = {};
     present.forEach(function(s){ stats[s] = computeStats(allSeries[s]); });
-    // Risk score per asset = outflow streak * 10 + abs(z if neg) * 5 + (100 - score) * 0.4
+
     var byRisk = present.map(function(s){
       var st = stats[s];
       var risk = 0;
@@ -2709,7 +2614,6 @@
     $("risk_rationale").textContent = parts.join(" ");
   }
 
-  // ====== Speak brief aloud (Web Speech API) ======
   var __speaking = false;
   $("brief_speak") && $("brief_speak").addEventListener("click", function(){
     if (!("speechSynthesis" in window)) { toast("Speech not supported in this browser", "err"); return; }
@@ -2736,12 +2640,10 @@
     $("brief_speak").textContent = "Stop";
   });
 
-  // ====== Print brief ======
   $("brief_print") && $("brief_print").addEventListener("click", function(){
     window.print();
   });
 
-  // ====== Live ticker bar ======
   function renderTicker(){
     var track = $("ticker_track"); if (!track) return;
     var withData = ASSETS.filter(function(s){ return allSeries[s] && allSeries[s].length; });
@@ -2766,7 +2668,6 @@
       }
     });
 
-    // Render twice in a row for seamless loop
     var renderItem = function(it){
       return '<div class="ticker-item"><span class="lbl">' + it.lbl + '</span><span class="v ' + (it.cls || "") + '">' + it.v + '</span></div><div class="sep"></div>';
     };
@@ -2774,7 +2675,6 @@
     track.innerHTML = html;
   }
 
-  // ====== Command palette ======
   var cmdkActions = [
     { name: "Switch to BTC", desc: "asset toggle", em: "BTC", run: function(){ document.querySelector('.pill[data-asset="BTC"]').click(); } },
     { name: "Switch to ETH", desc: "asset toggle", em: "ETH", run: function(){ document.querySelector('.pill[data-asset="ETH"]').click(); } },
@@ -2879,12 +2779,10 @@
     }
   });
 
-  // ====== Service Worker for offline ======
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").catch(function(){});
   }
 
-  // ====== Correlation matrix ======
   function pearson(a, b){
     var n = Math.min(a.length, b.length);
     if (n < 2) return 0;
@@ -2914,7 +2812,7 @@
       box.innerHTML = '<tr><td style="text-align:center;color:var(--muted);padding:14px" colspan="5">Need at least 2 assets with cached data</td></tr>';
       return;
     }
-    // Get last 30 daily flow series per asset
+
     var series = {};
     present.forEach(function(s){
       series[s] = allSeries[s].slice(-30).map(function(r){ return Number(r.total_net_inflow||0); });
@@ -2942,7 +2840,6 @@
     box.innerHTML = html;
   }
 
-  // ====== Performance summary ======
   function renderPerf(){
     var row = $("perf_row"); if (!row) return;
     var present = ASSETS.filter(function(s){ return allSeries[s] && allSeries[s].length; });
@@ -2970,7 +2867,6 @@
       + '<div class="perf-mini"><div class="pl">worst day '+(worstDate? "(" + worstDate + ")":"")+'</div><div class="pv neg">'+fmtUsd(worst)+'</div></div>';
   }
 
-  // ====== Audio chime for alerts ======
   var __audioCtx = null;
   function chime(){
     if (prefs.sound === "off") return;
@@ -2988,17 +2884,16 @@
       g.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
       o1.start(now); o2.start(now + 0.08);
       o1.stop(now + 0.5); o2.stop(now + 0.5);
-    } catch (e) { /* user gesture not yet given */ }
+    } catch (e) {  }
   }
 
-  // ====== HK overlay state ======
   var hkOverlay = false;
   var hkSeriesCache = {};
   $("hk_toggle") && $("hk_toggle").addEventListener("click", function(){
     hkOverlay = !hkOverlay;
     $("hk_toggle").classList.toggle("on", hkOverlay);
     if (hkOverlay && !hkSeriesCache[state.asset]) {
-      // Fetch HK if not cached
+
       fetch("api.php?path=" + encodeURIComponent("etfs/summary-history") + "&country_code=HK&limit=60&symbol=" + state.asset)
         .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, body: j }; }); })
         .then(function(r){
@@ -3014,7 +2909,6 @@
     }
   });
 
-  // ====== Brief copy ======
   $("brief_copy") && $("brief_copy").addEventListener("click", function(){
     var j = window.__lastBrief;
     if (!j || !j.summary) { toast("No brief to copy", "err"); return; }
@@ -3031,14 +2925,13 @@
     else toast("Clipboard not supported", "err");
   });
 
-  // ====== Indices market snapshot ======
   function renderIndicesSnapshot(){
     var grid = $("idx_grid"); if (!grid) return;
     fetch("api.php?path=" + encodeURIComponent("indices/market-snapshot")).then(function(r){
       return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; });
     }).then(function(r){
       if (!r.ok) {
-        // Demo mode or fail - leave skeletons replaced with no-data state
+
         grid.innerHTML = '<div class="empty-state" style="grid-column:span 2">Click Refresh prices to load index snapshot.</div>';
         return;
       }
@@ -3075,7 +2968,6 @@
     toast("Index snapshot refreshed", "info");
   });
 
-  // ====== News tabs ======
   var newsFeed = "featured";
   document.querySelectorAll(".news-tab").forEach(function(b){
     b.addEventListener("click", function(){
@@ -3087,7 +2979,6 @@
     });
   });
 
-  // ====== ETF list breakdown ======
   function renderEtfs(){
     var box = $("etfs_list"); if (!box) return;
     var setEmpty = function(msg){ box.innerHTML = '<div class="empty-state">' + (msg || "No ETF data cached. Click Refresh list to fetch.") + '</div>'; };
@@ -3117,7 +3008,6 @@
     toast("ETF list refreshed", "info");
   });
 
-  // ====== News feed ======
   function renderNews(){
     var box = $("news"); if (!box) return;
     var setEmpty = function(msg){
@@ -3157,7 +3047,6 @@
     toast("Feed refreshed");
   });
 
-  // ====== Trade Journal ======
   var journal;
   try { journal = JSON.parse(localStorage.getItem("sosoflows.journal") || "[]"); }
   catch (e) { journal = []; }
@@ -3242,11 +3131,9 @@
     checkAlerts();
   });
 
-  // Share + CSV + range/cum state
   var chartRange = 30;
   var chartCum = false;
 
-  // ====== Onboarding tour ======
   var TOUR_STEPS = [
     { target: null, title: "Welcome to SoSoFlows", text: "A 30-second tour of the agentic ETF flow analyst. Tap Next to start, Skip to dismiss." },
     { target: "cohort", title: "Cohort Health gauge", text: "Aggregate score across all 4 spot ETF cohorts. The ring shows average composite signal, the verdict pill summarizes the cohort tilt." },
@@ -3281,7 +3168,7 @@
           spot.style.left = (r.left - 8) + "px";
           spot.style.width = (r.width + 16) + "px";
           spot.style.height = (r.height + 16) + "px";
-          // Card position: below if there's room, else above
+
           var cardTop = r.bottom + 16;
           var maxTop = window.innerHeight - 200;
           if (cardTop > maxTop) cardTop = Math.max(20, r.top - 200);
@@ -3307,14 +3194,12 @@
   });
   $("tour_skip") && $("tour_skip").addEventListener("click", endTour);
 
-  // Auto-start tour on first visit
   setTimeout(function(){
     var seen;
     try { seen = localStorage.getItem("sosoflows.tourSeen"); } catch(e){}
     if (!seen) startTour();
   }, 800);
 
-  // ====== Theme toggle ======
   function applyTheme(t){
     document.body.classList.toggle("theme-light", t === "light");
     var btn = $("theme_toggle");
@@ -3330,7 +3215,6 @@
     toast(next === "light" ? "Light theme on" : "Dark theme on", "info");
   });
 
-  // ====== Drawer ======
   function openDrawer(){ $("drawer").classList.add("open"); $("drawer_bg").classList.add("open"); document.body.style.overflow = "hidden"; }
   function closeDrawer(){ $("drawer").classList.remove("open"); $("drawer_bg").classList.remove("open"); document.body.style.overflow = ""; }
   $("drawer_open") && $("drawer_open").addEventListener("click", openDrawer);
@@ -3360,12 +3244,10 @@
   $("drawer_refresh") && $("drawer_refresh").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("brief_refresh") && $("brief_refresh").click(); }, 200); });
   $("drawer_ab") && $("drawer_ab").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ renderABCompare(); $("modal_ab").classList.add("open"); }, 200); });
 
-  // Esc closes drawer too
   document.addEventListener("keydown", function(e){
     if (e.key === "Escape") closeDrawer();
   });
 
-  // Mobile bottom nav: scroll to section + active state
   document.querySelectorAll(".bn-btn[data-jump]").forEach(function(b){
     b.addEventListener("click", function(){
       var target = $("sec_" + b.dataset.jump);
@@ -3376,11 +3258,11 @@
       window.scrollTo({ top: off, behavior: "smooth" });
     });
   });
-  // Mobile FAB triggers brief refresh
+
   $("fab_refresh") && $("fab_refresh").addEventListener("click", function(){
     $("brief_refresh") && $("brief_refresh").click();
   });
-  // Auto-update bottom nav active state on scroll
+
   var sections = ["brief", "signals", "sizer", "alerts", "risk", "news", "journal", "etfs", "corr", "perf", "indices"];
   function updateBNActive(){
     if (window.innerWidth > 760) return;
@@ -3432,7 +3314,6 @@
     renderActiveAsset();
   });
 
-  // Read URL params for deeplink restore
   (function(){
     var p = new URLSearchParams(location.search);
     var a = (p.get("asset") || "").toUpperCase();
@@ -3505,7 +3386,7 @@
     if (!els.toast) return;
     if (__toastTimer) { clearTimeout(__toastTimer); __toastTimer = null; }
     els.toast.textContent = msg;
-    // Reset to base, then on next frame add show + type so opacity transition replays
+
     els.toast.className = "toast";
     els.toast.offsetHeight; // force reflow
     requestAnimationFrame(function(){
@@ -3517,7 +3398,7 @@
       __toastTimer = null;
     }, 2400);
   }
-  // Tap-to-dismiss on the toast itself
+
   if (els.toast) {
     els.toast.addEventListener("click", function(){
       if (__toastTimer) { clearTimeout(__toastTimer); __toastTimer = null; }
@@ -3525,7 +3406,6 @@
     });
   }
 
-  // Animated number counter
   function animateNum(el, from, to, formatter, duration){
     duration = duration || 700;
     var start = performance.now();
@@ -3591,7 +3471,7 @@
       checkAlerts();
       renderActiveAsset();
       loadBrief();
-      // Defer ETF list - only fetch on user click (to save Demo plan quota)
+
     });
     renderSsi(["ssimag7", "ssilayer1"]);
   }
@@ -3612,7 +3492,7 @@
     els.brief_text.textContent = j.summary || "(empty)";
     els.brief_meta.textContent = j.generated_at ? "as of " + j.generated_at.replace("T", " ").substring(0, 16) + " UTC" : "";
     els.brief_mode.textContent = j.mode === "groq" ? "[ai-rephrased]" : "[deterministic]";
-    // Sentiment stripe + pill
+
     var briefCard = document.querySelector(".card.brief");
     var sent = detectSentiment(j.summary);
     if (briefCard) {
@@ -3628,7 +3508,7 @@
       pill.textContent = sent === "bull" ? "bullish tone" : sent === "bear" ? "bearish tone" : "neutral tone";
       head.appendChild(pill);
     }
-    // live status pill
+
     var pill = $("live_pill"), pillTxt = $("live_pill_txt");
     if (pill && j.generated_at) {
       var ageMin = Math.max(0, Math.floor((Date.now() - new Date(j.generated_at).getTime()) / 60000));
@@ -3637,7 +3517,6 @@
     }
   }
 
-  // Sparkline drawer
   function drawSparkline(canvasId, values, isCumulative){
     var c = document.getElementById(canvasId); if (!c) return;
     var ctx = c.getContext("2d");
@@ -3648,7 +3527,7 @@
     ctx.clearRect(0,0,w,h);
     if (!values.length) return;
     if (isCumulative) {
-      // Line chart for cumulative
+
       var max = Math.max.apply(null, values), min = Math.min.apply(null, values);
       var range = Math.max(1, max - min);
       ctx.strokeStyle = "rgba(120,80,255,.7)"; ctx.lineWidth = 1.5;
@@ -3659,7 +3538,7 @@
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       });
       ctx.stroke();
-      // Fill under
+
       ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
       ctx.fillStyle = "rgba(120,80,255,.12)"; ctx.fill();
     } else {
@@ -3678,7 +3557,6 @@
     }
   }
 
-  // Heatmap drawer
   function drawHeatmap(rows){
     var hm = $("heatmap"); if (!hm) return;
     if (!rows || !rows.length) { hm.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;padding:18px">no data</div>'; return; }
@@ -3704,7 +3582,6 @@
     $("heatmap_title").innerHTML = state.asset + ' 30-day flow heatmap <span class="meta">brighter = larger flow, green = inflow, red = outflow</span>';
   }
 
-  // Compare grid
   function renderCompare(){
     var c = $("compare"); if (!c) return;
     var html = "";
@@ -3747,7 +3624,6 @@
     var sum30 = sumLast(30, "total_net_inflow");
     var prev7 = (function(){ var s = 0; for (var i = Math.max(0, asc.length-14); i < asc.length-7; i++) s += Number(asc[i].total_net_inflow||0); return s; })();
 
-    // Streak: consecutive same-sign days backward from end
     var streakLen = 0, streakDir = 0;
     for (var i = asc.length - 1; i >= 0; i--) {
       var v = Number(asc[i].total_net_inflow || 0);
@@ -3755,7 +3631,6 @@
       if ((streakDir === 1 && v > 0) || (streakDir === -1 && v < 0)) streakLen++; else break;
     }
 
-    // Std deviation over last 14 days for anomaly detection
     var win14 = asc.slice(-14).map(function(r){ return Number(r.total_net_inflow||0); });
     var mean14 = win14.reduce(function(a,b){return a+b}, 0) / Math.max(1, win14.length);
     var variance = win14.reduce(function(a,b){ return a + (b-mean14)*(b-mean14); }, 0) / Math.max(1, win14.length);
@@ -3763,20 +3638,12 @@
     var lastZ = std14 > 0 ? (Number(last.total_net_inflow||0) - mean14) / std14 : 0;
     var anomaly = Math.abs(lastZ) > 2;
 
-    // Consistency: percent of last 14 days that are positive
     var posDays14 = win14.filter(function(v){ return v > 0; }).length;
     var consistency = win14.length ? posDays14 / win14.length : 0;
 
-    // Magnitude vs 30d daily avg
     var dailyAvg30 = sum30 / Math.max(1, Math.min(30, asc.length));
     var magnitudeRatio = dailyAvg30 !== 0 ? Math.abs(Number(last.total_net_inflow||0) / dailyAvg30) : 0;
 
-    // Composite score 0-100
-    // 30% direction (full credit if bull, 0 if bear, 50 if neutral)
-    // 25% momentum (sum7 vs sum30/4 expectation)
-    // 20% consistency (% positive days)
-    // 15% magnitude (last day vs 30d avg, capped)
-    // 10% cumulative trend (positive cum = full credit)
     var direction = "flat";
     var dirScore = 50;
     if (sum7 > 0 && sum7 > prev7 * 1.1) { direction = "bull"; dirScore = 100; }
@@ -3831,7 +3698,6 @@
     };
   }
 
-  // Compute insights from across all assets
   function computeInsights(){
     var insights = [];
     var statsByAsset = {};
@@ -3843,7 +3709,6 @@
     var assets = Object.keys(statsByAsset);
     if (!assets.length) return insights;
 
-    // 1. Strongest streak across assets
     var maxStreak = null;
     assets.forEach(function(sym){
       var s = statsByAsset[sym];
@@ -3862,7 +3727,6 @@
       });
     }
 
-    // 2. Cross-asset divergence
     var bullAssets = assets.filter(function(sym){ return statsByAsset[sym].direction === "bull"; });
     var bearAssets = assets.filter(function(sym){ return statsByAsset[sym].direction === "bear"; });
     if (bullAssets.length && bearAssets.length) {
@@ -3874,7 +3738,6 @@
       });
     }
 
-    // 3. Anomaly detection
     assets.forEach(function(sym){
       var s = statsByAsset[sym];
       if (s.anomaly) {
@@ -3889,7 +3752,6 @@
       }
     });
 
-    // 4. Highest score asset
     var topScore = null;
     assets.forEach(function(sym){
       var s = statsByAsset[sym];
@@ -3917,7 +3779,6 @@
       });
     }
 
-    // 5. Cumulative milestones
     assets.forEach(function(sym){
       var s = statsByAsset[sym];
       if (s.cum >= 50e9 && s.cum < 60e9) {
@@ -3981,7 +3842,7 @@
             + '</div>';
     });
     els.signals.innerHTML = html;
-    // wire click -> asset modal
+
     els.signals.querySelectorAll(".sig-card").forEach(function(c){
       c.addEventListener("click", function(){
         var sym = c.dataset.asset;
@@ -3992,7 +3853,6 @@
         $("modal_asset_title").textContent = sym + " " + (s.direction === "bull" ? "bullish" : s.direction === "bear" ? "bearish" : "neutral") + " on 7d flow";
         var pos = s.sum7 >= 0;
 
-        // Build score ring + breakdown
         var ringColor = s.score >= 65 ? "#7adc9c" : s.score <= 35 ? "#ff8a8a" : "#a9a9b8";
         var circ = 2 * Math.PI * 38;
         var dash = (s.score / 100) * circ;
@@ -4072,7 +3932,6 @@
     }
     drawChart(window_data, hkData);
 
-    // Sparklines for each stat
     var last7 = rows.slice(-7).map(function(r){ return Number(r.total_net_inflow||0); });
     drawSparkline("spark_last", last7, false);
     var last14 = rows.slice(-14).map(function(r){ return Number(r.total_net_inflow||0); });
@@ -4082,7 +3941,6 @@
     var cumLast = rows.slice(-30).map(function(r){ return Number(r.cum_net_inflow||0); });
     drawSparkline("spark_cum", cumLast, true);
 
-    // Heatmap
     drawHeatmap(rows);
   }
 
@@ -4100,7 +3958,6 @@
     els.ssi.innerHTML = html;
   }
 
-  // Chart with hover tooltip
   var chartData = [];
   var chartGeom = null;
   function drawChart(data, hkData){
@@ -4125,11 +3982,9 @@
     var zeroY = pad + (h - pad*2) * (range / (range*2));
     var bw = (w - pad*2) / data.length;
 
-    // grid line
     ctx.strokeStyle = "rgba(255,255,255,.05)"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(pad, zeroY); ctx.lineTo(w-pad, zeroY); ctx.stroke();
 
-    // Compute mean/std of the visible window for anomaly detection
     var dataVals = data.map(function(d){ return d.v; });
     var dMean = dataVals.reduce(function(a,b){return a+b}, 0) / Math.max(1, dataVals.length);
     var dVar = dataVals.reduce(function(a,b){ return a + (b-dMean)*(b-dMean); }, 0) / Math.max(1, dataVals.length);
@@ -4154,7 +4009,7 @@
       }
       ctx.fillStyle = grad;
       ctx.fillRect(x, y, bw*0.7, bh);
-      // Anomaly marker
+
       if (isAnomaly) {
         ctx.strokeStyle = "rgba(255,200,80,.9)"; ctx.lineWidth = 1.5;
         ctx.strokeRect(x - 2, Math.min(y, zeroY) - 2, bw*0.7 + 4, bh + 4);
@@ -4163,7 +4018,6 @@
       }
     }
 
-    // HK overlay - dotted orange line tracking HK flows
     if (hkData && hkData.length) {
       var hkVals = hkData.map(function(d){ return d.v; });
       var hkRange = Math.max.apply(null, hkVals.map(Math.abs));
@@ -4181,13 +4035,12 @@
         }
         ctx.stroke();
         ctx.setLineDash([]);
-        // Legend
+
         ctx.fillStyle = "rgba(255,180,80,.85)"; ctx.font = "10px 'Geist Mono', monospace";
         ctx.textAlign = "left"; ctx.fillText("HK overlay", pad + 4, pad - 4);
       }
     }
 
-    // 7-day forecast band (linear regression on last 14 days, project 7 forward)
     if (prefs.forecast !== "off" && data.length >= 7) {
       var fitN = Math.min(14, data.length);
       var fitVals = data.slice(-fitN).map(function(d){ return d.v; });
@@ -4195,7 +4048,7 @@
       for (var i = 0; i < fitN; i++) { sx += i; sy += fitVals[i]; sxy += i * fitVals[i]; sxx += i * i; }
       var slope = (fitN * sxy - sx * sy) / Math.max(1, (fitN * sxx - sx * sx));
       var intercept = (sy - slope * sx) / fitN;
-      // Compute residual std
+
       var residSum = 0;
       for (var i = 0; i < fitN; i++) { var pred = intercept + slope * i; residSum += (fitVals[i] - pred) * (fitVals[i] - pred); }
       var residStd = Math.sqrt(residSum / Math.max(1, fitN - 2));
@@ -4217,7 +4070,7 @@
       }
       ctx.stroke();
       ctx.setLineDash([]);
-      // Confidence band (1 sigma)
+
       ctx.fillStyle = "rgba(120,80,255,.10)";
       ctx.beginPath();
       var bandStart = lastX;
@@ -4239,12 +4092,11 @@
       }
       ctx.closePath();
       ctx.fill();
-      // Forecast label
+
       ctx.fillStyle = "rgba(120,80,255,.85)"; ctx.font = "10px 'Geist Mono', monospace";
       ctx.textAlign = "right"; ctx.fillText("7d forecast", w - pad, pad + 12);
     }
 
-    // Cumulative line overlay
     if (chartCum && data.some(function(d){ return d.cum; })) {
       var cumVals = data.map(function(d){ return d.cum || 0; });
       var cmin = Math.min.apply(null, cumVals), cmax = Math.max.apply(null, cumVals);
@@ -4257,7 +4109,7 @@
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       });
       ctx.stroke();
-      // Right-axis label
+
       ctx.fillStyle = "rgba(120,80,255,.85)"; ctx.font = "10px 'Geist Mono', monospace";
       ctx.textAlign = "right"; ctx.fillText("cum " + fmtUsd(cmax), w - pad, pad - 6);
     }

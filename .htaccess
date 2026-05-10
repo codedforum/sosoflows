@@ -1,4 +1,4 @@
-# /sosoflows/.htaccess - SoSoFlows for SoSoValue Buildathon
+
 DirectoryIndex index.html
 
 <IfModule mod_rewrite.c>
@@ -11,11 +11,10 @@ DirectoryIndex index.html
 </IfModule>
 
 <IfModule mod_headers.c>
-  # Buildathon demo is now public - allow indexing of the landing page
+
   Header set Cache-Control "public, max-age=300"
 </IfModule>
 
-# Block direct access to api keys + cache directory
 <Files ".api-key">
   Order allow,deny
   Deny from all

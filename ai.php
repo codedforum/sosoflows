@@ -1,9 +1,4 @@
 <?php
-// /sosoflows/ai.php - Daily Brief + signal explanation generator.
-// Two modes:
-//   1. Groq mode (if .groq-key present) - calls Groq llama for plain-English summary
-//   2. Static mode - reads cached ETF data + emits a deterministic summary
-// Output is cached server-side for 6h regardless of mode.
 
 header("Content-Type: application/json; charset=utf-8");
 header("X-Robots-Tag: noindex, nofollow");
@@ -14,7 +9,6 @@ if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755);
 $briefFile = $cacheDir . "/_daily_brief.json";
 $BRIEF_TTL = 6 * 3600;
 
-// Force regenerate if ?refresh=1 (rate-limited per IP - 1/hour)
 $force = isset($_GET["refresh"]) && $_GET["refresh"] === "1";
 $rateFile = $cacheDir . "/_refresh_" . md5($_SERVER["REMOTE_ADDR"] ?? "0") . ".lock";
 if ($force) {
@@ -31,7 +25,6 @@ if (!$force && file_exists($briefFile) && (time() - filemtime($briefFile)) < $BR
     exit;
 }
 
-// Pull all cached ETF series we have
 $assets = [
     ["BTC", "US"],
     ["ETH", "US"],
@@ -55,7 +48,6 @@ foreach ($assets as $a) {
     $series[$sym] = $rows;
 }
 
-// Compute summary stats per asset
 $stats = [];
 foreach ($series as $sym => $rows) {
     if (count($rows) < 2) continue;
@@ -84,7 +76,6 @@ foreach ($series as $sym => $rows) {
     ];
 }
 
-// Generate the brief
 $keyfile = __DIR__ . "/.groq-key";
 $useGroq = file_exists($keyfile) && trim(file_get_contents($keyfile)) !== "";
 
@@ -97,7 +88,6 @@ $brief = [
     "actions" => []
 ];
 
-// Build headlines + actions deterministically (fallback for static mode, scaffolding for Groq)
 foreach ($stats as $sym => $s) {
     $abs7 = abs($s["sum_7d"]);
     $sign = $s["sum_7d"] >= 0 ? "+" : "-";
@@ -167,7 +157,7 @@ if ($useGroq && count($stats) > 0) {
 }
 
 if ($brief["summary"] === "") {
-    // Static fallback: synthesize a summary from stats
+
     if (count($stats) === 0) {
         $brief["summary"] = "No flow data cached yet. Run the dashboard or trigger a refresh to populate the daily brief.";
     } else {

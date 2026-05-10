@@ -1,6 +1,4 @@
 <?php
-// /sosoflows/api.php - cached proxy to openapi.sosovalue.com
-// Demo plan = 10 calls/month total. Cache aggressively (6h TTL) so reloads serve from disk.
 
 header("Content-Type: application/json; charset=utf-8");
 header("X-Robots-Tag: noindex, nofollow");
@@ -41,7 +39,6 @@ $cacheKey = preg_replace('/[^a-z0-9]+/i', '_', $path . "_" . $query);
 $cacheFile = $cacheDir . "/" . $cacheKey . ".json";
 $TTL = 7 * 24 * 3600; // 7 days - Demo plan is 10 calls/month, prefer stale data over quota burn
 
-// Serve from cache when fresh
 if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $TTL) {
     header("X-Cache: HIT");
     header("X-Cache-Age: " . (time() - filemtime($cacheFile)));
@@ -51,7 +48,7 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $TTL) {
 }
 
 if ($apiKey === "") {
-    // Stale-while-no-key: serve stale cache if we have any, else demo error
+
     if (file_exists($cacheFile)) {
         header("X-Cache: STALE-NO-KEY");
         echo file_get_contents($cacheFile);
@@ -84,7 +81,7 @@ $err = curl_error($ch);
 curl_close($ch);
 
 if ($body === false || $code >= 500 || $code === 0) {
-    // Upstream failure: serve stale cache if available
+
     if (file_exists($cacheFile)) {
         header("X-Cache: STALE-UPSTREAM-FAIL");
         echo file_get_contents($cacheFile);
@@ -95,14 +92,12 @@ if ($body === false || $code >= 500 || $code === 0) {
     exit;
 }
 
-// Rate-limited (429) or quota exhausted: serve stale if we have it
 if ($code === 429 && file_exists($cacheFile)) {
     header("X-Cache: STALE-429");
     echo file_get_contents($cacheFile);
     exit;
 }
 
-// Only persist 2xx to disk
 if ($code >= 200 && $code < 300) {
     @file_put_contents($cacheFile, $body);
     header("X-Cache: MISS-WROTE");

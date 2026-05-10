@@ -1,4 +1,4 @@
-// SoSoFlows service worker - offline cache for shell, network-first for API
+
 var CACHE_VERSION = "sosoflows-v1";
 var SHELL_ASSETS = [
   "./",
@@ -24,7 +24,7 @@ self.addEventListener("activate", function(e){
 
 self.addEventListener("fetch", function(e){
   var url = new URL(e.request.url);
-  // API calls + AI brief: network-first with cache fallback (server already caches 7d/6h)
+
   if (url.pathname.indexOf("/api.php") >= 0 || url.pathname.indexOf("/ai.php") >= 0) {
     e.respondWith(
       fetch(e.request).then(function(resp){
@@ -37,7 +37,7 @@ self.addEventListener("fetch", function(e){
     );
     return;
   }
-  // Shell + fonts: cache-first
+
   if (e.request.method === "GET") {
     e.respondWith(
       caches.match(e.request).then(function(cached){
