@@ -322,6 +322,83 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* live ticker bar */
+  .ticker{
+    position:sticky;top:0;z-index:35;
+    margin:-14px -12px 12px;padding:0;
+    background:linear-gradient(180deg,rgba(7,7,10,.96),rgba(7,7,10,.85));
+    border-bottom:1px solid var(--border);
+    overflow:hidden;height:34px;
+    display:flex;align-items:center;
+  }
+  body.theme-light .ticker{background:linear-gradient(180deg,rgba(245,245,247,.96),rgba(245,245,247,.85))}
+  .ticker-track{
+    display:flex;gap:32px;animation:tickerSlide 50s linear infinite;
+    padding-left:24px;will-change:transform;flex-shrink:0;
+  }
+  .ticker:hover .ticker-track{animation-play-state:paused}
+  .ticker-item{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Geist Mono',monospace;font-size:11.5px;font-weight:500;letter-spacing:.04em;
+    white-space:nowrap;color:#c9c9d4;flex-shrink:0;
+  }
+  .ticker-item .lbl{color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:.08em}
+  .ticker-item .v{color:#fff;font-weight:600}
+  .ticker-item .v.pos{color:var(--pos)}
+  .ticker-item .v.neg{color:var(--neg)}
+  .ticker-item .sep{width:4px;height:4px;border-radius:50%;background:var(--dim)}
+  @keyframes tickerSlide{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+
+  /* command palette */
+  .cmdk-bg{
+    position:fixed;inset:0;z-index:120;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    opacity:0;pointer-events:none;transition:opacity .18s;
+    display:grid;place-items:start center;padding:14vh 16px 16px;
+  }
+  .cmdk-bg.open{opacity:1;pointer-events:auto}
+  .cmdk{
+    width:100%;max-width:540px;
+    background:linear-gradient(160deg,#13131a,#0c0c12);
+    border:1px solid var(--border-strong);border-radius:14px;
+    box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04) inset;
+    overflow:hidden;
+    transform:translateY(-12px) scale(.97);transition:transform .22s cubic-bezier(.4,0,.2,1);
+  }
+  .cmdk-bg.open .cmdk{transform:translateY(0) scale(1)}
+  body.theme-light .cmdk{background:linear-gradient(160deg,#ffffff,#f5f5f7)}
+  .cmdk-input{
+    width:100%;padding:16px 20px;background:transparent;border:0;
+    border-bottom:1px solid var(--border);color:#fff;
+    font-family:'Geist',sans-serif;font-size:15px;outline:none;
+  }
+  body.theme-light .cmdk-input{color:#1a1a1f}
+  .cmdk-input::placeholder{color:var(--dim)}
+  .cmdk-list{max-height:54vh;overflow-y:auto;padding:8px}
+  .cmdk-row{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 14px;border-radius:8px;cursor:pointer;
+    transition:background .12s;
+  }
+  .cmdk-row:hover,.cmdk-row.on{background:rgba(120,80,255,.12)}
+  .cmdk-em{font-size:18px;width:24px;text-align:center;flex-shrink:0}
+  .cmdk-body{flex:1}
+  .cmdk-name{font-size:13.5px;color:#fff;font-weight:500;line-height:1.4}
+  body.theme-light .cmdk-name{color:#1a1a1f}
+  .cmdk-desc{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:2px}
+  .cmdk-kbd{
+    font-family:'Geist Mono',monospace;font-size:10px;
+    padding:3px 7px;border-radius:6px;
+    background:rgba(255,255,255,.06);border:1px solid var(--border);
+    color:var(--muted);flex-shrink:0;
+  }
+  .cmdk-empty{padding:30px 14px;text-align:center;color:var(--muted);font-size:13px}
+  .cmdk-foot{
+    padding:10px 16px;border-top:1px solid var(--border);
+    display:flex;justify-content:space-between;
+    font-family:'Geist Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.04em;
+  }
+
   /* correlation matrix */
   .corr-table{
     width:100%;border-collapse:separate;border-spacing:3px;
@@ -498,6 +575,7 @@
   body.theme-light .hamburger{color:#1a1a1f}
   body.theme-light .hamburger:hover{background:rgba(0,0,0,.06)}
   #drawer_open{display:none}
+  #cmdk_open{font-size:11px;width:auto;padding:0 10px;letter-spacing:.05em}
   @media (max-width:980px){
     .topbar-right .nav-link{display:none}
     #drawer_open{display:grid}
@@ -1094,6 +1172,13 @@
 </head>
 <body>
 
+<div class="ticker" id="ticker">
+  <div class="ticker-track" id="ticker_track">
+    <div class="ticker-item"><span class="lbl">cohort</span><span class="v" id="tk_cohort">--</span></div>
+    <div class="sep"></div>
+  </div>
+</div>
+
 <div class="topbar" id="topbar">
   <div style="display:flex;align-items:center;gap:10px">
     <div class="logo">SF</div>
@@ -1107,6 +1192,7 @@
     <button class="nav-link" data-modal="changelog"><span class="glyph">📋</span>Log</button>
     <button class="nav-link" data-modal="settings"><span class="glyph">⚙️</span>Settings</button>
     <button class="nav-link" id="share_btn" title="Copy a deeplink"><span class="glyph">🔗</span>Share</button>
+    <button class="hamburger" id="cmdk_open" title="Command palette (Cmd+K)" aria-label="Open command palette">⌘K</button>
     <button class="hamburger" id="theme_toggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
     <button class="hamburger" id="drawer_open" title="Open menu" aria-label="Open menu">☰</button>
   </div>
@@ -1612,6 +1698,18 @@
           <option value="conservative">Conservative</option><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option>
         </select>
       </div>
+      <div class="settings-row">
+        <label>Alert sound chime</label>
+        <select id="set_sound">
+          <option value="on">On</option><option value="off">Off</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Forecast band on chart</label>
+        <select id="set_forecast">
+          <option value="on">On</option><option value="off">Off</option>
+        </select>
+      </div>
     </div>
     <div style="display:flex;gap:8px;justify-content:space-between;margin-top:6px;flex-wrap:wrap">
       <button class="ghost-btn" id="set_replay">Replay tour</button>
@@ -1772,6 +1870,19 @@
   </div>
 </div>
 
+<!-- Command palette (Cmd+K / Ctrl+K) -->
+<div class="cmdk-bg" id="cmdk_bg">
+  <div class="cmdk">
+    <input type="text" class="cmdk-input" id="cmdk_input" placeholder="Search actions, sections, assets..." autocomplete="off">
+    <div class="cmdk-list" id="cmdk_list"></div>
+    <div class="cmdk-foot">
+      <span>↑ ↓ navigate</span>
+      <span>↵ select</span>
+      <span>esc close</span>
+    </div>
+  </div>
+</div>
+
 <!-- Onboarding tour overlay -->
 <div class="tour-bg" id="tour_bg">
   <div class="tour-spotlight" id="tour_spot" style="top:-1000px;left:-1000px;width:0;height:0"></div>
@@ -1870,7 +1981,7 @@
   }
 
   // ====== prefs persistence ======
-  var DEFAULT_PREFS = { bullThreshold: 1.1, capital: 10000, defaultAsset: "BTC", defaultRegion: "US", defaultRange: 30, riskMode: "balanced" };
+  var DEFAULT_PREFS = { bullThreshold: 1.1, capital: 10000, defaultAsset: "BTC", defaultRegion: "US", defaultRange: 30, riskMode: "balanced", sound: "on", forecast: "on" };
   var prefs;
   try { prefs = Object.assign({}, DEFAULT_PREFS, JSON.parse(localStorage.getItem("sosoflows.prefs") || "{}")); }
   catch (e) { prefs = Object.assign({}, DEFAULT_PREFS); }
@@ -1895,6 +2006,8 @@
     $("set_region").value = prefs.defaultRegion;
     $("set_range").value = prefs.defaultRange;
     $("set_risk").value = prefs.riskMode;
+    if ($("set_sound")) $("set_sound").value = prefs.sound || "on";
+    if ($("set_forecast")) $("set_forecast").value = prefs.forecast || "on";
   }
   syncSettingsForm();
 
@@ -1905,6 +2018,8 @@
     prefs.defaultRegion = $("set_region").value;
     prefs.defaultRange = parseInt($("set_range").value, 10) || 30;
     prefs.riskMode = $("set_risk").value;
+    if ($("set_sound")) prefs.sound = $("set_sound").value;
+    if ($("set_forecast")) prefs.forecast = $("set_forecast").value;
     savePrefs();
     // Apply immediately
     chartRange = prefs.defaultRange;
@@ -2118,6 +2233,145 @@
     rowEl.innerHTML = html;
   }
 
+  // ====== Live ticker bar ======
+  function renderTicker(){
+    var track = $("ticker_track"); if (!track) return;
+    var withData = ASSETS.filter(function(s){ return allSeries[s] && allSeries[s].length; });
+    if (!withData.length) return;
+    var stats = {};
+    withData.forEach(function(s){ stats[s] = computeStats(allSeries[s]); });
+    var avg = withData.length ? Math.round(withData.reduce(function(a,s){ return a + stats[s].score; }, 0) / withData.length) : 0;
+    var totalCum = withData.reduce(function(a,s){ return a + stats[s].cum; }, 0);
+    var bull = withData.filter(function(s){ return stats[s].direction === "bull"; }).length;
+    var bear = withData.filter(function(s){ return stats[s].direction === "bear"; }).length;
+
+    var items = [];
+    items.push({ lbl: "cohort", v: avg + "/100", cls: avg >= 65 ? "pos" : avg <= 35 ? "neg" : "" });
+    items.push({ lbl: "bull/bear", v: bull + " / " + bear, cls: bull > bear ? "pos" : bear > bull ? "neg" : "" });
+    items.push({ lbl: "total cum", v: fmtUsd(totalCum), cls: totalCum >= 0 ? "pos" : "neg" });
+    withData.forEach(function(s){
+      var st = stats[s];
+      items.push({ lbl: s + " 7d", v: (st.sum7 >= 0 ? "+" : "") + fmtUsd(st.sum7), cls: st.sum7 >= 0 ? "pos" : "neg" });
+      items.push({ lbl: s + " score", v: st.score, cls: st.score >= 65 ? "pos" : st.score <= 35 ? "neg" : "" });
+      if (st.streak.len >= 2) {
+        items.push({ lbl: s + " streak", v: st.streak.len + "d " + (st.streak.dir > 0 ? "in" : "out"), cls: st.streak.dir > 0 ? "pos" : "neg" });
+      }
+    });
+
+    // Render twice in a row for seamless loop
+    var renderItem = function(it){
+      return '<div class="ticker-item"><span class="lbl">' + it.lbl + '</span><span class="v ' + (it.cls || "") + '">' + it.v + '</span></div><div class="sep"></div>';
+    };
+    var html = items.map(renderItem).join("") + items.map(renderItem).join("");
+    track.innerHTML = html;
+  }
+
+  // ====== Command palette ======
+  var cmdkActions = [
+    { name: "Switch to BTC", desc: "asset toggle", em: "🟠", run: function(){ document.querySelector('.pill[data-asset="BTC"]').click(); } },
+    { name: "Switch to ETH", desc: "asset toggle", em: "🟣", run: function(){ document.querySelector('.pill[data-asset="ETH"]').click(); } },
+    { name: "Switch to SOL", desc: "asset toggle", em: "🟢", run: function(){ document.querySelector('.pill[data-asset="SOL"]').click(); } },
+    { name: "Switch to XRP", desc: "asset toggle", em: "⚪", run: function(){ document.querySelector('.pill[data-asset="XRP"]').click(); } },
+    { name: "Switch to US region", desc: "region toggle", em: "🇺🇸", run: function(){ document.querySelector('.pill[data-region="US"]').click(); } },
+    { name: "Switch to HK region", desc: "region toggle", em: "🇭🇰", run: function(){ document.querySelector('.pill[data-region="HK"]').click(); } },
+    { name: "Jump to Daily Brief", desc: "section", em: "📊", run: function(){ jumpTo("brief"); } },
+    { name: "Jump to Signal-to-Action", desc: "section", em: "🎯", run: function(){ jumpTo("signals"); } },
+    { name: "Jump to Position Sizer", desc: "section", em: "💰", run: function(){ jumpTo("sizer"); } },
+    { name: "Jump to Watchlist Alerts", desc: "section", em: "🔔", run: function(){ jumpTo("alerts"); } },
+    { name: "Jump to Trade Journal", desc: "section", em: "📝", run: function(){ jumpTo("journal"); } },
+    { name: "Jump to Market Context", desc: "section", em: "📰", run: function(){ jumpTo("news"); } },
+    { name: "Jump to Component ETFs", desc: "section", em: "🏛️", run: function(){ jumpTo("etfs"); } },
+    { name: "Jump to Correlation Matrix", desc: "section", em: "🔗", run: function(){ jumpTo("corr"); } },
+    { name: "Jump to Indices snapshot", desc: "section", em: "📈", run: function(){ jumpTo("indices"); } },
+    { name: "Regenerate Daily Brief", desc: "action", em: "🔄", run: function(){ $("brief_refresh").click(); } },
+    { name: "Copy Daily Brief", desc: "action", em: "📋", run: function(){ $("brief_copy").click(); } },
+    { name: "Snapshot to Journal", desc: "action", em: "📝", run: function(){ $("jrn_snap").click(); } },
+    { name: "Add Watchlist Alert", desc: "action", em: "🔔", run: function(){ $("alert_add").click(); } },
+    { name: "Export current asset CSV", desc: "action", em: "📥", run: function(){ $("csv_btn").click(); } },
+    { name: "Copy deeplink", desc: "action", em: "🔗", run: function(){ $("share_btn").click(); } },
+    { name: "Toggle theme", desc: "action", em: "🌗", run: function(){ $("theme_toggle").click(); } },
+    { name: "Open Methodology", desc: "modal", em: "🧠", run: function(){ openModal("how-it-works"); } },
+    { name: "Open Data Sources", desc: "modal", em: "🔌", run: function(){ openModal("api-info"); } },
+    { name: "Open Roadmap", desc: "modal", em: "🗺️", run: function(){ openModal("roadmap"); } },
+    { name: "Open Settings", desc: "modal", em: "⚙️", run: function(){ openModal("settings"); } },
+    { name: "Replay onboarding tour", desc: "tour", em: "🚀", run: function(){ startTour(); } }
+  ];
+  function jumpTo(sec){
+    var target = $("sec_" + sec) || $(sec);
+    if (!target) return;
+    var off = target.getBoundingClientRect().top + window.scrollY - 70;
+    window.scrollTo({ top: off, behavior: "smooth" });
+  }
+  var cmdkIdx = 0;
+  function paintCmdk(filter){
+    var f = (filter || "").toLowerCase().trim();
+    var matches = cmdkActions.filter(function(a){
+      if (!f) return true;
+      return (a.name + " " + (a.desc||"")).toLowerCase().indexOf(f) >= 0;
+    });
+    var box = $("cmdk_list");
+    if (!matches.length) { box.innerHTML = '<div class="cmdk-empty">No actions match "' + (f||"") + '"</div>'; return; }
+    if (cmdkIdx >= matches.length) cmdkIdx = 0;
+    var html = "";
+    matches.forEach(function(a, i){
+      html += '<div class="cmdk-row ' + (i === cmdkIdx ? "on" : "") + '" data-idx="' + i + '">'
+            + '<div class="cmdk-em">' + a.em + '</div>'
+            + '<div class="cmdk-body"><div class="cmdk-name">' + a.name + '</div><div class="cmdk-desc">' + (a.desc||"") + '</div></div>'
+            + '</div>';
+    });
+    box.innerHTML = html;
+    box.querySelectorAll(".cmdk-row").forEach(function(row){
+      row.addEventListener("mouseenter", function(){
+        cmdkIdx = parseInt(row.dataset.idx, 10);
+        box.querySelectorAll(".cmdk-row").forEach(function(x){x.classList.remove("on")});
+        row.classList.add("on");
+      });
+      row.addEventListener("click", function(){
+        var match = matches[parseInt(row.dataset.idx, 10)];
+        if (match) { closeCmdk(); setTimeout(match.run, 120); }
+      });
+    });
+    box.__matches = matches;
+  }
+  function openCmdk(){
+    $("cmdk_bg").classList.add("open");
+    cmdkIdx = 0;
+    $("cmdk_input").value = "";
+    paintCmdk("");
+    setTimeout(function(){ $("cmdk_input").focus(); }, 80);
+  }
+  function closeCmdk(){ $("cmdk_bg").classList.remove("open"); }
+  $("cmdk_open") && $("cmdk_open").addEventListener("click", openCmdk);
+  $("cmdk_bg") && $("cmdk_bg").addEventListener("click", function(e){ if (e.target === $("cmdk_bg")) closeCmdk(); });
+  $("cmdk_input") && $("cmdk_input").addEventListener("input", function(){
+    cmdkIdx = 0;
+    paintCmdk($("cmdk_input").value);
+  });
+  $("cmdk_input") && $("cmdk_input").addEventListener("keydown", function(e){
+    var box = $("cmdk_list");
+    var matches = box.__matches || [];
+    if (e.key === "ArrowDown") { e.preventDefault(); cmdkIdx = Math.min(matches.length - 1, cmdkIdx + 1); paintCmdk($("cmdk_input").value); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); cmdkIdx = Math.max(0, cmdkIdx - 1); paintCmdk($("cmdk_input").value); }
+    else if (e.key === "Enter") {
+      e.preventDefault();
+      var match = matches[cmdkIdx];
+      if (match) { closeCmdk(); setTimeout(match.run, 120); }
+    }
+  });
+  document.addEventListener("keydown", function(e){
+    if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      if ($("cmdk_bg").classList.contains("open")) closeCmdk(); else openCmdk();
+    } else if (e.key === "Escape" && $("cmdk_bg").classList.contains("open")) {
+      closeCmdk();
+    }
+  });
+
+  // ====== Service Worker for offline ======
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(function(){});
+  }
+
   // ====== Correlation matrix ======
   function pearson(a, b){
     var n = Math.min(a.length, b.length);
@@ -2207,6 +2461,7 @@
   // ====== Audio chime for alerts ======
   var __audioCtx = null;
   function chime(){
+    if (prefs.sound === "off") return;
     try {
       if (!__audioCtx) __audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       var ctx = __audioCtx;
@@ -2818,6 +3073,7 @@
       renderJournal();
       renderNews();
       renderIndicesSnapshot();
+      renderTicker();
       checkAlerts();
       renderActiveAsset();
       loadBrief();
@@ -3399,6 +3655,63 @@
         ctx.fillStyle = "rgba(255,180,80,.85)"; ctx.font = "10px 'Geist Mono', monospace";
         ctx.textAlign = "left"; ctx.fillText("HK overlay", pad + 4, pad - 4);
       }
+    }
+
+    // 7-day forecast band (linear regression on last 14 days, project 7 forward)
+    if (prefs.forecast !== "off" && data.length >= 7) {
+      var fitN = Math.min(14, data.length);
+      var fitVals = data.slice(-fitN).map(function(d){ return d.v; });
+      var sx = 0, sy = 0, sxy = 0, sxx = 0;
+      for (var i = 0; i < fitN; i++) { sx += i; sy += fitVals[i]; sxy += i * fitVals[i]; sxx += i * i; }
+      var slope = (fitN * sxy - sx * sy) / Math.max(1, (fitN * sxx - sx * sx));
+      var intercept = (sy - slope * sx) / fitN;
+      // Compute residual std
+      var residSum = 0;
+      for (var i = 0; i < fitN; i++) { var pred = intercept + slope * i; residSum += (fitVals[i] - pred) * (fitVals[i] - pred); }
+      var residStd = Math.sqrt(residSum / Math.max(1, fitN - 2));
+      var lastIdx = data.length - 1;
+      var lastX = pad + lastIdx * bw + bw*0.5;
+      var forecastDays = 7;
+      var futureBw = bw;
+      ctx.strokeStyle = "rgba(120,80,255,.6)"; ctx.lineWidth = 1.4;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      var fitStartX = pad + (data.length - fitN) * bw + bw*0.5;
+      for (var t = 0; t < fitN + forecastDays; t++) {
+        var pred = intercept + slope * t;
+        var x = fitStartX + t * futureBw;
+        if (x > w - pad) break;
+        var bh = (Math.abs(pred) / range) * (h/2 - pad);
+        var y = pred >= 0 ? zeroY - bh : zeroY + bh;
+        if (t === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Confidence band (1 sigma)
+      ctx.fillStyle = "rgba(120,80,255,.10)";
+      ctx.beginPath();
+      var bandStart = lastX;
+      for (var t = 0; t <= forecastDays; t++) {
+        var pred = intercept + slope * (fitN + t - 1);
+        var x = lastX + t * futureBw;
+        if (x > w - pad) break;
+        var upperBh = (Math.abs(pred + residStd) / range) * (h/2 - pad);
+        var upperY = (pred + residStd) >= 0 ? zeroY - upperBh : zeroY + upperBh;
+        if (t === 0) ctx.moveTo(x, upperY); else ctx.lineTo(x, upperY);
+      }
+      for (var t = forecastDays; t >= 0; t--) {
+        var pred = intercept + slope * (fitN + t - 1);
+        var x = lastX + t * futureBw;
+        if (x > w - pad) continue;
+        var lowerBh = (Math.abs(pred - residStd) / range) * (h/2 - pad);
+        var lowerY = (pred - residStd) >= 0 ? zeroY - lowerBh : zeroY + lowerBh;
+        ctx.lineTo(x, lowerY);
+      }
+      ctx.closePath();
+      ctx.fill();
+      // Forecast label
+      ctx.fillStyle = "rgba(120,80,255,.85)"; ctx.font = "10px 'Geist Mono', monospace";
+      ctx.textAlign = "right"; ctx.fillText("7d forecast", w - pad, pad + 12);
     }
 
     // Cumulative line overlay
