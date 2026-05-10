@@ -237,6 +237,63 @@
   .heatmap-legend .scale{display:flex;align-items:center;gap:3px}
   .heatmap-legend .scale span{width:14px;height:10px;border-radius:2px}
 
+  /* score ring */
+  .score-ring{
+    position:relative;width:90px;height:90px;margin:0 auto 12px;
+  }
+  .score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .score-ring .score-num{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-family:'Geist Mono',monospace;font-weight:600;font-size:24px;color:#fff;
+  }
+  .score-ring .score-num small{font-size:11px;color:var(--muted);font-weight:500;display:block}
+  .score-bd{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0 14px}
+  .score-row{
+    padding:8px 12px;border-radius:8px;
+    background:rgba(255,255,255,.025);border:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .score-row .l{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .score-row .v{font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:#fff}
+  .score-bar-track{
+    height:4px;background:rgba(255,255,255,.06);border-radius:99px;margin-top:6px;overflow:hidden;
+  }
+  .score-bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
+
+  /* streak badge */
+  .streak{
+    display:inline-flex;align-items:center;gap:5px;
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.05em;
+    padding:3px 8px;border-radius:99px;
+    background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);
+    margin-left:6px;
+  }
+  .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
+  .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
+
+  /* insights feed */
+  .insights{
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .ins-row{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:12px 14px;border-radius:10px;
+    background:rgba(255,255,255,.025);border:1px solid var(--border);
+    transition:background .15s,border-color .15s;
+  }
+  .ins-row:hover{background:rgba(255,255,255,.045);border-color:var(--border-strong)}
+  .ins-icon{
+    width:28px;height:28px;border-radius:7px;flex-shrink:0;
+    display:grid;place-items:center;font-family:'Geist Mono',monospace;font-size:11px;font-weight:600;
+  }
+  .ins-icon.pos{background:rgba(120,220,156,.15);color:var(--pos)}
+  .ins-icon.neg{background:rgba(255,138,138,.15);color:var(--neg)}
+  .ins-icon.info{background:rgba(120,80,255,.15);color:#c0a8ff}
+  .ins-icon.warn{background:rgba(255,180,80,.15);color:#ffd9a8}
+  .ins-body{flex:1}
+  .ins-title{font-size:13px;color:#fff;margin:0 0 3px;font-weight:500;line-height:1.4}
+  .ins-meta{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+
   /* compare grid */
   .compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .compare-card{
@@ -561,6 +618,17 @@
     <button class="ghost-btn primary" id="brief_open">Read full brief</button>
     <button class="ghost-btn" id="brief_refresh">Regenerate</button>
     <span class="meta" id="brief_mode" style="margin-left:auto"></span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h2>Auto-detected insights <span class="meta">cross-asset patterns scanned every render</span></h2>
+    <button class="info-btn" data-modal="how-it-works" title="How insights are detected">i</button>
+  </div>
+  <div class="insights" id="insights">
+    <div class="ins-row"><div class="ins-icon info">..</div><div class="ins-body"><p class="ins-title"><span class="skel" style="width:60%;display:block"></span></p><p class="ins-meta"><span class="skel" style="width:120px;display:block"></span></p></div></div>
+    <div class="ins-row"><div class="ins-icon info">..</div><div class="ins-body"><p class="ins-title"><span class="skel" style="width:55%;display:block"></span></p><p class="ins-meta"><span class="skel" style="width:100px;display:block"></span></p></div></div>
   </div>
 </div>
 
@@ -1082,6 +1150,7 @@
     var promises = keys.map(function(sym){ return loadOne(sym); });
     Promise.all(promises).then(function(results){
       keys.forEach(function(sym, i){ if (results[i]) allSeries[sym] = results[i]; });
+      renderInsights();
       renderSignals();
       renderCompare();
       renderActiveAsset();
@@ -1224,23 +1293,64 @@
     var sum7 = sumLast(7, "total_net_inflow");
     var sum30 = sumLast(30, "total_net_inflow");
     var prev7 = (function(){ var s = 0; for (var i = Math.max(0, asc.length-14); i < asc.length-7; i++) s += Number(asc[i].total_net_inflow||0); return s; })();
+
+    // Streak: consecutive same-sign days backward from end
+    var streakLen = 0, streakDir = 0;
+    for (var i = asc.length - 1; i >= 0; i--) {
+      var v = Number(asc[i].total_net_inflow || 0);
+      if (i === asc.length - 1) { streakDir = v > 0 ? 1 : v < 0 ? -1 : 0; if (streakDir === 0) break; streakLen = 1; continue; }
+      if ((streakDir === 1 && v > 0) || (streakDir === -1 && v < 0)) streakLen++; else break;
+    }
+
+    // Std deviation over last 14 days for anomaly detection
+    var win14 = asc.slice(-14).map(function(r){ return Number(r.total_net_inflow||0); });
+    var mean14 = win14.reduce(function(a,b){return a+b}, 0) / Math.max(1, win14.length);
+    var variance = win14.reduce(function(a,b){ return a + (b-mean14)*(b-mean14); }, 0) / Math.max(1, win14.length);
+    var std14 = Math.sqrt(variance);
+    var lastZ = std14 > 0 ? (Number(last.total_net_inflow||0) - mean14) / std14 : 0;
+    var anomaly = Math.abs(lastZ) > 2;
+
+    // Consistency: percent of last 14 days that are positive
+    var posDays14 = win14.filter(function(v){ return v > 0; }).length;
+    var consistency = win14.length ? posDays14 / win14.length : 0;
+
+    // Magnitude vs 30d daily avg
+    var dailyAvg30 = sum30 / Math.max(1, Math.min(30, asc.length));
+    var magnitudeRatio = dailyAvg30 !== 0 ? Math.abs(Number(last.total_net_inflow||0) / dailyAvg30) : 0;
+
+    // Composite score 0-100
+    // 30% direction (full credit if bull, 0 if bear, 50 if neutral)
+    // 25% momentum (sum7 vs sum30/4 expectation)
+    // 20% consistency (% positive days)
+    // 15% magnitude (last day vs 30d avg, capped)
+    // 10% cumulative trend (positive cum = full credit)
     var direction = "flat";
+    var dirScore = 50;
+    if (sum7 > 0 && sum7 > prev7 * 1.1) { direction = "bull"; dirScore = 100; }
+    else if (sum7 < 0 && sum7 < prev7) { direction = "bear"; dirScore = 0; }
+    else if (sum7 > 0 && sum7 < prev7) { direction = "flat"; dirScore = 60; }
+    else if (sum7 < 0 && sum7 > prev7) { direction = "flat"; dirScore = 40; }
+
+    var sum30avgWeek = sum30 / 4;
+    var momentumScore = sum30avgWeek === 0 ? 50 : Math.max(0, Math.min(100, 50 + (sum7 - sum30avgWeek) / Math.abs(sum30avgWeek) * 50));
+    var consistencyScore = consistency * 100;
+    var magScore = Math.max(0, Math.min(100, magnitudeRatio * 50));
+    var cumScore = Number(last.cum_net_inflow||0) > 0 ? 100 : 0;
+
+    var score = Math.round(dirScore*0.30 + momentumScore*0.25 + consistencyScore*0.20 + magScore*0.15 + cumScore*0.10);
+
     var insight = "Two-sided rotation. No clean signal.";
     var action = "No-trade environment. Wait for either side to break out of the range.";
-    if (sum7 > 0 && sum7 > prev7 * 1.1) {
-      direction = "bull";
+    if (direction === "bull") {
       insight = "Inflows expanding (+" + Math.round((sum7/Math.max(1, Math.abs(prev7))-1)*100) + "% vs prior 7d). Real institutional accumulation.";
       action = "Watch for follow-through. The cleanest setup is inflows leading price into a confirmation move.";
-    } else if (sum7 < 0 && sum7 < prev7) {
-      direction = "bear";
+    } else if (direction === "bear") {
       insight = "Outflows accelerating. Net redemptions for multiple sessions, not noise.";
       action = "Wait for outflow exhaustion. Reversals usually follow a flush, not the first red day.";
     } else if (sum7 > 0 && sum7 < prev7) {
-      direction = "flat";
       insight = "Inflows still positive but fading. Demand cooling.";
       action = "Trim chase entries. Wait for re-acceleration before adding risk.";
     } else if (sum7 < 0 && sum7 > prev7) {
-      direction = "flat";
       insight = "Outflows easing. Selling pressure fading without reversal yet.";
       action = "Watch for the first net-inflow day to flag the turn.";
     }
@@ -1250,8 +1360,146 @@
       sum7: sum7, sum30: sum30, prev7: prev7,
       cum: Number(last.cum_net_inflow||0),
       lastDate: last.date || "",
-      direction: direction, insight: insight, action: action
+      direction: direction, insight: insight, action: action,
+      score: score,
+      breakdown: {
+        direction: Math.round(dirScore),
+        momentum: Math.round(momentumScore),
+        consistency: Math.round(consistencyScore),
+        magnitude: Math.round(magScore),
+        cumulative: Math.round(cumScore)
+      },
+      streak: { len: streakLen, dir: streakDir },
+      anomaly: anomaly,
+      lastZ: lastZ,
+      std14: std14,
+      mean14: mean14,
+      consistency: consistency
     };
+  }
+
+  // Compute insights from across all assets
+  function computeInsights(){
+    var insights = [];
+    var statsByAsset = {};
+    ASSETS.forEach(function(sym){
+      var rows = allSeries[sym];
+      if (!rows || !rows.length) return;
+      statsByAsset[sym] = computeStats(rows);
+    });
+    var assets = Object.keys(statsByAsset);
+    if (!assets.length) return insights;
+
+    // 1. Strongest streak across assets
+    var maxStreak = null;
+    assets.forEach(function(sym){
+      var s = statsByAsset[sym];
+      if (s.streak.len >= 3) {
+        if (!maxStreak || s.streak.len > maxStreak.s.streak.len) maxStreak = { sym: sym, s: s };
+      }
+    });
+    if (maxStreak) {
+      var dirTxt = maxStreak.s.streak.dir > 0 ? "inflow" : "outflow";
+      var iconCls = maxStreak.s.streak.dir > 0 ? "pos" : "neg";
+      insights.push({
+        icon: maxStreak.s.streak.len + "d",
+        iconCls: iconCls,
+        title: maxStreak.sym + " on a " + maxStreak.s.streak.len + "-day " + dirTxt + " streak",
+        meta: dirTxt === "inflow" ? "Pattern persistence usually leads continuation" : "Persistent redemptions often precede a flush"
+      });
+    }
+
+    // 2. Cross-asset divergence
+    var bullAssets = assets.filter(function(sym){ return statsByAsset[sym].direction === "bull"; });
+    var bearAssets = assets.filter(function(sym){ return statsByAsset[sym].direction === "bear"; });
+    if (bullAssets.length && bearAssets.length) {
+      insights.push({
+        icon: "DIV",
+        iconCls: "info",
+        title: "Cross-asset divergence: " + bullAssets.join(", ") + " bullish vs " + bearAssets.join(", ") + " bearish",
+        meta: "Rotation between cohorts. Strength concentrating in the bullish set."
+      });
+    }
+
+    // 3. Anomaly detection
+    assets.forEach(function(sym){
+      var s = statsByAsset[sym];
+      if (s.anomaly) {
+        var dir = s.last > s.mean14 ? "above" : "below";
+        var iconCls = s.last > s.mean14 ? "pos" : "neg";
+        insights.push({
+          icon: "z=" + s.lastZ.toFixed(1),
+          iconCls: iconCls,
+          title: sym + " last day flow is a " + Math.abs(s.lastZ).toFixed(1) + "-sigma " + dir + " 14d mean",
+          meta: "Anomaly day. Either real catalyst or single-day distortion."
+        });
+      }
+    });
+
+    // 4. Highest score asset
+    var topScore = null;
+    assets.forEach(function(sym){
+      var s = statsByAsset[sym];
+      if (!topScore || s.score > topScore.s.score) topScore = { sym: sym, s: s };
+    });
+    if (topScore && topScore.s.score >= 70) {
+      insights.push({
+        icon: topScore.s.score,
+        iconCls: "pos",
+        title: topScore.sym + " composite signal score at " + topScore.s.score + " of 100",
+        meta: "Top of the cohort on direction + momentum + consistency + magnitude + cumulative"
+      });
+    }
+    var bottomScore = null;
+    assets.forEach(function(sym){
+      var s = statsByAsset[sym];
+      if (!bottomScore || s.score < bottomScore.s.score) bottomScore = { sym: sym, s: s };
+    });
+    if (bottomScore && bottomScore.s.score <= 30) {
+      insights.push({
+        icon: bottomScore.s.score,
+        iconCls: "neg",
+        title: bottomScore.sym + " composite signal score at " + bottomScore.s.score + " of 100",
+        meta: "Bottom of the cohort. Multiple sub-factors aligning to caution."
+      });
+    }
+
+    // 5. Cumulative milestones
+    assets.forEach(function(sym){
+      var s = statsByAsset[sym];
+      if (s.cum >= 50e9 && s.cum < 60e9) {
+        insights.push({
+          icon: "$50B",
+          iconCls: "info",
+          title: sym + " cumulative inflow above $50B since launch",
+          meta: "Long-tail demand intact regardless of week-to-week noise."
+        });
+      } else if (s.cum >= 10e9 && s.cum < 15e9 && sym !== "BTC") {
+        insights.push({
+          icon: "$10B",
+          iconCls: "info",
+          title: sym + " cumulative inflow above $10B since launch",
+          meta: "Second-tier ETF demand confirmed at multi-billion scale."
+        });
+      }
+    });
+
+    return insights;
+  }
+
+  function renderInsights(){
+    var ins = computeInsights();
+    var box = $("insights");
+    if (!box) return;
+    if (!ins.length) {
+      box.innerHTML = '<div class="ins-row"><div class="ins-icon info">--</div><div class="ins-body"><p class="ins-title">No standout cross-asset patterns right now</p><p class="ins-meta">Switch region or check back after the next session</p></div></div>';
+      return;
+    }
+    var html = "";
+    ins.forEach(function(i){
+      html += '<div class="ins-row"><div class="ins-icon '+i.iconCls+'">'+i.icon+'</div><div class="ins-body"><p class="ins-title">'+i.title+'</p><p class="ins-meta">'+i.meta+'</p></div></div>';
+    });
+    box.innerHTML = html;
   }
 
   function renderSignals(){
@@ -1266,8 +1514,15 @@
       var sigClass = s.direction === "bull" ? "bull" : (s.direction === "bear" ? "bear" : "flat");
       var sigText = s.direction === "bull" ? "bullish" : (s.direction === "bear" ? "bearish" : "neutral");
       var pos = s.sum7 >= 0;
+      var streakBadge = "";
+      if (s.streak.len >= 2) {
+        var streakCls = s.streak.dir > 0 ? "in" : "out";
+        var streakLabel = s.streak.len + "d " + (s.streak.dir > 0 ? "in" : "out");
+        streakBadge = '<span class="streak '+streakCls+'">'+streakLabel+'</span>';
+      }
+      var scoreColor = s.score >= 65 ? "var(--pos)" : s.score <= 35 ? "var(--neg)" : "var(--muted)";
       html += '<div class="sig-card" data-direction="'+s.direction+'" data-asset="'+sym+'">'
-            + '<div class="head"><span class="sym">'+sym+'</span><span class="signal '+sigClass+'">'+sigText+'</span></div>'
+            + '<div class="head"><span class="sym">'+sym+streakBadge+'</span><div style="display:flex;align-items:center;gap:8px"><span class="meta" style="color:'+scoreColor+';font-weight:600">'+s.score+'/100</span><span class="signal '+sigClass+'">'+sigText+'</span></div></div>'
             + '<p class="insight"><strong style="color:'+(pos?"var(--pos)":"var(--neg)")+'">'+(pos?"+":"")+fmtUsd(s.sum7)+'</strong> 7d net flow. '+s.insight+'</p>'
             + '<p class="action">'+s.action+'</p>'
             + '</div>';
@@ -1280,14 +1535,39 @@
         var rows = allSeries[sym];
         if (!rows || !rows.length) { toast("No data for " + sym + " yet", "info"); return; }
         var s = computeStats(rows);
-        $("modal_asset_eyebrow").textContent = sym + " - " + state.region + " spot ETF flow";
+        $("modal_asset_eyebrow").textContent = sym + " - " + state.region + " spot ETF flow / score " + s.score;
         $("modal_asset_title").textContent = sym + " " + (s.direction === "bull" ? "bullish" : s.direction === "bear" ? "bearish" : "neutral") + " on 7d flow";
         var pos = s.sum7 >= 0;
-        $("modal_asset_stats").innerHTML =
-            '<div class="modal-stat"><div class="l">7d net flow</div><div class="v" style="color:'+(pos?"var(--pos)":"var(--neg)")+'">'+(pos?"+":"")+fmtUsd(s.sum7)+'</div></div>'
+
+        // Build score ring + breakdown
+        var ringColor = s.score >= 65 ? "#7adc9c" : s.score <= 35 ? "#ff8a8a" : "#a9a9b8";
+        var circ = 2 * Math.PI * 38;
+        var dash = (s.score / 100) * circ;
+        var ring = '<div class="score-ring">'
+                 + '<svg viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/>'
+                 + '<circle cx="45" cy="45" r="38" fill="none" stroke="'+ringColor+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+dash+' '+circ+'"/></svg>'
+                 + '<div class="score-num">'+s.score+'<small>/100</small></div></div>';
+
+        function bar(label, val){
+          var col = val >= 65 ? "var(--pos)" : val <= 35 ? "var(--neg)" : "#c0a8ff";
+          return '<div class="score-row"><div><div class="l">'+label+'</div><div class="score-bar-track"><div class="score-bar-fill" style="width:'+val+'%;background:'+col+'"></div></div></div><div class="v">'+val+'</div></div>';
+        }
+        var breakdownHtml = '<div class="score-bd">'
+                          + bar("direction (30%)", s.breakdown.direction)
+                          + bar("momentum (25%)", s.breakdown.momentum)
+                          + bar("consistency (20%)", s.breakdown.consistency)
+                          + bar("magnitude (15%)", s.breakdown.magnitude)
+                          + bar("cumulative (10%)", s.breakdown.cumulative)
+                          + '</div>';
+
+        $("modal_asset_stats").innerHTML = ring
+          + '<div class="modal-stat"><div class="l">7d net flow</div><div class="v" style="color:'+(pos?"var(--pos)":"var(--neg)")+'">'+(pos?"+":"")+fmtUsd(s.sum7)+'</div></div>'
           + '<div class="modal-stat"><div class="l">prior 7d</div><div class="v">'+(s.prev7>=0?"+":"")+fmtUsd(s.prev7)+'</div></div>'
           + '<div class="modal-stat"><div class="l">30d net flow</div><div class="v" style="color:'+(s.sum30>=0?"var(--pos)":"var(--neg)")+'">'+(s.sum30>=0?"+":"")+fmtUsd(s.sum30)+'</div></div>'
-          + '<div class="modal-stat"><div class="l">cumulative</div><div class="v">'+fmtUsd(s.cum)+'</div></div>';
+          + '<div class="modal-stat"><div class="l">cumulative</div><div class="v">'+fmtUsd(s.cum)+'</div></div>'
+          + '<div class="modal-stat"><div class="l">streak</div><div class="v" style="color:'+(s.streak.dir>0?"var(--pos)":s.streak.dir<0?"var(--neg)":"var(--muted)")+'">'+(s.streak.len?(s.streak.len+"d "+(s.streak.dir>0?"inflow":"outflow")):"-")+'</div></div>'
+          + '<div class="modal-stat"><div class="l">14d sigma</div><div class="v">'+(s.std14>=1e9?(s.std14/1e9).toFixed(2)+"B":s.std14>=1e6?(s.std14/1e6).toFixed(2)+"M":(s.std14/1e3).toFixed(2)+"K")+'</div></div>'
+          + '<div class="modal-stat" style="grid-column:span 2"><div class="l">composite score breakdown</div>' + breakdownHtml + '</div>';
         $("modal_asset_insight").textContent = s.insight;
         $("modal_asset_action").textContent = s.action;
         openModal("asset");
@@ -1392,13 +1672,21 @@
     ctx.strokeStyle = "rgba(255,255,255,.05)"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(pad, zeroY); ctx.lineTo(w-pad, zeroY); ctx.stroke();
 
+    // Compute mean/std of the visible window for anomaly detection
+    var dataVals = data.map(function(d){ return d.v; });
+    var dMean = dataVals.reduce(function(a,b){return a+b}, 0) / Math.max(1, dataVals.length);
+    var dVar = dataVals.reduce(function(a,b){ return a + (b-dMean)*(b-dMean); }, 0) / Math.max(1, dataVals.length);
+    var dStd = Math.sqrt(dVar);
+
     var bars = [];
     for (var i = 0; i < data.length; i++) {
       var v = data[i].v;
       var x = pad + i * bw + bw*0.15;
       var bh = (Math.abs(v) / range) * (h/2 - pad);
       var y = v >= 0 ? zeroY - bh : zeroY;
-      bars.push({ x: x, y: y, w: bw*0.7, h: bh, v: v, d: data[i].d });
+      var z = dStd > 0 ? (v - dMean) / dStd : 0;
+      var isAnomaly = Math.abs(z) > 2;
+      bars.push({ x: x, y: y, w: bw*0.7, h: bh, v: v, d: data[i].d, z: z, anomaly: isAnomaly });
       var grad = ctx.createLinearGradient(0, y, 0, y + bh);
       if (v >= 0) {
         grad.addColorStop(0, "rgba(120,220,156,.95)");
@@ -1409,6 +1697,13 @@
       }
       ctx.fillStyle = grad;
       ctx.fillRect(x, y, bw*0.7, bh);
+      // Anomaly marker
+      if (isAnomaly) {
+        ctx.strokeStyle = "rgba(255,200,80,.9)"; ctx.lineWidth = 1.5;
+        ctx.strokeRect(x - 2, Math.min(y, zeroY) - 2, bw*0.7 + 4, bh + 4);
+        ctx.fillStyle = "rgba(255,200,80,.95)";
+        ctx.beginPath(); ctx.arc(x + bw*0.35, v >= 0 ? y - 6 : y + bh + 6, 2.5, 0, 2*Math.PI); ctx.fill();
+      }
     }
 
     // Cumulative line overlay
@@ -1450,7 +1745,8 @@
       els.chart_tt.classList.add("show");
       els.chart_tt.style.left = (hit.x + hit.w/2) + "px";
       els.chart_tt.style.top = (hit.y - 6) + "px";
-      els.chart_tt.innerHTML = '<div class="ttd">'+hit.d+'</div><div class="ttv '+(hit.v>=0?"pos":"neg")+'">'+sign(hit.v)+fmtUsd(hit.v)+'</div>';
+      var anomalyTag = hit.anomaly ? '<div class="ttd" style="color:#ffc380">anomaly z=' + hit.z.toFixed(1) + '</div>' : '';
+      els.chart_tt.innerHTML = '<div class="ttd">'+hit.d+'</div><div class="ttv '+(hit.v>=0?"pos":"neg")+'">'+sign(hit.v)+fmtUsd(hit.v)+'</div>' + anomalyTag;
     } else {
       els.chart_tt.classList.remove("show");
     }
