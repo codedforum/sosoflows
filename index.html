@@ -196,6 +196,73 @@
   .pos{color:var(--pos)}
   .neg{color:var(--neg)}
 
+  /* sparkline */
+  .spark{display:block;width:100%;height:28px;margin-top:8px;opacity:.85}
+
+  /* live status pill */
+  .live-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.05em;
+    padding:5px 9px;border-radius:99px;
+    background:rgba(120,220,156,.10);border:1px solid rgba(120,220,156,.25);
+    color:var(--pos);
+  }
+  .live-pill .dot{
+    width:6px;height:6px;border-radius:50%;background:var(--pos);
+    box-shadow:0 0 8px var(--pos);animation:pulse 2s ease-in-out infinite;
+  }
+  .live-pill.stale{background:rgba(255,180,80,.10);border-color:rgba(255,180,80,.25);color:#ffd9a8}
+  .live-pill.stale .dot{background:#ffc380;box-shadow:0 0 8px #ffc380}
+
+  /* heatmap */
+  .heatmap{display:grid;grid-template-columns:repeat(30,1fr);gap:3px;margin:6px 0}
+  .hcell{
+    aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.04);
+    transition:transform .15s,outline-color .15s;cursor:pointer;outline:1px solid transparent;
+  }
+  .hcell:hover{transform:scale(1.3);outline-color:rgba(255,255,255,.4);z-index:2}
+  .hcell.h0{background:rgba(255,255,255,.04)}
+  .hcell.hp1{background:rgba(120,220,156,.18)}
+  .hcell.hp2{background:rgba(120,220,156,.38)}
+  .hcell.hp3{background:rgba(120,220,156,.62)}
+  .hcell.hp4{background:rgba(120,220,156,.92)}
+  .hcell.hn1{background:rgba(255,138,138,.18)}
+  .hcell.hn2{background:rgba(255,138,138,.38)}
+  .hcell.hn3{background:rgba(255,138,138,.62)}
+  .hcell.hn4{background:rgba(255,138,138,.92)}
+  .heatmap-legend{
+    display:flex;justify-content:space-between;align-items:center;margin-top:10px;
+    font-family:'Geist Mono',monospace;font-size:10px;color:var(--dim);
+  }
+  .heatmap-legend .scale{display:flex;align-items:center;gap:3px}
+  .heatmap-legend .scale span{width:14px;height:10px;border-radius:2px}
+
+  /* compare grid */
+  .compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .compare-card{
+    border:1px solid var(--border);border-radius:10px;padding:12px 14px;
+    background:rgba(255,255,255,.02);transition:all .2s;cursor:pointer;
+  }
+  .compare-card:hover{background:rgba(255,255,255,.05);transform:translateY(-1px)}
+  .compare-card .csym{font-family:'Geist Mono',monospace;font-weight:600;font-size:13px;color:#fff;margin-bottom:6px}
+  .compare-card canvas{display:block;width:100%;height:34px}
+  .compare-card .cstats{
+    display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;
+    color:var(--muted);margin-top:6px;
+  }
+  .compare-card .cstats .cv{color:#fff;font-weight:600}
+
+  /* chart controls */
+  .chart-ctrls{display:flex;gap:6px;align-items:center}
+  .toggle-btn{
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.06em;font-weight:500;
+    padding:5px 10px;border-radius:6px;text-transform:uppercase;
+    background:rgba(255,255,255,.03);border:1px solid var(--border);
+    color:var(--muted);cursor:pointer;transition:all .15s;
+  }
+  .toggle-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
+  .toggle-btn.on{background:var(--soft-purple);border-color:rgba(120,80,255,.4);color:#d4c8ff}
+
   /* skeleton */
   .skel{
     display:inline-block;height:.9em;width:80px;border-radius:4px;
@@ -439,9 +506,12 @@
     <div class="name">SoSoFlows <small>v1 / Wave 1</small></div>
   </div>
   <div class="topbar-right">
+    <span class="live-pill" id="live_pill" title="Last server-side brief sync"><span class="dot"></span><span id="live_pill_txt">live</span></span>
     <button class="nav-link" data-modal="how-it-works">Methodology</button>
-    <button class="nav-link" data-modal="api-info">Data sources</button>
+    <button class="nav-link" data-modal="api-info">Data</button>
     <button class="nav-link" data-modal="roadmap">Roadmap</button>
+    <button class="nav-link" data-modal="changelog">Changelog</button>
+    <button class="nav-link" id="share_btn" title="Copy a deeplink">Share</button>
   </div>
 </div>
 
@@ -508,20 +578,54 @@
 </div>
 
 <div class="grid stagger">
-  <div class="stat"><p class="lbl">Last day net flow</p><p class="val" id="s_last"><span class="skel"></span></p><p class="dlt" id="s_last_d"></p></div>
-  <div class="stat"><p class="lbl">7d net flow</p><p class="val" id="s_7d"><span class="skel"></span></p><p class="dlt" id="s_7d_d"></p></div>
-  <div class="stat"><p class="lbl">30d net flow</p><p class="val" id="s_30d"><span class="skel"></span></p><p class="dlt" id="s_30d_d"></p></div>
-  <div class="stat"><p class="lbl">Cumulative inflow</p><p class="val" id="s_cum"><span class="skel"></span></p><p class="dlt">since launch</p></div>
+  <div class="stat"><p class="lbl">Last day net flow</p><p class="val" id="s_last"><span class="skel"></span></p><p class="dlt" id="s_last_d"></p><canvas class="spark" id="spark_last" width="200" height="28"></canvas></div>
+  <div class="stat"><p class="lbl">7d net flow</p><p class="val" id="s_7d"><span class="skel"></span></p><p class="dlt" id="s_7d_d"></p><canvas class="spark" id="spark_7d" width="200" height="28"></canvas></div>
+  <div class="stat"><p class="lbl">30d net flow</p><p class="val" id="s_30d"><span class="skel"></span></p><p class="dlt" id="s_30d_d"></p><canvas class="spark" id="spark_30d" width="200" height="28"></canvas></div>
+  <div class="stat"><p class="lbl">Cumulative inflow</p><p class="val" id="s_cum"><span class="skel"></span></p><p class="dlt">since launch</p><canvas class="spark" id="spark_cum" width="200" height="28"></canvas></div>
 </div>
 
 <div class="card">
   <div class="card-head">
     <h2 id="chart_title">BTC daily net inflow</h2>
-    <span class="signal flat" id="signal">loading</span>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="signal flat" id="signal">loading</span>
+      <div class="chart-ctrls">
+        <button class="toggle-btn" data-range="14">14d</button>
+        <button class="toggle-btn on" data-range="30">30d</button>
+        <button class="toggle-btn" data-range="60">60d</button>
+        <button class="toggle-btn" id="cum_toggle" title="Overlay cumulative inflow line">Cum</button>
+      </div>
+    </div>
   </div>
   <div class="chart-wrap">
     <canvas id="chart" width="1040" height="240"></canvas>
     <div class="chart-tooltip" id="chart_tt"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h2>Compare all 4 <span class="meta">7d sparklines, click to focus</span></h2>
+  </div>
+  <div class="compare-grid" id="compare"></div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h2 id="heatmap_title">BTC 30-day flow heatmap <span class="meta">brighter = larger flow, green = inflow, red = outflow</span></h2>
+  </div>
+  <div class="heatmap" id="heatmap"></div>
+  <div class="heatmap-legend">
+    <span id="heatmap_range">-</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span>outflow</span>
+      <div class="scale">
+        <span class="hcell hn4"></span><span class="hcell hn3"></span><span class="hcell hn2"></span><span class="hcell hn1"></span>
+        <span class="hcell h0"></span>
+        <span class="hcell hp1"></span><span class="hcell hp2"></span><span class="hcell hp3"></span><span class="hcell hp4"></span>
+      </div>
+      <span>inflow</span>
+    </div>
   </div>
 </div>
 
@@ -535,6 +639,7 @@
 <div class="card">
   <div class="card-head">
     <h2>Recent rows <span class="meta">last 14 days, <span id="rows_meta">-</span></span></h2>
+    <button class="ghost-btn" id="csv_btn">Export CSV</button>
   </div>
   <table id="rows"><thead><tr><th>Date</th><th>Net inflow (USD)</th><th>Volume (USD)</th><th>NAV (USD)</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:18px"><span class="skel" style="width:160px"></span></td></tr></tbody></table>
 </div>
@@ -673,6 +778,46 @@
   </div>
 </div>
 
+<div class="modal-bg" id="modal_changelog">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">Wave 1 Changelog</p>
+        <h3>What shipped this wave</h3>
+      </div>
+      <button class="modal-close" data-close>X</button>
+    </div>
+    <h4>2026-05-10 - Wave 1 submission build</h4>
+    <ul>
+      <li>Hero with Buildathon framing + tag pills</li>
+      <li>4-asset toggles with keyboard shortcuts (1-4)</li>
+      <li>Daily Brief endpoint <code>ai.php</code> with static + Groq modes, 6h cache</li>
+      <li>Per-asset Signal-to-Action grid, click-to-detail modal</li>
+      <li>Stat cards with animated counters + 7d sparklines</li>
+      <li>Main chart with 14d / 30d / 60d range toggle + cumulative overlay</li>
+      <li>30-day flow heatmap calendar</li>
+      <li>Compare-all view, sparkline per asset, click to focus</li>
+      <li>Methodology, Data sources, Roadmap modals</li>
+      <li>CSV export for the rows table</li>
+      <li>Share button for deeplink with asset and region pre-selected</li>
+      <li>Sticky topbar with live status pill + scroll shadow</li>
+      <li>Toast notifications, chart hover tooltip, skeleton loaders</li>
+    </ul>
+    <h4>Earlier (2026-05-02)</h4>
+    <ul>
+      <li>SoSoValue API proxy <code>api.php</code> with whitelist + 7d disk cache</li>
+      <li>Initial BTC and ETH coverage, US and HK regions</li>
+      <li>Geist font system, dark theme baseline</li>
+    </ul>
+    <h4>Wave 2 plan</h4>
+    <ul>
+      <li>SoDEX testnet API integration with one-click trade flow</li>
+      <li>SSI rebalance correlation overlay</li>
+      <li>Confirmation modal before any trade-intent action</li>
+    </ul>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal_asset">
   <div class="modal">
     <div class="modal-head">
@@ -767,10 +912,61 @@
     bg.addEventListener("click", function(e){ if (e.target === bg) bg.classList.remove("open"); });
   });
   function openModal(id){
-    var map = { "how-it-works": "modal_how", "api-info": "modal_api", "roadmap": "modal_roadmap", "brief": "modal_brief", "asset": "modal_asset" };
+    var map = { "how-it-works": "modal_how", "api-info": "modal_api", "roadmap": "modal_roadmap", "brief": "modal_brief", "asset": "modal_asset", "changelog": "modal_changelog" };
     var m = $(map[id] || id);
     if (m) m.classList.add("open");
   }
+
+  // Share + CSV + range/cum state
+  var chartRange = 30;
+  var chartCum = false;
+
+  $("share_btn") && $("share_btn").addEventListener("click", function(){
+    var url = location.origin + location.pathname + "?asset=" + state.asset + "&region=" + state.region;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function(){ toast("Deeplink copied"); }, function(){ toast("Copy failed - select " + url, "err"); });
+    } else { toast(url, "info"); }
+  });
+
+  $("csv_btn") && $("csv_btn").addEventListener("click", function(){
+    var rows = allSeries[state.asset] || [];
+    if (!rows.length) { toast("No rows to export", "err"); return; }
+    var lines = ["date,total_net_inflow,total_value_traded,total_net_assets,cum_net_inflow"];
+    rows.slice().reverse().forEach(function(r){
+      lines.push([r.date||"", r.total_net_inflow||0, r.total_value_traded||0, r.total_net_assets||0, r.cum_net_inflow||0].join(","));
+    });
+    var blob = new Blob([lines.join("\n")], {type:"text/csv"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "sosoflows_" + state.asset + "_" + state.region + "_" + new Date().toISOString().substring(0,10) + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("CSV exported");
+  });
+
+  document.querySelectorAll(".toggle-btn[data-range]").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.querySelectorAll(".toggle-btn[data-range]").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on");
+      chartRange = parseInt(b.dataset.range, 10) || 30;
+      renderActiveAsset();
+    });
+  });
+  $("cum_toggle") && $("cum_toggle").addEventListener("click", function(){
+    chartCum = !chartCum;
+    $("cum_toggle").classList.toggle("on", chartCum);
+    renderActiveAsset();
+  });
+
+  // Read URL params for deeplink restore
+  (function(){
+    var p = new URLSearchParams(location.search);
+    var a = (p.get("asset") || "").toUpperCase();
+    var r = (p.get("region") || "").toUpperCase();
+    if (ASSETS.indexOf(a) >= 0) state.asset = a;
+    if (r === "US" || r === "HK") state.region = r;
+    document.querySelectorAll(".pill[data-asset]").forEach(function(x){ x.classList.toggle("on", x.dataset.asset === state.asset); });
+    document.querySelectorAll(".pill[data-region]").forEach(function(x){ x.classList.toggle("on", x.dataset.region === state.region); });
+  })();
 
   els.brief_refresh.addEventListener("click", function(){
     els.brief_refresh.disabled = true;
@@ -887,6 +1083,7 @@
     Promise.all(promises).then(function(results){
       keys.forEach(function(sym, i){ if (results[i]) allSeries[sym] = results[i]; });
       renderSignals();
+      renderCompare();
       renderActiveAsset();
       loadBrief();
     });
@@ -909,6 +1106,110 @@
     els.brief_text.textContent = j.summary || "(empty)";
     els.brief_meta.textContent = j.generated_at ? "as of " + j.generated_at.replace("T", " ").substring(0, 16) + " UTC" : "";
     els.brief_mode.textContent = j.mode === "groq" ? "[ai-rephrased]" : "[deterministic]";
+    // live status pill
+    var pill = $("live_pill"), pillTxt = $("live_pill_txt");
+    if (pill && j.generated_at) {
+      var ageMin = Math.max(0, Math.floor((Date.now() - new Date(j.generated_at).getTime()) / 60000));
+      pillTxt.textContent = ageMin < 1 ? "live" : ageMin < 60 ? (ageMin + "m ago") : (Math.floor(ageMin/60) + "h ago");
+      pill.classList.toggle("stale", ageMin > 360);
+    }
+  }
+
+  // Sparkline drawer
+  function drawSparkline(canvasId, values, isCumulative){
+    var c = document.getElementById(canvasId); if (!c) return;
+    var ctx = c.getContext("2d");
+    var dpr = window.devicePixelRatio || 1;
+    var w = c.clientWidth, h = c.clientHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+    if (!values.length) return;
+    if (isCumulative) {
+      // Line chart for cumulative
+      var max = Math.max.apply(null, values), min = Math.min.apply(null, values);
+      var range = Math.max(1, max - min);
+      ctx.strokeStyle = "rgba(120,80,255,.7)"; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      values.forEach(function(v, i){
+        var x = (i / (values.length-1)) * w;
+        var y = h - ((v - min) / range) * (h - 4) - 2;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      // Fill under
+      ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+      ctx.fillStyle = "rgba(120,80,255,.12)"; ctx.fill();
+    } else {
+      var max = Math.max.apply(null, values.map(Math.abs));
+      if (max === 0) max = 1;
+      var bw = w / values.length;
+      var zeroY = h * 0.5;
+      ctx.strokeStyle = "rgba(255,255,255,.06)";
+      ctx.beginPath(); ctx.moveTo(0, zeroY); ctx.lineTo(w, zeroY); ctx.stroke();
+      values.forEach(function(v, i){
+        var bh = (Math.abs(v) / max) * (h * 0.45);
+        var y = v >= 0 ? zeroY - bh : zeroY;
+        ctx.fillStyle = v >= 0 ? "rgba(120,220,156,.85)" : "rgba(255,138,138,.85)";
+        ctx.fillRect(i * bw + 0.5, y, Math.max(1, bw - 1.5), bh);
+      });
+    }
+  }
+
+  // Heatmap drawer
+  function drawHeatmap(rows){
+    var hm = $("heatmap"); if (!hm) return;
+    if (!rows || !rows.length) { hm.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;padding:18px">no data</div>'; return; }
+    var last30 = rows.slice(-30);
+    var max = 0;
+    last30.forEach(function(r){ var v = Math.abs(Number(r.total_net_inflow||0)); if (v > max) max = v; });
+    if (max === 0) max = 1;
+    var html = "";
+    last30.forEach(function(r){
+      var v = Number(r.total_net_inflow||0);
+      var ratio = Math.abs(v) / max;
+      var bucket = "h0";
+      if (v > 0) {
+        if (ratio > .75) bucket = "hp4"; else if (ratio > .5) bucket = "hp3"; else if (ratio > .25) bucket = "hp2"; else if (ratio > .05) bucket = "hp1";
+      } else if (v < 0) {
+        if (ratio > .75) bucket = "hn4"; else if (ratio > .5) bucket = "hn3"; else if (ratio > .25) bucket = "hn2"; else if (ratio > .05) bucket = "hn1";
+      }
+      html += '<div class="hcell '+bucket+'" title="'+(r.date||"")+': '+(v>=0?"+":"")+fmtUsd(v)+'"></div>';
+    });
+    hm.innerHTML = html;
+    var first = last30[0] && last30[0].date, lastD = last30[last30.length-1] && last30[last30.length-1].date;
+    $("heatmap_range").textContent = first + " to " + lastD;
+    $("heatmap_title").innerHTML = state.asset + ' 30-day flow heatmap <span class="meta">brighter = larger flow, green = inflow, red = outflow</span>';
+  }
+
+  // Compare grid
+  function renderCompare(){
+    var c = $("compare"); if (!c) return;
+    var html = "";
+    ASSETS.forEach(function(sym){
+      var rows = allSeries[sym];
+      var canvasId = "csp_" + sym;
+      if (!rows || !rows.length) {
+        html += '<div class="compare-card" data-asset="'+sym+'"><div class="csym">'+sym+'</div><canvas id="'+canvasId+'" width="160" height="34"></canvas><div class="cstats"><span>7d</span><span class="cv">-</span></div></div>';
+        return;
+      }
+      var s = computeStats(rows);
+      var pos = s.sum7 >= 0;
+      html += '<div class="compare-card" data-asset="'+sym+'"><div class="csym">'+sym+'</div><canvas id="'+canvasId+'" width="160" height="34"></canvas><div class="cstats"><span>7d</span><span class="cv" style="color:'+(pos?"var(--pos)":"var(--neg)")+'">'+(pos?"+":"")+fmtUsd(s.sum7)+'</span></div></div>';
+    });
+    c.innerHTML = html;
+    ASSETS.forEach(function(sym){
+      var rows = allSeries[sym];
+      if (!rows || !rows.length) return;
+      drawSparkline("csp_" + sym, rows.slice(-14).map(function(r){ return Number(r.total_net_inflow||0); }), false);
+    });
+    c.querySelectorAll(".compare-card").forEach(function(card){
+      card.addEventListener("click", function(){
+        var sym = card.dataset.asset;
+        var btn = document.querySelector('.pill[data-asset="'+sym+'"]');
+        if (btn) btn.click();
+      });
+    });
   }
 
   function computeStats(rows){
@@ -1031,7 +1332,21 @@
     }
     els.rows.innerHTML = html || '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:18px">no rows</td></tr>';
 
-    drawChart(rows.slice(-30).map(function(r){ return { d: r.date, v: Number(r.total_net_inflow||0) }; }));
+    var window_data = rows.slice(-chartRange).map(function(r){ return { d: r.date, v: Number(r.total_net_inflow||0), cum: Number(r.cum_net_inflow||0) }; });
+    drawChart(window_data);
+
+    // Sparklines for each stat
+    var last7 = rows.slice(-7).map(function(r){ return Number(r.total_net_inflow||0); });
+    drawSparkline("spark_last", last7, false);
+    var last14 = rows.slice(-14).map(function(r){ return Number(r.total_net_inflow||0); });
+    drawSparkline("spark_7d", last14, false);
+    var last30 = rows.slice(-30).map(function(r){ return Number(r.total_net_inflow||0); });
+    drawSparkline("spark_30d", last30, false);
+    var cumLast = rows.slice(-30).map(function(r){ return Number(r.cum_net_inflow||0); });
+    drawSparkline("spark_cum", cumLast, true);
+
+    // Heatmap
+    drawHeatmap(rows);
   }
 
   function renderSsi(symbols){
@@ -1096,7 +1411,25 @@
       ctx.fillRect(x, y, bw*0.7, bh);
     }
 
-    ctx.fillStyle = "var(--dim)"; ctx.font = "10px 'Geist Mono', monospace";
+    // Cumulative line overlay
+    if (chartCum && data.some(function(d){ return d.cum; })) {
+      var cumVals = data.map(function(d){ return d.cum || 0; });
+      var cmin = Math.min.apply(null, cumVals), cmax = Math.max.apply(null, cumVals);
+      var crange = Math.max(1, cmax - cmin);
+      ctx.strokeStyle = "rgba(120,80,255,.85)"; ctx.lineWidth = 2;
+      ctx.beginPath();
+      data.forEach(function(d, i){
+        var x = pad + i * bw + bw*0.5;
+        var y = pad + (h - pad*2) * (1 - (d.cum - cmin) / crange);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      // Right-axis label
+      ctx.fillStyle = "rgba(120,80,255,.85)"; ctx.font = "10px 'Geist Mono', monospace";
+      ctx.textAlign = "right"; ctx.fillText("cum " + fmtUsd(cmax), w - pad, pad - 6);
+    }
+
+    ctx.fillStyle = "#5a5a68"; ctx.font = "10px 'Geist Mono', monospace";
     ctx.textAlign = "left"; ctx.fillText(data[0].d, pad, h - 10);
     ctx.textAlign = "right"; ctx.fillText(data[data.length-1].d, w - pad, h - 10);
     chartGeom = { bars: bars, bw: bw, w: w, h: h, pad: pad };
