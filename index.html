@@ -271,6 +271,83 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* sizer */
+  .sizer-controls{
+    display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+    padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.025);
+    border:1px solid var(--border);margin-bottom:14px;
+  }
+  .sizer-input{
+    background:rgba(0,0,0,.3);border:1px solid var(--border);
+    color:#fff;padding:8px 12px;border-radius:8px;
+    font-family:'Geist Mono',monospace;font-size:13px;width:140px;
+  }
+  .sizer-input:focus{outline:none;border-color:var(--accent-purple)}
+  .sizer-modes{display:flex;gap:4px;background:rgba(0,0,0,.3);padding:3px;border-radius:8px;border:1px solid var(--border)}
+  .sizer-mode{
+    font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.05em;font-weight:500;
+    padding:6px 12px;border-radius:6px;cursor:pointer;
+    background:transparent;border:0;color:var(--muted);transition:all .15s;text-transform:uppercase;
+  }
+  .sizer-mode:hover{color:#fff}
+  .sizer-mode.on{background:var(--soft-purple);color:#d4c8ff}
+  .sizer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .sizer-row{
+    padding:14px 16px;border-radius:10px;
+    background:rgba(255,255,255,.025);border:1px solid var(--border);
+    transition:border-color .2s;
+  }
+  .sizer-row:hover{border-color:var(--border-strong)}
+  .sizer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .sizer-sym{font-family:'Geist Mono',monospace;font-weight:600;font-size:14px;color:#fff;letter-spacing:.05em}
+  .sizer-pct{font-family:'Geist Mono',monospace;font-size:13px;font-weight:600;color:#c0a8ff}
+  .sizer-amt{font-family:'Geist Mono',monospace;font-size:18px;font-weight:600;color:#fff;letter-spacing:-.01em;margin-bottom:6px}
+  .sizer-bar{height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-bottom:6px}
+  .sizer-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-purple),var(--accent-orange));border-radius:99px;transition:width .6s ease}
+  .sizer-note{font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+
+  /* alerts */
+  .alerts-list{display:flex;flex-direction:column;gap:8px}
+  .alert-row{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:11px 14px;border-radius:10px;
+    background:rgba(255,255,255,.02);border:1px solid var(--border);
+    font-family:'Geist Mono',monospace;font-size:12px;
+  }
+  .alert-row.armed{border-color:rgba(120,80,255,.3);background:rgba(120,80,255,.06)}
+  .alert-row.triggered{border-color:rgba(120,220,156,.4);background:rgba(120,220,156,.07)}
+  .alert-cond{color:#c9c9d4}
+  .alert-cond strong{color:#fff;font-weight:600}
+  .alert-meta{display:flex;align-items:center;gap:8px}
+  .alert-state{
+    font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+    padding:3px 7px;border-radius:99px;
+  }
+  .alert-state.armed{background:rgba(120,80,255,.15);color:#c0a8ff;border:1px solid rgba(120,80,255,.3)}
+  .alert-state.triggered{background:rgba(120,220,156,.15);color:var(--pos);border:1px solid rgba(120,220,156,.3)}
+  .alert-del{
+    background:transparent;border:1px solid var(--border);color:var(--muted);
+    width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:11px;
+    display:grid;place-items:center;transition:all .15s;
+  }
+  .alert-del:hover{background:rgba(255,138,138,.1);color:var(--neg);border-color:rgba(255,138,138,.3)}
+  .empty-state{
+    text-align:center;padding:24px 16px;color:var(--muted);font-size:13px;
+  }
+
+  /* settings modal form */
+  .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .settings-row{display:flex;flex-direction:column;gap:6px}
+  .settings-row label{
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .settings-row input,.settings-row select{
+    background:rgba(0,0,0,.3);border:1px solid var(--border);color:#fff;
+    padding:8px 12px;border-radius:8px;font-family:'Geist Mono',monospace;font-size:13px;
+  }
+  .settings-row input:focus,.settings-row select:focus{outline:none;border-color:var(--accent-purple)}
+
   /* insights feed */
   .insights{
     display:flex;flex-direction:column;gap:8px;
@@ -544,14 +621,143 @@
   .stagger > *:nth-child(3){animation-delay:.15s}
   .stagger > *:nth-child(4){animation-delay:.20s}
 
+  /* Mobile bottom nav */
+  .bottom-nav{display:none}
+  .mobile-fab{display:none}
+
   @media (max-width:760px){
-    .grid{grid-template-columns:repeat(2,1fr)}
+    body{padding:0;padding-bottom:84px}
+    .wrap{padding:14px 12px 80px;max-width:100%}
+    .grid{grid-template-columns:repeat(2,1fr);gap:8px}
     .signals-grid{grid-template-columns:1fr}
+    .compare-grid{grid-template-columns:repeat(2,1fr);gap:8px}
     .about-cols{grid-template-columns:1fr;gap:18px}
-    .modal{padding:22px 22px;border-radius:14px}
-    .modal-stat-grid{grid-template-columns:1fr}
-    .wrap{padding:16px 12px 60px}
-    .topbar{margin:-16px -12px 14px;padding:12px 16px}
+    .modal{padding:22px 20px;border-radius:14px;max-height:90vh}
+    .modal-stat-grid{grid-template-columns:1fr;gap:8px}
+    .settings-grid{grid-template-columns:1fr;gap:10px}
+    .sizer-grid{grid-template-columns:1fr;gap:8px}
+    .heatmap{grid-template-columns:repeat(15,1fr);gap:2px}
+
+    /* Compact mobile topbar */
+    .topbar{
+      margin:0 0 14px;padding:12px 14px;border-radius:0;
+      background:linear-gradient(180deg,rgba(7,7,10,.92),rgba(7,7,10,.78));
+    }
+    .topbar .name{font-size:13px}
+    .topbar .name small{display:block;margin:0;font-size:10px}
+    .live-pill{padding:4px 8px;font-size:9.5px}
+    .topbar-right .nav-link{display:none}
+
+    /* Hero compact */
+    .hero{padding:18px 18px;border-radius:14px;margin-bottom:12px}
+    .hero h1{font-size:21px;line-height:1.2}
+    .hero p.lede{font-size:13px;line-height:1.55;margin-bottom:12px}
+    .hero-eyebrow{font-size:10px}
+
+    /* Asset toggles - horizontal scroll on mobile */
+    .asset-row{
+      padding:10px 12px;border-radius:12px;margin-bottom:14px;
+      overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .asset-row::-webkit-scrollbar{display:none}
+    .asset-row .label{font-size:9.5px;flex-shrink:0}
+    .pill{padding:8px 12px;font-size:12px;flex-shrink:0;min-height:36px}
+    .pill .kbd{display:none}
+
+    /* Cards tighter */
+    .card{padding:16px 16px;border-radius:14px;margin-bottom:12px}
+    .card-head h2{font-size:11.5px}
+    .card-head .meta{font-size:9.5px}
+
+    /* Stats cards mobile */
+    .stat{padding:14px 14px;border-radius:12px}
+    .stat .lbl{font-size:9px}
+    .stat .val{font-size:18px}
+    .stat .dlt{font-size:10.5px}
+
+    /* Sizer */
+    .sizer-controls{padding:12px;flex-direction:column;align-items:stretch;gap:10px}
+    .sizer-input{width:100%}
+    .sizer-modes{justify-content:space-between}
+    .sizer-mode{flex:1}
+
+    /* Brief */
+    .brief-text{font-size:14.5px;line-height:1.6}
+
+    /* Chart */
+    #chart{height:200px}
+    .chart-ctrls{flex-wrap:wrap;justify-content:flex-end}
+
+    /* Compare card mobile */
+    .compare-card{padding:10px 12px}
+    .compare-card .csym{font-size:12px}
+
+    /* Sig cards */
+    .sig-card{padding:14px 14px}
+
+    /* Alert rows */
+    .alert-row{font-size:11.5px;padding:10px 12px;flex-wrap:wrap}
+
+    /* Insights */
+    .ins-row{padding:10px 12px}
+    .ins-icon{width:26px;height:26px;font-size:10px}
+    .ins-title{font-size:12.5px}
+    .ins-meta{font-size:10px}
+
+    /* About */
+    .about{padding:18px 18px;border-radius:14px}
+
+    /* Hide top-bar nav links, surface in bottom nav */
+    .bottom-nav{
+      display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;
+      background:linear-gradient(180deg,rgba(15,15,22,.92),rgba(7,7,10,.96));
+      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border-top:1px solid var(--border);
+      padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+      justify-content:space-around;align-items:center;gap:2px;
+    }
+    .bn-btn{
+      flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+      background:transparent;border:0;color:var(--muted);
+      padding:8px 4px;border-radius:10px;cursor:pointer;
+      transition:all .15s;font-family:'Geist Mono',monospace;
+    }
+    .bn-btn:hover{color:var(--text)}
+    .bn-btn.on{color:#d4c8ff;background:rgba(120,80,255,.10)}
+    .bn-icon{
+      width:24px;height:24px;display:grid;place-items:center;
+      font-size:14px;font-weight:600;
+    }
+    .bn-label{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase}
+
+    /* Mobile FAB for refresh brief */
+    .mobile-fab{
+      display:flex;position:fixed;right:16px;bottom:90px;z-index:45;
+      width:48px;height:48px;border-radius:14px;
+      background:linear-gradient(135deg,var(--accent-purple),var(--accent-orange));
+      border:0;color:#fff;cursor:pointer;
+      align-items:center;justify-content:center;
+      font-size:18px;font-weight:600;
+      box-shadow:0 8px 24px rgba(120,80,255,.4),0 0 0 1px rgba(255,255,255,.1) inset;
+      transition:transform .15s;
+    }
+    .mobile-fab:active{transform:scale(.9)}
+
+    /* Mobile footer condensed */
+    footer{font-size:10.5px;padding:0 8px;line-height:1.6}
+
+    /* Toast for mobile */
+    .toast{bottom:96px;font-size:11.5px;padding:10px 16px}
+  }
+
+  @media (max-width:480px){
+    .grid{grid-template-columns:1fr 1fr;gap:8px}
+    .stat .val{font-size:17px}
+    .compare-grid{grid-template-columns:1fr 1fr}
+    .heatmap{grid-template-columns:repeat(10,1fr)}
+    .hero h1{font-size:19px}
+    .modal-head h3{font-size:16px}
   }
 </style>
 </head>
@@ -568,6 +774,7 @@
     <button class="nav-link" data-modal="api-info">Data</button>
     <button class="nav-link" data-modal="roadmap">Roadmap</button>
     <button class="nav-link" data-modal="changelog">Changelog</button>
+    <button class="nav-link" data-modal="settings">Settings</button>
     <button class="nav-link" id="share_btn" title="Copy a deeplink">Share</button>
   </div>
 </div>
@@ -600,7 +807,7 @@
 
 <div id="banner"></div>
 
-<div class="card brief">
+<div class="card brief" id="sec_brief">
   <div class="card-head">
     <h2>Daily Brief
       <button class="info-btn" data-modal="how-it-works" title="How signals are computed">i</button>
@@ -632,7 +839,30 @@
   </div>
 </div>
 
-<div class="card">
+<div class="card" id="sec_sizer">
+  <div class="card-head">
+    <h2>Position Sizer <span class="meta">score-weighted allocation across the cohort</span></h2>
+    <button class="info-btn" data-modal="sizer-info" title="How sizing is computed">i</button>
+  </div>
+  <div class="sizer-controls">
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <label style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Capital ($)</label>
+      <input type="number" class="sizer-input" id="sizer_capital" value="10000" min="0" step="100">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <label style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Risk profile</label>
+      <div class="sizer-modes">
+        <button class="sizer-mode" data-risk="conservative">Conservative</button>
+        <button class="sizer-mode on" data-risk="balanced">Balanced</button>
+        <button class="sizer-mode" data-risk="aggressive">Aggressive</button>
+      </div>
+    </div>
+    <div style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted)" id="sizer_status">-</div>
+  </div>
+  <div class="sizer-grid stagger" id="sizer"></div>
+</div>
+
+<div class="card" id="sec_signals">
   <div class="card-head">
     <h2>Signal-to-Action <span class="meta">7d vs prior-7d delta per asset</span></h2>
     <button class="info-btn" data-modal="how-it-works">i</button>
@@ -642,6 +872,16 @@
     <div class="sig-card"><div class="head"><span class="sym">ETH</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:75%;display:block"></span></p></div>
     <div class="sig-card"><div class="head"><span class="sym">SOL</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:85%;display:block"></span></p></div>
     <div class="sig-card"><div class="head"><span class="sym">XRP</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:70%;display:block"></span></p></div>
+  </div>
+</div>
+
+<div class="card" id="sec_alerts">
+  <div class="card-head">
+    <h2>Watchlist alerts <span class="meta">browser notifications fire when conditions cross</span></h2>
+    <button class="ghost-btn primary" id="alert_add">+ Add alert</button>
+  </div>
+  <div class="alerts-list" id="alerts">
+    <div class="empty-state">No alerts yet. Click + Add alert to set a threshold.</div>
   </div>
 </div>
 
@@ -736,6 +976,18 @@
 </footer>
 
 </div>
+
+<!-- Mobile FAB - regenerate brief -->
+<button class="mobile-fab" id="fab_refresh" title="Regenerate Daily Brief">^</button>
+
+<!-- Mobile bottom nav -->
+<nav class="bottom-nav">
+  <button class="bn-btn on" data-jump="brief"><div class="bn-icon">B</div><div class="bn-label">Brief</div></button>
+  <button class="bn-btn" data-jump="signals"><div class="bn-icon">S</div><div class="bn-label">Signals</div></button>
+  <button class="bn-btn" data-jump="sizer"><div class="bn-icon">$</div><div class="bn-label">Size</div></button>
+  <button class="bn-btn" data-jump="alerts"><div class="bn-icon">!</div><div class="bn-label">Alerts</div></button>
+  <button class="bn-btn" data-modal="settings"><div class="bn-icon">o</div><div class="bn-label">More</div></button>
+</nav>
 
 <!-- modals -->
 <div class="modal-bg" id="modal_brief">
@@ -843,6 +1095,126 @@
       <li>Broader ticker coverage (LTC, HBAR, DOGE, LINK, AVAX, DOT)</li>
       <li>Final demo polish and submission package</li>
     </ul>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal_settings">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">Settings</p>
+        <h3>Tune the engine to your style</h3>
+      </div>
+      <button class="modal-close" data-close>X</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">All preferences persist locally in your browser. Nothing leaves the device.</p>
+    <div class="settings-grid">
+      <div class="settings-row">
+        <label>Bullish threshold (sum7 vs prior 7d)</label>
+        <input type="number" id="set_bull_thr" step="0.05" min="1" max="3">
+      </div>
+      <div class="settings-row">
+        <label>Default capital ($)</label>
+        <input type="number" id="set_capital" step="100" min="0">
+      </div>
+      <div class="settings-row">
+        <label>Default asset</label>
+        <select id="set_asset">
+          <option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option><option value="XRP">XRP</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Default region</label>
+        <select id="set_region">
+          <option value="US">US</option><option value="HK">HK</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Default chart range (days)</label>
+        <select id="set_range">
+          <option value="14">14</option><option value="30">30</option><option value="60">60</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Risk profile</label>
+        <select id="set_risk">
+          <option value="conservative">Conservative</option><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+      <button class="ghost-btn" id="set_reset">Reset to defaults</button>
+      <button class="ghost-btn primary" id="set_save">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal_sizer">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">Position Sizer</p>
+        <h3>How allocation is computed</h3>
+      </div>
+      <button class="modal-close" data-close>X</button>
+    </div>
+    <h4>Inputs</h4>
+    <ul>
+      <li>Total capital you want to deploy across the cohort</li>
+      <li>Composite signal score per asset (0-100) from the signal engine</li>
+      <li>Risk profile - conservative, balanced, or aggressive</li>
+    </ul>
+    <h4>Algorithm</h4>
+    <p>Each asset's weight is its score raised to a risk exponent: <code>weight = score^riskExp</code> where <code>riskExp</code> is 1 for conservative, 2 for balanced, 3 for aggressive. Higher exponent concentrates more capital into the highest-scoring assets. Weights are normalized across the 4 assets.</p>
+    <h4>Why this shape</h4>
+    <p>Conservative spreads capital roughly proportional to score. Aggressive heavily favors the top scorer. Balanced sits in between. Assets with score 0 or no data get nothing.</p>
+    <h4>Caveats</h4>
+    <p>This is a directional sizer based on flow data, not a complete risk model. It does not account for volatility, position correlation, or time-of-entry. Treat the output as a starting point, not a trade ticket.</p>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal_alert">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">New alert</p>
+        <h3>Set a threshold to watch</h3>
+      </div>
+      <button class="modal-close" data-close>X</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Browser notifications fire when the condition crosses. The page must be open for client-side alerts to work.</p>
+    <div class="settings-grid">
+      <div class="settings-row">
+        <label>Asset</label>
+        <select id="al_asset">
+          <option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option><option value="XRP">XRP</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Metric</label>
+        <select id="al_metric">
+          <option value="score">Composite score</option>
+          <option value="sum7">7d net flow ($)</option>
+          <option value="streak">Streak length (days)</option>
+          <option value="lastZ">Last day z-score (sigma)</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Operator</label>
+        <select id="al_op">
+          <option value="gt">greater than</option>
+          <option value="lt">less than</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label>Value</label>
+        <input type="number" id="al_value" placeholder="e.g. 70 for score">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+      <button class="ghost-btn" data-close>Cancel</button>
+      <button class="ghost-btn primary" id="al_save">Add alert</button>
+    </div>
   </div>
 </div>
 
@@ -980,14 +1352,260 @@
     bg.addEventListener("click", function(e){ if (e.target === bg) bg.classList.remove("open"); });
   });
   function openModal(id){
-    var map = { "how-it-works": "modal_how", "api-info": "modal_api", "roadmap": "modal_roadmap", "brief": "modal_brief", "asset": "modal_asset", "changelog": "modal_changelog" };
+    var map = { "how-it-works": "modal_how", "api-info": "modal_api", "roadmap": "modal_roadmap", "brief": "modal_brief", "asset": "modal_asset", "changelog": "modal_changelog", "settings": "modal_settings", "sizer-info": "modal_sizer", "alert-add": "modal_alert" };
     var m = $(map[id] || id);
     if (m) m.classList.add("open");
   }
 
+  // ====== prefs persistence ======
+  var DEFAULT_PREFS = { bullThreshold: 1.1, capital: 10000, defaultAsset: "BTC", defaultRegion: "US", defaultRange: 30, riskMode: "balanced" };
+  var prefs;
+  try { prefs = Object.assign({}, DEFAULT_PREFS, JSON.parse(localStorage.getItem("sosoflows.prefs") || "{}")); }
+  catch (e) { prefs = Object.assign({}, DEFAULT_PREFS); }
+  function savePrefs(){ try { localStorage.setItem("sosoflows.prefs", JSON.stringify(prefs)); } catch (e) {} }
+
+  // Apply prefs as initial state if not overridden by URL
+  if (!new URLSearchParams(location.search).get("asset")) state.asset = prefs.defaultAsset;
+  if (!new URLSearchParams(location.search).get("region")) state.region = prefs.defaultRegion;
+
+  // ====== alerts persistence ======
+  var alerts;
+  try { alerts = JSON.parse(localStorage.getItem("sosoflows.alerts") || "[]"); }
+  catch (e) { alerts = []; }
+  function saveAlerts(){ try { localStorage.setItem("sosoflows.alerts", JSON.stringify(alerts)); } catch (e) {} }
+
+  // ====== Settings modal logic ======
+  function syncSettingsForm(){
+    if (!$("set_bull_thr")) return;
+    $("set_bull_thr").value = prefs.bullThreshold;
+    $("set_capital").value = prefs.capital;
+    $("set_asset").value = prefs.defaultAsset;
+    $("set_region").value = prefs.defaultRegion;
+    $("set_range").value = prefs.defaultRange;
+    $("set_risk").value = prefs.riskMode;
+  }
+  syncSettingsForm();
+
+  $("set_save") && $("set_save").addEventListener("click", function(){
+    prefs.bullThreshold = parseFloat($("set_bull_thr").value) || 1.1;
+    prefs.capital = parseFloat($("set_capital").value) || 10000;
+    prefs.defaultAsset = $("set_asset").value;
+    prefs.defaultRegion = $("set_region").value;
+    prefs.defaultRange = parseInt($("set_range").value, 10) || 30;
+    prefs.riskMode = $("set_risk").value;
+    savePrefs();
+    // Apply immediately
+    chartRange = prefs.defaultRange;
+    document.querySelectorAll(".toggle-btn[data-range]").forEach(function(x){ x.classList.toggle("on", parseInt(x.dataset.range,10) === chartRange); });
+    $("sizer_capital").value = prefs.capital;
+    document.querySelectorAll(".sizer-mode").forEach(function(x){ x.classList.toggle("on", x.dataset.risk === prefs.riskMode); });
+    renderInsights(); renderSignals(); renderActiveAsset(); renderSizer();
+    document.querySelectorAll(".modal-bg.open").forEach(function(m){ m.classList.remove("open"); });
+    toast("Settings saved");
+  });
+
+  $("set_reset") && $("set_reset").addEventListener("click", function(){
+    prefs = Object.assign({}, DEFAULT_PREFS);
+    savePrefs();
+    syncSettingsForm();
+    toast("Reset to defaults");
+  });
+
+  // ====== Position Sizer ======
+  function renderSizer(){
+    var box = $("sizer"); if (!box) return;
+    var capital = parseFloat($("sizer_capital").value) || 0;
+    var riskExp = prefs.riskMode === "conservative" ? 1 : prefs.riskMode === "aggressive" ? 3 : 2;
+
+    var assetsWithScore = [];
+    ASSETS.forEach(function(sym){
+      var rows = allSeries[sym];
+      if (!rows || !rows.length) { assetsWithScore.push({ sym: sym, score: 0, hasData: false }); return; }
+      var s = computeStats(rows);
+      assetsWithScore.push({ sym: sym, score: s.score, hasData: true, direction: s.direction });
+    });
+
+    var totalWeight = assetsWithScore.reduce(function(a, b){ return a + Math.pow(Math.max(0, b.score), riskExp); }, 0);
+    var html = "";
+    var allocSum = 0;
+    var statusTxt;
+    if (totalWeight === 0) {
+      html = '<div class="empty-state" style="grid-column:span 2">All scores are zero. Wait for data to load or signals to firm up.</div>';
+      statusTxt = "no allocation";
+    } else {
+      assetsWithScore.forEach(function(a){
+        var w = Math.pow(Math.max(0, a.score), riskExp);
+        var pct = (w / totalWeight) * 100;
+        var amt = (w / totalWeight) * capital;
+        allocSum += amt;
+        var note = a.hasData ? "score " + a.score + " / " + (a.direction || "neutral") : "no data";
+        html += '<div class="sizer-row">'
+              + '<div class="sizer-head"><span class="sizer-sym">'+a.sym+'</span><span class="sizer-pct">'+pct.toFixed(1)+'%</span></div>'
+              + '<div class="sizer-amt">$'+amt.toLocaleString(undefined,{maximumFractionDigits:0})+'</div>'
+              + '<div class="sizer-bar"><div class="sizer-bar-fill" style="width:'+pct+'%"></div></div>'
+              + '<div class="sizer-note">'+note+'</div>'
+              + '</div>';
+      });
+      statusTxt = "$" + allocSum.toLocaleString(undefined,{maximumFractionDigits:0}) + " allocated, " + prefs.riskMode + " profile (exp=" + riskExp + ")";
+    }
+    box.innerHTML = html;
+    var st = $("sizer_status"); if (st) st.textContent = statusTxt;
+  }
+
+  document.querySelectorAll(".sizer-mode").forEach(function(b){
+    b.addEventListener("click", function(){
+      document.querySelectorAll(".sizer-mode").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on");
+      prefs.riskMode = b.dataset.risk;
+      savePrefs();
+      renderSizer();
+    });
+  });
+
+  $("sizer_capital") && $("sizer_capital").addEventListener("input", function(){
+    prefs.capital = parseFloat($("sizer_capital").value) || 0;
+    savePrefs();
+    renderSizer();
+  });
+
+  // Apply persisted capital + risk mode after load
+  setTimeout(function(){
+    if ($("sizer_capital")) $("sizer_capital").value = prefs.capital;
+    document.querySelectorAll(".sizer-mode").forEach(function(x){ x.classList.toggle("on", x.dataset.risk === prefs.riskMode); });
+  }, 0);
+
+  // ====== Watchlist Alerts ======
+  function getMetricValue(sym, metric){
+    var rows = allSeries[sym];
+    if (!rows || !rows.length) return null;
+    var s = computeStats(rows);
+    if (metric === "score") return s.score;
+    if (metric === "sum7") return s.sum7;
+    if (metric === "streak") return s.streak.dir > 0 ? s.streak.len : -s.streak.len;
+    if (metric === "lastZ") return s.lastZ;
+    return null;
+  }
+  function metricLabel(metric){
+    return { score: "score", sum7: "7d net flow", streak: "streak", lastZ: "last z-score" }[metric] || metric;
+  }
+  function metricFmt(metric, value){
+    if (value === null || value === undefined) return "-";
+    if (metric === "sum7") return (value >= 0 ? "+$" : "-$") + (function(v){ var a = Math.abs(v); return a >= 1e9 ? (a/1e9).toFixed(2)+"B" : a >= 1e6 ? (a/1e6).toFixed(2)+"M" : a >= 1e3 ? (a/1e3).toFixed(2)+"K" : a.toFixed(0); })(value);
+    if (metric === "lastZ") return value.toFixed(2) + " sigma";
+    if (metric === "streak") return Math.abs(value) + "d " + (value >= 0 ? "in" : "out");
+    return value;
+  }
+
+  function checkAlerts(){
+    var fired = false;
+    alerts.forEach(function(al){
+      var v = getMetricValue(al.asset, al.metric);
+      if (v === null) return;
+      var conditionMet = al.op === "gt" ? v > al.value : v < al.value;
+      if (conditionMet && !al.triggered) {
+        al.triggered = true;
+        al.triggeredAt = Date.now();
+        fired = true;
+        // Browser notification
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("SoSoFlows alert: " + al.asset, {
+            body: metricLabel(al.metric) + " " + (al.op === "gt" ? ">" : "<") + " " + al.value + " (now " + metricFmt(al.metric, v) + ")",
+            icon: "https://smartcoded.xyz/favicon.ico"
+          });
+        }
+        toast(al.asset + " alert: " + metricLabel(al.metric) + " " + (al.op === "gt" ? ">" : "<") + " " + al.value, "info");
+      } else if (!conditionMet && al.triggered) {
+        al.triggered = false;
+      }
+    });
+    if (fired) saveAlerts();
+  }
+
+  function renderAlerts(){
+    var box = $("alerts"); if (!box) return;
+    if (!alerts.length) {
+      box.innerHTML = '<div class="empty-state">No alerts yet. Click + Add alert to set a threshold.</div>';
+      return;
+    }
+    var html = "";
+    alerts.forEach(function(al, i){
+      var v = getMetricValue(al.asset, al.metric);
+      var stateCls = al.triggered ? "triggered" : "armed";
+      var stateLabel = al.triggered ? "triggered" : "armed";
+      var current = v !== null ? metricFmt(al.metric, v) : "no data";
+      html += '<div class="alert-row '+stateCls+'">'
+            + '<div class="alert-cond"><strong>'+al.asset+'</strong> ' + metricLabel(al.metric) + ' ' + (al.op === "gt" ? ">" : "<") + ' <strong>' + al.value + '</strong> <span style="color:var(--muted)">- now ' + current + '</span></div>'
+            + '<div class="alert-meta"><span class="alert-state '+stateCls+'">'+stateLabel+'</span><button class="alert-del" data-idx="'+i+'" title="Remove">X</button></div>'
+            + '</div>';
+    });
+    box.innerHTML = html;
+    box.querySelectorAll(".alert-del").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.dataset.idx, 10);
+        alerts.splice(idx, 1);
+        saveAlerts();
+        renderAlerts();
+        toast("Alert removed");
+      });
+    });
+  }
+
+  $("alert_add") && $("alert_add").addEventListener("click", function(){
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+    openModal("alert-add");
+  });
+
+  $("al_save") && $("al_save").addEventListener("click", function(){
+    var asset = $("al_asset").value;
+    var metric = $("al_metric").value;
+    var op = $("al_op").value;
+    var value = parseFloat($("al_value").value);
+    if (isNaN(value)) { toast("Enter a numeric threshold", "err"); return; }
+    alerts.push({ asset: asset, metric: metric, op: op, value: value, triggered: false, createdAt: Date.now() });
+    saveAlerts();
+    renderAlerts();
+    document.querySelectorAll(".modal-bg.open").forEach(function(m){ m.classList.remove("open"); });
+    $("al_value").value = "";
+    toast("Alert armed");
+    checkAlerts();
+  });
+
   // Share + CSV + range/cum state
   var chartRange = 30;
   var chartCum = false;
+
+  // Mobile bottom nav: scroll to section + active state
+  document.querySelectorAll(".bn-btn[data-jump]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var target = $("sec_" + b.dataset.jump);
+      if (!target) return;
+      document.querySelectorAll(".bn-btn").forEach(function(x){x.classList.remove("on")});
+      b.classList.add("on");
+      var off = target.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top: off, behavior: "smooth" });
+    });
+  });
+  // Mobile FAB triggers brief refresh
+  $("fab_refresh") && $("fab_refresh").addEventListener("click", function(){
+    $("brief_refresh") && $("brief_refresh").click();
+  });
+  // Auto-update bottom nav active state on scroll
+  var sections = ["brief", "signals", "sizer", "alerts"];
+  function updateBNActive(){
+    if (window.innerWidth > 760) return;
+    var scrollY = window.scrollY + 120;
+    var current = "brief";
+    sections.forEach(function(s){
+      var el = $("sec_" + s);
+      if (el && el.getBoundingClientRect().top + window.scrollY <= scrollY) current = s;
+    });
+    document.querySelectorAll(".bn-btn[data-jump]").forEach(function(b){
+      b.classList.toggle("on", b.dataset.jump === current);
+    });
+  }
+  window.addEventListener("scroll", updateBNActive, { passive: true });
 
   $("share_btn") && $("share_btn").addEventListener("click", function(){
     var url = location.origin + location.pathname + "?asset=" + state.asset + "&region=" + state.region;
@@ -1153,6 +1771,9 @@
       renderInsights();
       renderSignals();
       renderCompare();
+      renderSizer();
+      renderAlerts();
+      checkAlerts();
       renderActiveAsset();
       loadBrief();
     });
