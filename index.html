@@ -322,6 +322,77 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* card collapse */
+  .card{position:relative;transition:padding .25s ease}
+  .card-collapse{
+    background:transparent;border:1px solid var(--border);
+    color:var(--muted);width:24px;height:24px;border-radius:7px;
+    cursor:pointer;font-family:'Geist Mono',monospace;font-size:14px;font-weight:600;
+    display:inline-grid;place-items:center;transition:all .15s;line-height:0;
+  }
+  .card-collapse:hover{background:rgba(255,255,255,.06);color:#fff}
+  body.theme-light .card-collapse{color:#1a1a1f}
+  body.theme-light .card-collapse:hover{background:rgba(0,0,0,.06)}
+  .card.collapsed{padding-bottom:14px}
+  .card.collapsed > *:not(.card-head){display:none !important}
+  .card.collapsed .card-head{margin-bottom:0}
+
+  /* brief sentiment stripe */
+  .brief.brief-bull::before{background:linear-gradient(90deg,transparent,var(--pos),transparent)}
+  .brief.brief-bear::before{background:linear-gradient(90deg,transparent,var(--neg),transparent)}
+  .brief.brief-flat::before{background:linear-gradient(90deg,transparent,var(--accent-purple),transparent)}
+  .sentiment-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.06em;
+    padding:3px 9px;border-radius:99px;text-transform:uppercase;font-weight:500;
+    margin-left:8px;
+  }
+  .sentiment-pill.bull{background:rgba(120,220,156,.12);color:var(--pos);border:1px solid rgba(120,220,156,.25)}
+  .sentiment-pill.bear{background:rgba(255,138,138,.12);color:var(--neg);border:1px solid rgba(255,138,138,.25)}
+  .sentiment-pill.flat{background:rgba(120,80,255,.12);color:#c0a8ff;border:1px solid rgba(120,80,255,.25)}
+
+  /* quick-add chips */
+  .qchip-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding:0 0 12px;border-bottom:1px dashed var(--border)}
+  .qchip{
+    font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.04em;
+    padding:5px 11px;border-radius:99px;
+    background:rgba(120,80,255,.08);border:1px solid rgba(120,80,255,.2);
+    color:#c0a8ff;cursor:pointer;transition:all .15s;
+  }
+  .qchip:hover{background:rgba(120,80,255,.16);color:#fff;border-color:rgba(120,80,255,.4)}
+  .qchip-label{
+    font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;
+    color:var(--dim);text-transform:uppercase;align-self:center;margin-right:4px;
+  }
+
+  /* A/B compare */
+  .ab-pick-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+  .ab-pick{
+    flex:1;min-width:140px;
+    background:rgba(0,0,0,.3);border:1px solid var(--border);color:#fff;
+    padding:9px 12px;border-radius:8px;font-family:'Geist Mono',monospace;font-size:13px;
+  }
+  .ab-pick:focus{outline:none;border-color:var(--accent-purple)}
+  .ab-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  }
+  .ab-col{
+    padding:14px 16px;border-radius:12px;
+    background:rgba(255,255,255,.025);border:1px solid var(--border);
+  }
+  .ab-col-head{font-family:'Geist Mono',monospace;font-size:14px;font-weight:600;color:#fff;letter-spacing:.06em;margin-bottom:8px}
+  .ab-row{
+    display:flex;justify-content:space-between;padding:6px 0;
+    font-family:'Geist Mono',monospace;font-size:12px;
+    border-bottom:1px dashed var(--border);
+  }
+  .ab-row:last-child{border-bottom:none}
+  .ab-row .l{color:var(--muted)}
+  .ab-row .v{color:#fff;font-weight:600}
+  @media (max-width:560px){
+    .ab-grid{grid-template-columns:1fr}
+  }
+
   /* alert badge */
   .alert-badge{
     display:inline-grid;place-items:center;
@@ -1408,6 +1479,14 @@
     <h2>Watchlist alerts <span class="meta">browser notifications fire when conditions cross</span></h2>
     <button class="ghost-btn primary" id="alert_add">+ Add alert</button>
   </div>
+  <div class="qchip-row">
+    <span class="qchip-label">Quick add:</span>
+    <button class="qchip" data-q="BTC,score,gt,80">BTC score &gt; 80</button>
+    <button class="qchip" data-q="ETH,score,gt,80">ETH score &gt; 80</button>
+    <button class="qchip" data-q="BTC,sum7,lt,0">BTC 7d outflow</button>
+    <button class="qchip" data-q="SOL,streak,gt,3">SOL 3d+ streak</button>
+    <button class="qchip" data-q="ETH,lastZ,gt,2">ETH 2-sigma anomaly</button>
+  </div>
   <div class="alerts-list" id="alerts">
     <div class="empty-state">No alerts yet. Click + Add alert to set a threshold.</div>
   </div>
@@ -1546,6 +1625,7 @@
     <button class="drawer-link" data-drawer-jump="corr"><span class="em">🔗</span><span class="lbl">Correlation matrix</span></button>
     <button class="drawer-link" data-drawer-jump="perf"><span class="em">📊</span><span class="lbl">Cohort performance</span></button>
     <button class="drawer-link" data-drawer-jump="indices"><span class="em">📈</span><span class="lbl">Indices snapshot</span></button>
+    <button class="drawer-link" id="drawer_ab"><span class="em">⇄</span><span class="lbl">A/B compare</span></button>
   </div>
 
   <div class="drawer-section">
@@ -1772,6 +1852,25 @@
     <p>Conservative spreads capital roughly proportional to score. Aggressive heavily favors the top scorer. Balanced sits in between. Assets with score 0 or no data get nothing.</p>
     <h4>Caveats</h4>
     <p>This is a directional sizer based on flow data, not a complete risk model. It does not account for volatility, position correlation, or time-of-entry. Treat the output as a starting point, not a trade ticket.</p>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal_ab">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">Side-by-side compare</p>
+        <h3>Two-asset analytical view</h3>
+      </div>
+      <button class="modal-close" data-close>X</button>
+    </div>
+    <div class="ab-pick-row">
+      <select class="ab-pick" id="ab_a"><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option><option value="XRP">XRP</option></select>
+      <span style="font-family:'Geist Mono',monospace;color:var(--muted);font-size:13px">vs</span>
+      <select class="ab-pick" id="ab_b"><option value="BTC">BTC</option><option value="ETH" selected>ETH</option><option value="SOL">SOL</option><option value="XRP">XRP</option></select>
+    </div>
+    <div class="ab-grid" id="ab_grid"></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:14px;text-align:center">Highlighted side wins each row. Underlying data: 60d cached SoSoValue series.</p>
   </div>
 </div>
 
@@ -2271,6 +2370,111 @@
     rowEl.innerHTML = html;
   }
 
+  // ====== Per-card collapse with persistence ======
+  var collapsed;
+  try { collapsed = JSON.parse(localStorage.getItem("sosoflows.collapsed") || "{}"); }
+  catch(e){ collapsed = {}; }
+  function saveCollapsed(){ try { localStorage.setItem("sosoflows.collapsed", JSON.stringify(collapsed)); } catch(e){} }
+
+  function attachCollapseButtons(){
+    document.querySelectorAll(".card[id]").forEach(function(card){
+      // Skip the brief card and cohort already styled
+      if (card.querySelector(".card-collapse")) return;
+      var head = card.querySelector(".card-head");
+      if (!head) return;
+      var btn = document.createElement("button");
+      btn.className = "card-collapse";
+      btn.textContent = collapsed[card.id] ? "+" : "-";
+      btn.title = "Collapse";
+      btn.setAttribute("aria-label", "Toggle card");
+      // Append after existing buttons
+      head.appendChild(btn);
+      btn.addEventListener("click", function(){
+        card.classList.toggle("collapsed");
+        var isCollapsed = card.classList.contains("collapsed");
+        btn.textContent = isCollapsed ? "+" : "-";
+        collapsed[card.id] = isCollapsed;
+        saveCollapsed();
+      });
+      // Apply persisted state
+      if (collapsed[card.id]) card.classList.add("collapsed");
+    });
+  }
+
+  // ====== Brief sentiment indicator ======
+  function detectSentiment(text){
+    if (!text) return "flat";
+    var lower = text.toLowerCase();
+    var bullKw = ["expanding", "accumulating", "bullish", "demand", "follow-through", "positive", "intact", "expanding"];
+    var bearKw = ["redemptions", "outflow", "bearish", "flush", "selling pressure", "exhaustion", "redempt", "drag"];
+    var bullScore = 0, bearScore = 0;
+    bullKw.forEach(function(k){ if (lower.indexOf(k) >= 0) bullScore++; });
+    bearKw.forEach(function(k){ if (lower.indexOf(k) >= 0) bearScore++; });
+    if (bullScore > bearScore + 1) return "bull";
+    if (bearScore > bullScore + 1) return "bear";
+    return "flat";
+  }
+
+  // ====== Quick-add chips ======
+  document.querySelectorAll(".qchip[data-q]").forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var p = chip.dataset.q.split(",");
+      var asset = p[0], metric = p[1], op = p[2], value = parseFloat(p[3]);
+      // Avoid duplicates
+      var dup = alerts.some(function(a){ return a.asset === asset && a.metric === metric && a.op === op && a.value === value; });
+      if (dup) { toast("Alert already exists", "err"); return; }
+      alerts.push({ asset: asset, metric: metric, op: op, value: value, triggered: false, createdAt: Date.now() });
+      saveAlerts();
+      renderAlerts();
+      checkAlerts();
+      if ("Notification" in window && Notification.permission === "default") Notification.requestPermission();
+      toast("Alert armed: " + asset + " " + metric + " " + op + " " + value);
+    });
+  });
+
+  // ====== A/B compare modal ======
+  function renderABCompare(){
+    var a = $("ab_a").value, b = $("ab_b").value;
+    var grid = $("ab_grid");
+    if (!grid) return;
+    var ra = allSeries[a], rb = allSeries[b];
+    if (!ra || !rb || !ra.length || !rb.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:span 2">Need cached data for both assets.</div>';
+      return;
+    }
+    var sa = computeStats(ra), sb = computeStats(rb);
+    function row(label, va, vb, fmt, higherIsBetter){
+      var winA = higherIsBetter ? va > vb : va < vb;
+      var winB = higherIsBetter ? vb > va : vb < va;
+      var aClass = winA && va !== vb ? 'style="color:var(--pos)"' : '';
+      var bClass = winB && va !== vb ? 'style="color:var(--pos)"' : '';
+      return [
+        '<div class="ab-row"><span class="l">' + label + '</span><span class="v" ' + aClass + '>' + fmt(va) + '</span></div>',
+        '<div class="ab-row"><span class="l">' + label + '</span><span class="v" ' + bClass + '>' + fmt(vb) + '</span></div>'
+      ];
+    }
+    function dirFmt(d){ return d; }
+    function streakFmt(s){ return s.dir === 0 ? "-" : (s.len + "d " + (s.dir > 0 ? "in" : "out")); }
+    var rowsA = [], rowsB = [];
+    [
+      row("Composite score", sa.score, sb.score, function(v){return v + "/100"}, true),
+      row("7d net flow", sa.sum7, sb.sum7, function(v){ return (v >= 0 ? "+" : "") + fmtUsd(v); }, true),
+      row("30d net flow", sa.sum30, sb.sum30, function(v){ return (v >= 0 ? "+" : "") + fmtUsd(v); }, true),
+      row("Cumulative", sa.cum, sb.cum, fmtUsd, true),
+      row("Direction", sa.direction, sb.direction, dirFmt, false),
+      row("Streak", sa.streak, sb.streak, streakFmt, false),
+      row("Last z-score", sa.lastZ, sb.lastZ, function(v){ return v.toFixed(2) + " sigma"; }, false),
+      row("14d sigma", sa.std14, sb.std14, fmtUsd, false),
+      row("Consistency", sa.consistency, sb.consistency, function(v){ return Math.round(v*100) + "%"; }, true)
+    ].forEach(function(pair){ rowsA.push(pair[0]); rowsB.push(pair[1]); });
+
+    grid.innerHTML =
+        '<div class="ab-col"><div class="ab-col-head" style="color:#fff">' + a + '</div>' + rowsA.join("") + '</div>'
+      + '<div class="ab-col"><div class="ab-col-head" style="color:#fff">' + b + '</div>' + rowsB.join("") + '</div>';
+  }
+  $("ab_a") && $("ab_a").addEventListener("change", renderABCompare);
+  $("ab_b") && $("ab_b").addEventListener("change", renderABCompare);
+
   // ====== Hash routing for deep section links ======
   function jumpToHash(hash){
     if (!hash || hash.length < 2) return;
@@ -2375,7 +2579,8 @@
     { name: "Open Data Sources", desc: "modal", em: "+", run: function(){ openModal("api-info"); } },
     { name: "Open Roadmap", desc: "modal", em: "+", run: function(){ openModal("roadmap"); } },
     { name: "Open Settings", desc: "modal", em: "+", run: function(){ openModal("settings"); } },
-    { name: "Replay onboarding tour", desc: "tour", em: "+", run: function(){ startTour(); } }
+    { name: "Replay onboarding tour", desc: "tour", em: "+", run: function(){ startTour(); } },
+    { name: "Open A/B asset compare", desc: "modal", em: "+", run: function(){ renderABCompare(); $("modal_ab").classList.add("open"); } }
   ];
   function jumpTo(sec){
     var target = $("sec_" + sec) || $(sec);
@@ -2927,6 +3132,7 @@
   $("drawer_share") && $("drawer_share").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("share_btn") && $("share_btn").click(); }, 200); });
   $("drawer_csv") && $("drawer_csv").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("csv_btn") && $("csv_btn").click(); }, 200); });
   $("drawer_refresh") && $("drawer_refresh").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ $("brief_refresh") && $("brief_refresh").click(); }, 200); });
+  $("drawer_ab") && $("drawer_ab").addEventListener("click", function(){ closeDrawer(); setTimeout(function(){ renderABCompare(); $("modal_ab").classList.add("open"); }, 200); });
 
   // Esc closes drawer too
   document.addEventListener("keydown", function(e){
@@ -3179,6 +3385,22 @@
     els.brief_text.textContent = j.summary || "(empty)";
     els.brief_meta.textContent = j.generated_at ? "as of " + j.generated_at.replace("T", " ").substring(0, 16) + " UTC" : "";
     els.brief_mode.textContent = j.mode === "groq" ? "[ai-rephrased]" : "[deterministic]";
+    // Sentiment stripe + pill
+    var briefCard = document.querySelector(".card.brief");
+    var sent = detectSentiment(j.summary);
+    if (briefCard) {
+      briefCard.classList.remove("brief-bull", "brief-bear", "brief-flat");
+      briefCard.classList.add("brief-" + sent);
+    }
+    var head = briefCard ? briefCard.querySelector(".card-head h2") : null;
+    if (head) {
+      var existing = head.querySelector(".sentiment-pill");
+      if (existing) existing.remove();
+      var pill = document.createElement("span");
+      pill.className = "sentiment-pill " + sent;
+      pill.textContent = sent === "bull" ? "bullish tone" : sent === "bear" ? "bearish tone" : "neutral tone";
+      head.appendChild(pill);
+    }
     // live status pill
     var pill = $("live_pill"), pillTxt = $("live_pill_txt");
     if (pill && j.generated_at) {
@@ -3845,6 +4067,7 @@
   window.addEventListener("resize", function(){ renderActiveAsset(); });
 
   loadAll();
+  attachCollapseButtons();
 })();
 </script>
 </body>
