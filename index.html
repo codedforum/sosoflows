@@ -28,6 +28,51 @@
     --soft-purple:rgba(120,80,255,.15);
     --soft-orange:rgba(255,140,80,.15);
   }
+  body.theme-light{
+    --bg:#f5f5f7;
+    --card-grad-start:rgba(0,0,0,.025);
+    --card-grad-end:rgba(0,0,0,.008);
+    --border:rgba(0,0,0,.10);
+    --border-strong:rgba(0,0,0,.18);
+    --text:#1a1a1f;
+    --muted:#5a5a68;
+    --dim:#8a8a98;
+    --pos:#15803d;
+    --neg:#dc2626;
+    --soft-purple:rgba(120,80,255,.12);
+    --soft-orange:rgba(255,140,80,.12);
+  }
+  body.theme-light .topbar{background:linear-gradient(180deg,rgba(245,245,247,.92),rgba(245,245,247,.72))}
+  body.theme-light::before{
+    background:
+      radial-gradient(circle at 15% 0%,rgba(120,80,255,.07),transparent 50%),
+      radial-gradient(circle at 85% 100%,rgba(255,140,80,.05),transparent 50%);
+  }
+  body.theme-light::after{
+    background-image:
+      linear-gradient(rgba(0,0,0,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,0,0,.025) 1px,transparent 1px);
+  }
+  body.theme-light .modal{background:linear-gradient(160deg,#ffffff,#f5f5f7)}
+  body.theme-light .modal h3{background:linear-gradient(120deg,#1a1a1f,#5a5a68);-webkit-background-clip:text}
+  body.theme-light .hero h1{background:linear-gradient(120deg,#1a1a1f,#4a4a55);-webkit-background-clip:text}
+  body.theme-light .topbar .name small{color:var(--muted)}
+  body.theme-light .stat .val{color:#1a1a1f}
+  body.theme-light .sig-card .sym,body.theme-light .sizer-sym{color:#1a1a1f}
+  body.theme-light .news-title{color:#1a1a1f}
+  body.theme-light .ins-title{color:#1a1a1f}
+  body.theme-light .modal-stat .v{color:#1a1a1f}
+  body.theme-light .gauge-ring .gnum{color:#1a1a1f}
+  body.theme-light .cohort-title{color:#1a1a1f}
+  body.theme-light .pill.on,body.theme-light .toggle-btn.on,body.theme-light .sizer-mode.on{color:#1a1a1f}
+  body.theme-light .sizer-amt{color:#1a1a1f}
+  body.theme-light .drawer{background:linear-gradient(180deg,#ffffff,#f5f5f7)}
+  body.theme-light .drawer-link{color:#1a1a1f}
+  body.theme-light .ghost-btn{color:#1a1a1f}
+  body.theme-light .stat .val.pos,body.theme-light .stat .val.neg{color:inherit}
+  body.theme-light .modal p,body.theme-light .modal ul{color:#3a3a45}
+  body.theme-light .brief-text{color:#1a1a1f}
+  body.theme-light .toast{box-shadow:0 8px 28px rgba(0,0,0,.15),0 0 0 1px rgba(0,0,0,.06) inset}
   *,*::before,*::after{box-sizing:border-box}
   html,body{margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -335,12 +380,15 @@
   .hamburger{
     background:transparent;border:1px solid var(--border);color:#c9c9d4;
     width:34px;height:34px;border-radius:8px;cursor:pointer;
-    font-size:16px;display:none;place-items:center;transition:all .15s;
+    font-size:16px;display:grid;place-items:center;transition:all .15s;
   }
   .hamburger:hover{background:rgba(255,255,255,.06);color:#fff;border-color:var(--border-strong)}
+  body.theme-light .hamburger{color:#1a1a1f}
+  body.theme-light .hamburger:hover{background:rgba(0,0,0,.06)}
+  #drawer_open{display:none}
   @media (max-width:980px){
     .topbar-right .nav-link{display:none}
-    .hamburger{display:grid}
+    #drawer_open{display:grid}
   }
 
   /* cohort gauge */
@@ -746,16 +794,21 @@
   /* toast */
   .toast{
     position:fixed;bottom:24px;left:50%;
-    transform:translateX(-50%) translateY(160%);
+    transform:translate(-50%, 0);
+    opacity:0;visibility:hidden;pointer-events:none;
     padding:11px 18px;border-radius:10px;
     font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.04em;
     background:linear-gradient(135deg,rgba(120,220,156,.95),rgba(100,200,140,.95));
     color:#0a2010;cursor:pointer;
     box-shadow:0 8px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.08) inset;
-    z-index:200;transition:transform .3s cubic-bezier(.4,0,.2,1);
-    will-change:transform;
+    z-index:200;
+    transition:opacity .25s ease, visibility 0s linear .25s;
+    max-width:88%;
   }
-  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.show{
+    opacity:1;visibility:visible;pointer-events:auto;
+    transition:opacity .25s ease, visibility 0s linear 0s;
+  }
   .toast.err{
     background:linear-gradient(135deg,rgba(255,138,138,.95),rgba(255,118,118,.95));color:#2a0a0a;
   }
@@ -942,6 +995,7 @@
     <button class="nav-link" data-modal="changelog"><span class="glyph">📋</span>Log</button>
     <button class="nav-link" data-modal="settings"><span class="glyph">⚙️</span>Settings</button>
     <button class="nav-link" id="share_btn" title="Copy a deeplink"><span class="glyph">🔗</span>Share</button>
+    <button class="hamburger" id="theme_toggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
     <button class="hamburger" id="drawer_open" title="Open menu" aria-label="Open menu">☰</button>
   </div>
 </div>
@@ -1054,6 +1108,16 @@
     <div class="sig-card"><div class="head"><span class="sym">ETH</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:75%;display:block"></span></p></div>
     <div class="sig-card"><div class="head"><span class="sym">SOL</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:85%;display:block"></span></p></div>
     <div class="sig-card"><div class="head"><span class="sym">XRP</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:70%;display:block"></span></p></div>
+  </div>
+</div>
+
+<div class="card" id="sec_etfs">
+  <div class="card-head">
+    <h2><span style="margin-right:6px">🏛️</span>Component ETFs <span class="meta" id="etfs_meta">underlying ETFs that make up the basket for the active asset</span></h2>
+    <button class="ghost-btn" id="etfs_refresh">Refresh list</button>
+  </div>
+  <div id="etfs_list">
+    <div class="empty-state">Click Refresh list to load the underlying ETFs from etfs/list.</div>
   </div>
 </div>
 
@@ -1212,6 +1276,7 @@
     <button class="drawer-link" data-drawer-jump="alerts"><span class="em">🔔</span><span class="lbl">Watchlist Alerts</span></button>
     <button class="drawer-link" data-drawer-jump="news"><span class="em">📰</span><span class="lbl">Market Context</span></button>
     <button class="drawer-link" data-drawer-jump="journal"><span class="em">📝</span><span class="lbl">Trade Journal</span></button>
+    <button class="drawer-link" data-drawer-jump="etfs"><span class="em">🏛️</span><span class="lbl">Component ETFs</span></button>
   </div>
 
   <div class="drawer-section">
@@ -1868,6 +1933,36 @@
     rowEl.innerHTML = html;
   }
 
+  // ====== ETF list breakdown ======
+  function renderEtfs(){
+    var box = $("etfs_list"); if (!box) return;
+    var setEmpty = function(msg){ box.innerHTML = '<div class="empty-state">' + (msg || "No ETF data cached. Click Refresh list to fetch.") + '</div>'; };
+    fetch("api.php?path=" + encodeURIComponent("etfs/list") + "&symbol=" + state.asset + "&country_code=" + state.region).then(function(r){
+      return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; });
+    }).then(function(r){
+      if (!r.ok) { setEmpty(r.status === 503 ? "Demo mode - configure API key to load list." : "List unavailable."); return; }
+      var items = (r.body && (r.body.data || r.body.list || r.body.records || r.body)) || [];
+      if (!Array.isArray(items)) items = items.list || items.records || items.data || items.etfs || [];
+      if (!items.length) { setEmpty("No component ETFs cached for " + state.asset + " in " + state.region + "."); return; }
+      var html = '<table><thead><tr><th>Ticker</th><th>Issuer</th><th>NAV (USD)</th><th>Net assets</th></tr></thead><tbody>';
+      items.slice(0, 12).forEach(function(it){
+        var ticker = it.ticker || it.symbol || it.code || it.id || "-";
+        var issuer = it.issuer || it.provider || it.fund_company || it.fund || it.name || "";
+        var nav = parseFloat(it.nav || it.price || it.closing_price || 0);
+        var assets = parseFloat(it.total_net_assets || it.total_assets || it.aum || it.net_assets || 0);
+        html += '<tr><td><strong>'+String(ticker).replace(/[<>]/g,"")+'</strong></td><td>'+String(issuer).replace(/[<>]/g,"").substring(0,40)+'</td><td>'+(nav?nav.toFixed(2):"-")+'</td><td>'+(assets?fmtUsd(assets):"-")+'</td></tr>';
+      });
+      html += '</tbody></table>';
+      box.innerHTML = html;
+      var meta = $("etfs_meta"); if (meta) meta.textContent = "underlying ETFs for " + state.asset + " " + state.region;
+    }).catch(function(){ setEmpty("Network error loading list."); });
+  }
+  $("etfs_refresh") && $("etfs_refresh").addEventListener("click", function(){
+    $("etfs_list").innerHTML = '<div class="empty-state">refreshing...</div>';
+    renderEtfs();
+    toast("ETF list refreshed", "info");
+  });
+
   // ====== News feed ======
   function renderNews(){
     var box = $("news"); if (!box) return;
@@ -1996,6 +2091,22 @@
   var chartRange = 30;
   var chartCum = false;
 
+  // ====== Theme toggle ======
+  function applyTheme(t){
+    document.body.classList.toggle("theme-light", t === "light");
+    var btn = $("theme_toggle");
+    if (btn) btn.textContent = t === "light" ? "☀️" : "🌙";
+  }
+  var savedTheme = (function(){ try { return localStorage.getItem("sosoflows.theme") || "dark"; } catch(e){ return "dark"; } })();
+  applyTheme(savedTheme);
+  $("theme_toggle") && $("theme_toggle").addEventListener("click", function(){
+    var current = document.body.classList.contains("theme-light") ? "light" : "dark";
+    var next = current === "light" ? "dark" : "light";
+    applyTheme(next);
+    try { localStorage.setItem("sosoflows.theme", next); } catch(e){}
+    toast(next === "light" ? "Light theme on" : "Dark theme on", "info");
+  });
+
   // ====== Drawer ======
   function openDrawer(){ $("drawer").classList.add("open"); $("drawer_bg").classList.add("open"); document.body.style.overflow = "hidden"; }
   function closeDrawer(){ $("drawer").classList.remove("open"); $("drawer_bg").classList.remove("open"); document.body.style.overflow = ""; }
@@ -2046,7 +2157,7 @@
     $("brief_refresh") && $("brief_refresh").click();
   });
   // Auto-update bottom nav active state on scroll
-  var sections = ["brief", "signals", "sizer", "alerts", "news", "journal"];
+  var sections = ["brief", "signals", "sizer", "alerts", "news", "journal", "etfs"];
   function updateBNActive(){
     if (window.innerWidth > 760) return;
     var scrollY = window.scrollY + 120;
@@ -2170,22 +2281,25 @@
     if (!els.toast) return;
     if (__toastTimer) { clearTimeout(__toastTimer); __toastTimer = null; }
     els.toast.textContent = msg;
-    els.toast.className = "toast" + (type ? " " + type : "");
-    void els.toast.offsetWidth; // force reflow so transition replays
-    els.toast.classList.add("show");
+    // Reset to base, then on next frame add show + type so opacity transition replays
+    els.toast.className = "toast";
+    els.toast.offsetHeight; // force reflow
+    requestAnimationFrame(function(){
+      if (!els.toast) return;
+      els.toast.className = "toast show" + (type ? " " + type : "");
+    });
     __toastTimer = setTimeout(function(){
-      if (els.toast) els.toast.classList.remove("show");
+      if (els.toast) els.toast.className = "toast";
       __toastTimer = null;
     }, 2400);
   }
   // Tap-to-dismiss on the toast itself
-  setTimeout(function(){
-    var t = document.getElementById("toast");
-    if (t) t.addEventListener("click", function(){
+  if (els.toast) {
+    els.toast.addEventListener("click", function(){
       if (__toastTimer) { clearTimeout(__toastTimer); __toastTimer = null; }
-      t.classList.remove("show");
+      els.toast.className = "toast";
     });
-  }, 0);
+  }
 
   // Animated number counter
   function animateNum(el, from, to, formatter, duration){
@@ -2248,6 +2362,7 @@
       checkAlerts();
       renderActiveAsset();
       loadBrief();
+      // Defer ETF list - only fetch on user click (to save Demo plan quota)
     });
     renderSsi(["ssimag7", "ssilayer1"]);
   }
