@@ -271,6 +271,84 @@
   .streak.in{background:rgba(120,220,156,.10);border-color:rgba(120,220,156,.25);color:var(--pos)}
   .streak.out{background:rgba(255,138,138,.10);border-color:rgba(255,138,138,.25);color:var(--neg)}
 
+  /* cohort gauge */
+  .cohort-card{
+    display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;
+    padding:18px 22px;border-radius:16px;
+    background:linear-gradient(160deg,rgba(120,80,255,.10),rgba(255,140,80,.04));
+    border:1px solid var(--border);margin-bottom:14px;
+    position:relative;overflow:hidden;
+  }
+  .cohort-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(120,80,255,.5),transparent);
+  }
+  .gauge-ring{position:relative;width:96px;height:96px;flex-shrink:0}
+  .gauge-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .gauge-ring .gnum{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-family:'Geist Mono',monospace;font-weight:700;font-size:26px;color:#fff;letter-spacing:-.02em;
+    flex-direction:column;
+  }
+  .gauge-ring .gnum small{font-size:10px;color:var(--muted);font-weight:500;display:block;margin-top:2px}
+  .cohort-body{flex:1}
+  .cohort-eyebrow{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .cohort-title{font-size:18px;font-weight:600;margin:0 0 8px;letter-spacing:-.01em}
+  .cohort-row{display:flex;gap:14px;flex-wrap:wrap}
+  .cohort-pill{
+    font-family:'Geist Mono',monospace;font-size:11px;
+    padding:5px 11px;border-radius:99px;letter-spacing:.04em;
+    background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);
+  }
+  .cohort-pill.bull{background:rgba(120,220,156,.10);color:var(--pos);border-color:rgba(120,220,156,.25)}
+  .cohort-pill.bear{background:rgba(255,138,138,.10);color:var(--neg);border-color:rgba(255,138,138,.25)}
+  .cohort-verdict{
+    font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;font-weight:500;
+    padding:6px 12px;border-radius:99px;
+  }
+  .cohort-verdict.bull{background:rgba(120,220,156,.15);color:var(--pos)}
+  .cohort-verdict.bear{background:rgba(255,138,138,.15);color:var(--neg)}
+  .cohort-verdict.flat{background:rgba(120,80,255,.15);color:#c0a8ff}
+
+  /* news feed */
+  .news-list{display:flex;flex-direction:column;gap:8px}
+  .news-item{
+    padding:12px 14px;border-radius:10px;
+    background:rgba(255,255,255,.025);border:1px solid var(--border);
+    transition:border-color .15s,background .15s;cursor:pointer;
+    display:block;text-decoration:none;color:inherit;
+  }
+  .news-item:hover{border-color:var(--border-strong);background:rgba(255,255,255,.04);color:#fff}
+  .news-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:5px}
+  .news-title{font-size:13.5px;color:#fff;line-height:1.45;margin:0;font-weight:500;flex:1}
+  .news-meta{
+    font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--muted);
+    display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  }
+  .news-source{
+    font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.06em;
+    text-transform:uppercase;padding:2px 7px;border-radius:99px;
+    background:rgba(120,80,255,.12);color:#c0a8ff;flex-shrink:0;
+  }
+
+  /* journal */
+  .journal-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .jrn-row{
+    padding:12px 14px;border-radius:10px;
+    background:rgba(255,255,255,.022);border:1px solid var(--border);
+    display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+  }
+  .jrn-stamp{
+    font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em;
+    flex-shrink:0;text-align:center;
+  }
+  .jrn-stamp .jdate{display:block;color:#c9c9d4;font-size:11px;font-weight:600;margin-bottom:2px}
+  .jrn-body{font-size:12.5px;color:#c9c9d4;line-height:1.5}
+  .jrn-body .jasset{font-family:'Geist Mono',monospace;color:#fff;font-weight:600;letter-spacing:.05em}
+  .jrn-body .jnote{display:block;margin-top:4px;color:var(--muted);font-style:italic;font-size:11.5px}
+  .jrn-actions{display:flex;gap:6px;flex-shrink:0}
+
   /* sizer */
   .sizer-controls{
     display:flex;gap:14px;align-items:center;flex-wrap:wrap;
@@ -596,13 +674,14 @@
   /* toast */
   .toast{
     position:fixed;bottom:24px;left:50%;
-    transform:translateX(-50%) translateY(120%);
+    transform:translateX(-50%) translateY(160%);
     padding:11px 18px;border-radius:10px;
     font-family:'Geist Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.04em;
     background:linear-gradient(135deg,rgba(120,220,156,.95),rgba(100,200,140,.95));
-    color:#0a2010;
+    color:#0a2010;cursor:pointer;
     box-shadow:0 8px 28px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.08) inset;
     z-index:200;transition:transform .3s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
   }
   .toast.show{transform:translateX(-50%) translateY(0)}
   .toast.err{
@@ -807,6 +886,21 @@
 
 <div id="banner"></div>
 
+<div class="cohort-card" id="cohort">
+  <div class="gauge-ring" id="cohort_ring">
+    <svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/><circle id="cohort_arc" cx="48" cy="48" r="40" fill="none" stroke="#7adc9c" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 251" /></svg>
+    <div class="gnum"><span id="cohort_score">--</span><small>cohort</small></div>
+  </div>
+  <div class="cohort-body">
+    <p class="cohort-eyebrow">Cohort Health</p>
+    <p class="cohort-title" id="cohort_title">Reading aggregate flow signals...</p>
+    <div class="cohort-row" id="cohort_row">
+      <span class="cohort-pill"><span class="skel" style="width:40px"></span></span>
+    </div>
+  </div>
+  <span class="cohort-verdict flat" id="cohort_verdict">--</span>
+</div>
+
 <div class="card brief" id="sec_brief">
   <div class="card-head">
     <h2>Daily Brief
@@ -872,6 +966,28 @@
     <div class="sig-card"><div class="head"><span class="sym">ETH</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:75%;display:block"></span></p></div>
     <div class="sig-card"><div class="head"><span class="sym">SOL</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:85%;display:block"></span></p></div>
     <div class="sig-card"><div class="head"><span class="sym">XRP</span><span class="signal flat"><span class="skel" style="width:50px"></span></span></div><p class="insight"><span class="skel" style="width:70%;display:block"></span></p></div>
+  </div>
+</div>
+
+<div class="card" id="sec_news">
+  <div class="card-head">
+    <h2>Market context <span class="meta">SoSoValue feeds, cached 7d</span></h2>
+    <button class="ghost-btn" id="news_refresh">Refresh feed</button>
+  </div>
+  <div class="news-list" id="news">
+    <div class="news-item" style="cursor:default"><p class="news-title"><span class="skel" style="width:80%;display:block"></span></p><div class="news-meta"><span class="skel" style="width:120px"></span></div></div>
+    <div class="news-item" style="cursor:default"><p class="news-title"><span class="skel" style="width:65%;display:block"></span></p><div class="news-meta"><span class="skel" style="width:100px"></span></div></div>
+    <div class="news-item" style="cursor:default"><p class="news-title"><span class="skel" style="width:75%;display:block"></span></p><div class="news-meta"><span class="skel" style="width:110px"></span></div></div>
+  </div>
+</div>
+
+<div class="card" id="sec_journal">
+  <div class="card-head">
+    <h2>Trade Journal <span class="meta">snapshot the current view, review later</span></h2>
+    <button class="ghost-btn primary" id="jrn_snap">Snapshot view</button>
+  </div>
+  <div class="journal-list" id="journal">
+    <div class="empty-state">No snapshots yet. Click Snapshot view to log the current asset, score, and signal context.</div>
   </div>
 </div>
 
@@ -1170,6 +1286,27 @@
     <p>Conservative spreads capital roughly proportional to score. Aggressive heavily favors the top scorer. Balanced sits in between. Assets with score 0 or no data get nothing.</p>
     <h4>Caveats</h4>
     <p>This is a directional sizer based on flow data, not a complete risk model. It does not account for volatility, position correlation, or time-of-entry. Treat the output as a starting point, not a trade ticket.</p>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal_jrn">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">New journal snapshot</p>
+        <h3 id="jrn_modal_title">Snapshot</h3>
+      </div>
+      <button class="modal-close" data-close>X</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px" id="jrn_modal_ctx">-</p>
+    <div class="settings-row">
+      <label>Decision or note (optional)</label>
+      <input type="text" id="jrn_note" placeholder="e.g. opened 30% allocation, watching for follow-through">
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <button class="ghost-btn" data-close>Cancel</button>
+      <button class="ghost-btn primary" id="jrn_save">Save snapshot</button>
+    </div>
   </div>
 </div>
 
@@ -1550,6 +1687,158 @@
     });
   }
 
+  // ====== Cohort Health gauge ======
+  function renderCohort(){
+    var ring = $("cohort_arc"); if (!ring) return;
+    var titleEl = $("cohort_title"), scoreEl = $("cohort_score"), rowEl = $("cohort_row"), verdictEl = $("cohort_verdict");
+    var withData = ASSETS.filter(function(s){ return allSeries[s] && allSeries[s].length; });
+    if (!withData.length) {
+      scoreEl.textContent = "--";
+      titleEl.textContent = "Waiting on cached flow data";
+      rowEl.innerHTML = '<span class="cohort-pill">no assets loaded</span>';
+      verdictEl.textContent = "--"; verdictEl.className = "cohort-verdict flat";
+      ring.setAttribute("stroke-dasharray", "0 251");
+      return;
+    }
+    var bull = 0, bear = 0, neutral = 0, scoreSum = 0;
+    var details = {};
+    withData.forEach(function(sym){
+      var st = computeStats(allSeries[sym]);
+      details[sym] = st;
+      scoreSum += st.score;
+      if (st.direction === "bull") bull++; else if (st.direction === "bear") bear++; else neutral++;
+    });
+    var avg = Math.round(scoreSum / withData.length);
+    scoreEl.textContent = avg;
+
+    var ringColor = avg >= 65 ? "#7adc9c" : avg <= 35 ? "#ff8a8a" : "#c0a8ff";
+    ring.setAttribute("stroke", ringColor);
+    var circ = 2 * Math.PI * 40;
+    var dash = (avg / 100) * circ;
+    ring.setAttribute("stroke-dasharray", dash + " " + circ);
+
+    var verdict = "rotation";
+    var verdictCls = "flat";
+    if (bull > bear && avg >= 60) { verdict = "demand expanding"; verdictCls = "bull"; }
+    else if (bear > bull && avg <= 40) { verdict = "redemptions dominating"; verdictCls = "bear"; }
+    else if (bull > bear) { verdict = "tilt bullish"; verdictCls = "bull"; }
+    else if (bear > bull) { verdict = "tilt bearish"; verdictCls = "bear"; }
+    verdictEl.textContent = verdict; verdictEl.className = "cohort-verdict " + verdictCls;
+
+    var topAsset = withData[0], topScore = -1;
+    withData.forEach(function(sym){ if (details[sym].score > topScore) { topScore = details[sym].score; topAsset = sym; } });
+    titleEl.textContent = topAsset + " is leading the cohort at " + topScore + "/100. " + bull + " bullish, " + bear + " bearish, " + neutral + " neutral.";
+
+    var html = "";
+    html += '<span class="cohort-pill bull">' + bull + ' bull</span>';
+    html += '<span class="cohort-pill bear">' + bear + ' bear</span>';
+    html += '<span class="cohort-pill">' + neutral + ' neutral</span>';
+    html += '<span class="cohort-pill">avg score ' + avg + '</span>';
+    rowEl.innerHTML = html;
+  }
+
+  // ====== News feed ======
+  function renderNews(){
+    var box = $("news"); if (!box) return;
+    var setEmpty = function(msg){
+      box.innerHTML = '<div class="empty-state">' + (msg || "No feed items cached. Click Refresh feed to fetch.") + '</div>';
+    };
+    fetch("api.php?path=" + encodeURIComponent("feeds/featured")).then(function(r){
+      return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; });
+    }).then(function(r){
+      if (!r.ok) { setEmpty(r.status === 503 ? "Demo mode - configure API key to load feed." : "Feed temporarily unavailable."); return; }
+      var items = (r.body && (r.body.data || r.body.items || r.body.list || r.body.records || r.body)) || [];
+      if (!Array.isArray(items)) items = items.list || items.records || items.data || [];
+      if (!items.length) { setEmpty("Feed cached but empty."); return; }
+      var html = "";
+      items.slice(0, 5).forEach(function(it){
+        var title = it.title || it.name || it.headline || it.text || "(untitled)";
+        var src = it.source || it.author || it.publisher || it.feed || "feed";
+        var date = it.date || it.publishedAt || it.pubDate || it.created_at || "";
+        var url = it.url || it.link || it.href || "#";
+        if (date && date.length > 10) date = date.substring(0, 10);
+        var safeTitle = String(title).replace(/[<>]/g, "");
+        var safeSrc = String(src).replace(/[<>]/g, "");
+        var safeDate = String(date).replace(/[<>]/g, "");
+        var safeUrl = url && /^https?:/i.test(url) ? url : "#";
+        html += '<a class="news-item" href="' + safeUrl + '" target="_blank" rel="noopener">'
+              + '<div class="news-head"><p class="news-title">' + safeTitle + '</p>'
+              + '<span class="news-source">' + safeSrc + '</span></div>'
+              + '<div class="news-meta">' + safeDate + '</div>'
+              + '</a>';
+      });
+      box.innerHTML = html;
+    }).catch(function(){ setEmpty("Network error loading feed."); });
+  }
+  $("news_refresh") && $("news_refresh").addEventListener("click", function(){
+    $("news").innerHTML = '<div class="empty-state">refreshing...</div>';
+    renderNews();
+    toast("Feed refreshed");
+  });
+
+  // ====== Trade Journal ======
+  var journal;
+  try { journal = JSON.parse(localStorage.getItem("sosoflows.journal") || "[]"); }
+  catch (e) { journal = []; }
+  function saveJournal(){ try { localStorage.setItem("sosoflows.journal", JSON.stringify(journal)); } catch (e) {} }
+
+  function renderJournal(){
+    var box = $("journal"); if (!box) return;
+    if (!journal.length) {
+      box.innerHTML = '<div class="empty-state">No snapshots yet. Click Snapshot view to log the current asset, score, and signal context.</div>';
+      return;
+    }
+    var html = "";
+    journal.slice().reverse().forEach(function(j, idx){
+      var realIdx = journal.length - 1 - idx;
+      var d = new Date(j.t);
+      var dateStr = d.toISOString().substring(0, 10);
+      var timeStr = d.toISOString().substring(11, 16);
+      var dirCol = j.direction === "bull" ? "var(--pos)" : j.direction === "bear" ? "var(--neg)" : "var(--muted)";
+      html += '<div class="jrn-row">'
+            + '<div class="jrn-stamp"><span class="jdate">'+dateStr+'</span>'+timeStr+' UTC</div>'
+            + '<div class="jrn-body"><span class="jasset">'+j.asset+'</span> / '+j.region+' - score <strong style="color:'+dirCol+'">'+j.score+'</strong>, '+j.direction+', 7d '+(j.sum7>=0?"+":"-")+'$'+(function(v){var a=Math.abs(v);return a>=1e9?(a/1e9).toFixed(2)+"B":a>=1e6?(a/1e6).toFixed(2)+"M":a>=1e3?(a/1e3).toFixed(2)+"K":a.toFixed(0)})(j.sum7)
+            + (j.note ? '<span class="jnote">"'+String(j.note).replace(/[<>]/g,"")+'"</span>' : "")
+            + '</div>'
+            + '<div class="jrn-actions"><button class="alert-del" data-jidx="'+realIdx+'" title="Remove">X</button></div>'
+            + '</div>';
+    });
+    box.innerHTML = html;
+    box.querySelectorAll(".alert-del").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.dataset.jidx, 10);
+        journal.splice(idx, 1);
+        saveJournal();
+        renderJournal();
+        toast("Snapshot removed");
+      });
+    });
+  }
+
+  $("jrn_snap") && $("jrn_snap").addEventListener("click", function(){
+    var rows = allSeries[state.asset];
+    if (!rows || !rows.length) { toast("No data for current asset", "err"); return; }
+    var s = computeStats(rows);
+    $("jrn_modal_title").textContent = "Snapshot " + state.asset + " / " + state.region;
+    $("jrn_modal_ctx").textContent = "Score " + s.score + "/100, " + s.direction + ", 7d net flow " + (s.sum7 >= 0 ? "+$" : "-$") + (function(v){var a=Math.abs(v);return a>=1e9?(a/1e9).toFixed(2)+"B":a>=1e6?(a/1e6).toFixed(2)+"M":a>=1e3?(a/1e3).toFixed(2)+"K":a.toFixed(0)})(s.sum7);
+    $("jrn_note").value = "";
+    openModal("modal_jrn");
+  });
+  $("jrn_save") && $("jrn_save").addEventListener("click", function(){
+    var rows = allSeries[state.asset];
+    if (!rows || !rows.length) return;
+    var s = computeStats(rows);
+    journal.push({
+      t: Date.now(), asset: state.asset, region: state.region,
+      score: s.score, direction: s.direction, sum7: s.sum7,
+      note: $("jrn_note").value || ""
+    });
+    saveJournal();
+    renderJournal();
+    document.querySelectorAll(".modal-bg.open").forEach(function(m){ m.classList.remove("open"); });
+    toast("Snapshot saved");
+  });
+
   $("alert_add") && $("alert_add").addEventListener("click", function(){
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission();
@@ -1592,7 +1881,7 @@
     $("brief_refresh") && $("brief_refresh").click();
   });
   // Auto-update bottom nav active state on scroll
-  var sections = ["brief", "signals", "sizer", "alerts"];
+  var sections = ["brief", "signals", "sizer", "alerts", "news", "journal"];
   function updateBNActive(){
     if (window.innerWidth > 760) return;
     var scrollY = window.scrollY + 120;
@@ -1711,12 +2000,27 @@
   function showBanner(html){ els.banner.innerHTML = '<div class="banner">'+html+'</div>'; }
   function clearBanner(){ els.banner.innerHTML = ""; }
 
+  var __toastTimer = null;
   function toast(msg, type){
+    if (!els.toast) return;
+    if (__toastTimer) { clearTimeout(__toastTimer); __toastTimer = null; }
     els.toast.textContent = msg;
-    els.toast.className = "toast " + (type || "");
-    setTimeout(function(){ els.toast.classList.add("show"); }, 10);
-    setTimeout(function(){ els.toast.classList.remove("show"); }, 2400);
+    els.toast.className = "toast" + (type ? " " + type : "");
+    void els.toast.offsetWidth; // force reflow so transition replays
+    els.toast.classList.add("show");
+    __toastTimer = setTimeout(function(){
+      if (els.toast) els.toast.classList.remove("show");
+      __toastTimer = null;
+    }, 2400);
   }
+  // Tap-to-dismiss on the toast itself
+  setTimeout(function(){
+    var t = document.getElementById("toast");
+    if (t) t.addEventListener("click", function(){
+      if (__toastTimer) { clearTimeout(__toastTimer); __toastTimer = null; }
+      t.classList.remove("show");
+    });
+  }, 0);
 
   // Animated number counter
   function animateNum(el, from, to, formatter, duration){
@@ -1768,11 +2072,14 @@
     var promises = keys.map(function(sym){ return loadOne(sym); });
     Promise.all(promises).then(function(results){
       keys.forEach(function(sym, i){ if (results[i]) allSeries[sym] = results[i]; });
+      renderCohort();
       renderInsights();
       renderSignals();
       renderCompare();
       renderSizer();
       renderAlerts();
+      renderJournal();
+      renderNews();
       checkAlerts();
       renderActiveAsset();
       loadBrief();
