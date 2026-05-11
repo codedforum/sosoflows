@@ -1430,6 +1430,42 @@
   </div>
 </div>
 
+<div class="card" id="sec_sodex" style="border-color:rgba(255,140,80,.22);background:linear-gradient(160deg,rgba(255,140,80,.08),rgba(255,140,80,.02))">
+  <div class="card-head">
+    <h2>SoDEX execution preview <span class="meta">Wave 2 lands May 18 - May 29</span></h2>
+    <span class="signal" style="background:rgba(255,140,80,.18);color:#ffd0b3;border:1px solid rgba(255,140,80,.35)">Wave 2</span>
+  </div>
+  <p style="font-size:13.5px;color:#c9c9d4;line-height:1.6;margin:0 0 14px">Each Signal-to-Action card upgrades to a one-click trade flow that builds the execution payload from the active signal, position-sized capital, and chosen pair. Confirmation modal previews slippage, fill price, and fees against SoDEX testnet before any submit.</p>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px">
+    <div style="padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid var(--border)">
+      <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Testnet base</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;color:#fff;word-break:break-all">testnet-gw.sodex.dev/api/v1/spot</div>
+    </div>
+    <div style="padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.25);border:1px solid var(--border)">
+      <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Native chain</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:12px;color:#fff">ValueChain L1 (SOSO is gas)</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+    <div style="padding:10px 12px;border-radius:9px;background:rgba(0,0,0,.25);border:1px solid var(--border);text-align:center">
+      <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Step 1</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#fff;font-weight:600">Build payload</div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4">from signal + sizer + pair</div>
+    </div>
+    <div style="padding:10px 12px;border-radius:9px;background:rgba(0,0,0,.25);border:1px solid var(--border);text-align:center">
+      <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Step 2</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#fff;font-weight:600">Preview</div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4">slippage, fill, fees</div>
+    </div>
+    <div style="padding:10px 12px;border-radius:9px;background:rgba(0,0,0,.25);border:1px solid var(--border);text-align:center">
+      <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Step 3</div>
+      <div style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#fff;font-weight:600">Submit + log</div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4">tx hash to Journal</div>
+    </div>
+  </div>
+  <p style="font-size:11.5px;color:var(--muted);margin:14px 0 0;line-height:1.5">SoDEX testnet does not require a separate API key per the Buildathon brief. Wave 2 build starts 2026-05-18.</p>
+</div>
+
 <div class="card" id="sec_etfs">
   <div class="card-head">
     <h2>Component ETFs <span class="meta" id="etfs_meta">underlying ETFs that make up the basket for the active asset</span></h2>
@@ -3263,7 +3299,7 @@
     $("brief_refresh") && $("brief_refresh").click();
   });
 
-  var sections = ["brief", "signals", "sizer", "alerts", "risk", "news", "journal", "etfs", "corr", "perf", "indices"];
+  var sections = ["brief", "signals", "sizer", "alerts", "risk", "news", "journal", "etfs", "sodex", "corr", "perf", "indices"];
   function updateBNActive(){
     if (window.innerWidth > 760) return;
     var scrollY = window.scrollY + 120;
