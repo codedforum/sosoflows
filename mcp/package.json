@@ -1,0 +1,18 @@
+{
+  "name": "sosoflows-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for SoSoFlows · turns SoSoValue ETF-flow data into agentic trading signals (composite score, cohort regime, SoDEX order envelopes) as Model Context Protocol tools for Claude Desktop, Cursor, and any MCP client.",
+  "type": "module",
+  "bin": {
+    "sosoflows-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "smoke": "node test/smoke.js"
+  },
+  "keywords": ["mcp", "sosovalue", "sodex", "etf", "crypto", "trading-signals", "agentic-finance"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  }
+}
